@@ -1,0 +1,43 @@
+COMPLETE
+
+FUNCTIONAL
+Racecar Movement
+Block Mem Storage
+Block Walls
+Collisions
+Area Detection
+Timer
+Checkpoints + Respawning System
+End Race
+Block Effects
+Camera
+Transitioning Between Game Screens
+Saving or Loading Tracks
+Main Menu
+Editor
+Track Selection
+Other Enviroments
+Validating Tracks
+Raylib Logo Startup
+Pause Menu
+Inputs as one short int, binary calc in rmlib (To save it easier in replays)
+Fadeout Fadein 
+Profiles
+
+IN PROGRESS
+Editor Buttons
+Input Replays
+
+NOT DONE
+Removing Tracks, Profiles and Replays
+Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
+Medals
+Options
+Party Mode like OG Trackmania
+Other Racecars
+My Logo On Startup (Whatever That Is)
+Racecar Visuals + Colorswaps
+Enviroment Visuals
+Skid Lines
+Block Visuals (Only the ones near you render)
+Actual Blocks
