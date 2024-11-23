@@ -46,7 +46,7 @@ int SizeOfDemoSave(Demo* demo);
 void ChecksumDemo(Demo* demo, unsigned char checksum[DEMO_CHECKSUM_SIZE]);
 bool ChecksumsMatch(unsigned char checksum_1[DEMO_CHECKSUM_SIZE], unsigned char checksum_2[DEMO_CHECKSUM_SIZE]);
 
-bool LoadDemo(Demo** demo, unsigned char* track_name, const char* filename);
+bool LoadDemo(Demo** demo, unsigned char** ptn, const char* filename);
 bool SaveDemoTime(Demo* demo, unsigned char* track_name);
 bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename);
 

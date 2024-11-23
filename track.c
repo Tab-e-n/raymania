@@ -292,8 +292,8 @@ bool SaveTrack(Track* track, const char* filename, unsigned char author[PROFILE_
 		if(CheckTrackFile(data_size, size_check[0], size_check[1], size_check[2]))
 		{
 			save_data_size = sizeof(TrackSave);
-			TraceLog(LOG_INFO, "RL_REALLOC: save track");
-			save_file_data = (unsigned char*)RL_REALLOC(file_data, save_data_size);
+			TraceLog(LOG_INFO, "REALLOC: save track");
+			save_file_data = (unsigned char*)_realloc(file_data, save_data_size);
 
 			if(save_file_data != (void*)0)
 			{
@@ -324,14 +324,14 @@ bool SaveTrack(Track* track, const char* filename, unsigned char author[PROFILE_
 		}
 
 		success = SaveFileData(filename, file_data, data_size);
-		TraceLog(LOG_INFO, "RL_FREE: save track");
-		RL_FREE(save_file_data);
+		TraceLog(LOG_INFO, "FREE: save track");
+		_free(save_file_data);
 	}
 	else
 	{
 		data_size = sizeof(TrackSave);
-		TraceLog(LOG_INFO, "RL_MALLOC: save track");
-		file_data = (unsigned char*)RL_MALLOC(data_size);
+		TraceLog(LOG_INFO, "MALLOC: save track");
+		file_data = (unsigned char*)_malloc(data_size);
 		TrackSave* savefile = (TrackSave*)file_data;
 	
 		savefile->track = *track;
@@ -376,8 +376,8 @@ const char* TrackFileName(unsigned char* track_dir, unsigned char name[TRACK_NAM
 	}
 
 	unsigned int track_dir_len = TextLength(track_dir);
-	TraceLog(LOG_INFO, "RL_MALLOC: track name");
-	unsigned char* filename = (unsigned char*)RL_MALLOC(track_dir_len + size + 6);
+	TraceLog(LOG_INFO, "MALLOC: track name");
+	unsigned char* filename = (unsigned char*)_malloc(track_dir_len + size + 6);
 	for(int i = 0; i < track_dir_len; i++)
 	{
 		filename[i] = track_dir[i];
@@ -392,13 +392,14 @@ const char* TrackFileName(unsigned char* track_dir, unsigned char name[TRACK_NAM
 	filename[track_dir_len + size + 3] = 'r';
 	filename[track_dir_len + size + 4] = 'k';
 	filename[track_dir_len + size + 5] = '\0';
-	//const char* FILENAME = (const char*)RL_REALLOC(filename, size);
+	//const char* FILENAME = (const char*)_realloc(filename, size);
 	const char* FILENAME = (const char*)filename;
 	return FILENAME;
 }
 
 void TrackNameFromFilename(const char* filename, unsigned char name[TRACK_NAME_LENGHT])
 {
+	TraceLog(LOG_INFO, "|%s|", filename);
 	unsigned int len = TextFindLastChar(filename, '/') + 1;
 	if(TextLength(filename) - len < 4)
 	{

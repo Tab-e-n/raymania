@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <raylib.h>
 #include <raymath.h>
 #include "rmlib.h"
@@ -22,8 +23,6 @@ void RaylibLogo(void)
     int state = 0;                  // Tracking animation states (State Machine)
     float alpha = 1.0f;             // Useful for fading
 
-    //--------------------------------------------------------------------------------------
-
     // Main game loop
     while (state != 4)    // Detect window close button or ESC key
     {
@@ -37,7 +36,6 @@ void RaylibLogo(void)
 	    lettersCount = 6;
 	}
         // Update
-        //----------------------------------------------------------------------------------
         if (state == 0)                 // State 0: Small box blinking
         {
             framesCounter++;
@@ -83,10 +81,8 @@ void RaylibLogo(void)
                 }
             }
         }
-        //----------------------------------------------------------------------------------
 
         // Draw
-        //----------------------------------------------------------------------------------
         BeginDrawing();
 
             ClearBackground(RAYWHITE);
@@ -122,13 +118,27 @@ void RaylibLogo(void)
             }
 
         EndDrawing();
-        //----------------------------------------------------------------------------------
     }
 }
 
 void TabinLogo(void)
 {
 
+}
+
+extern void* _malloc(size_t size)
+{
+	return malloc(size);
+}
+
+extern void* _realloc(void* ptr, size_t size)
+{
+	return realloc(ptr, size);
+}
+
+extern void _free(void* ptr)
+{
+	return free(ptr);
 }
 
 int sign(float x)

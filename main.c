@@ -198,11 +198,11 @@ int main(void)
 
 	// TRACKS SELECTOR
 	
-	TraceLog(LOG_INFO, "RL_MALLOC: track_dir");
-	unsigned char* track_dir = (unsigned char*)RL_MALLOC(TextLength(TRACK_DIRECTORY));
+	TraceLog(LOG_INFO, "MALLOC: track_dir");
+	unsigned char* track_dir = (unsigned char*)_malloc(TextLength(TRACK_DIRECTORY));
 	TextCopy(track_dir, TRACK_DIRECTORY);
-	TraceLog(LOG_INFO, "RL_MALLOC: demo_dir");
-	unsigned char* demo_dir = (unsigned char*)RL_MALLOC(TextLength(DEMO_DIRECTORY));
+	TraceLog(LOG_INFO, "MALLOC: demo_dir");
+	unsigned char* demo_dir = (unsigned char*)_malloc(TextLength(DEMO_DIRECTORY));
 	TextCopy(demo_dir, DEMO_DIRECTORY);
 	bool skip_validate_check = false;
 
@@ -972,7 +972,7 @@ int main(void)
 						playing_demo = DEMO_GHOST_PLAY;
 						if(demo_track_name != PNULL)
 						{
-							RL_FREE(demo_track_name);
+							_free(demo_track_name);
 						}
 					}
 				}
@@ -1147,20 +1147,24 @@ int main(void)
 						current_game_screen = RACE;
 						reset_race = true;
 
-						unsigned char* demo_track_name;
-						if(LoadDemo(&ghost_demo, demo_track_name, DemoFilename(DEMO_DIRECTORY, TrackFileName(track_dir,track_name), profile.name)))
+						unsigned char** pdtn;
+						Demo** pdemo = &ghost_demo;
+						if(LoadDemo(pdemo, pdtn, DemoFilename(DEMO_DIRECTORY, TrackFileName(track_dir,track_name), profile.name)))
 						{
+							TraceLog(LOG_INFO, "pdtn");
+							unsigned char* demo_track_name = *pdtn;
+							TraceLog(LOG_INFO, "pdemo convert");
+							ghost_demo = *pdemo;
+							TraceLog(LOG_INFO, "StartDemo");
 							StartDemo(ghost_demo);
 							playing_demo = DEMO_GHOST_INIT;
+							_free(demo_track_name);
 						}
 						else
 						{
 							playing_demo = DEMO_OFF;
 						}
-						if(demo_track_name != PNULL)
-						{
-							RL_FREE(demo_track_name);
-						}
+						TraceLog(LOG_INFO, "FREE: demo_track_name");
 					}
 					else
 					{
@@ -1177,25 +1181,33 @@ int main(void)
 			}
 			else if(file_list_active == FL_DEMO)
 			{
-				unsigned char* demo_track_name;
+				unsigned char** pdtn;
 				//CopyNameToDemo(demo, profile.name);
-				if(LoadDemo(&demo, demo_track_name, path))
+				Demo** pdemo = &demo;
+				TraceLog(LOG_INFO, "Currently in demo tab");
+				if(LoadDemo(pdemo, pdtn, path))
 				{
+					TraceLog(LOG_INFO, "pdtn");
+					unsigned char* demo_track_name = *pdtn;
+					TraceLog(LOG_INFO, "pdemo convert");
+					demo = *pdemo;
+					TraceLog(LOG_INFO, "StartDemo");
 					StartDemo(demo);
 					playing_demo = DEMO_INIT;
 
-					track = LoadTrack(demo_track_name);
-					TrackNameFromFilename(path, track_name);
+					TraceLog(LOG_INFO, "LoadTrack");
+					track = LoadTrack((const char*)demo_track_name);
+					TraceLog(LOG_INFO, "TrackName");
+					TrackNameFromFilename((const char*)demo_track_name, track_name);
+					TraceLog(LOG_INFO, "MakeBlocks");
 					MakeTrackBlocks(&track, blocks);
 
 					file_list_active = FL_OFF;
 					current_game_screen = RACE;
 					reset_race = true;
+					_free(demo_track_name);
 				}
-				if(demo_track_name != PNULL)
-				{
-					RL_FREE(demo_track_name);
-				}
+				TraceLog(LOG_INFO, "FREE: demo_track_name");
 			}
 			skip_validate_check = false;
 		}

@@ -1,6 +1,7 @@
 #ifndef RMLIB
 #define RMLIB
 
+#include <stdlib.h>
 #include <raylib.h>
 #include <raymath.h>
 
@@ -34,6 +35,10 @@ typedef struct RMInput
 
 void RaylibLogo(void);
 void TabinLogo(void);
+
+extern void* _malloc(size_t size);
+extern void* _realloc(void* ptr, size_t size);
+extern void _free(void* ptr);
 
 int sign(float x);
 float absf(float x);

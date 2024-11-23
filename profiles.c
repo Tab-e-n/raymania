@@ -97,8 +97,8 @@ const char* ProfileFilename(unsigned char* dir, unsigned char name[PROFILE_NAME_
 	}
 
 	unsigned int dir_len = TextLength(dir);
-	TraceLog(LOG_INFO, "RL_MALLOC: profile file name");
-	unsigned char* filename = (unsigned char*)RL_MALLOC(dir_len + size + 6);
+	TraceLog(LOG_INFO, "MALLOC: profile file name");
+	unsigned char* filename = (unsigned char*)_malloc(dir_len + size + 6);
 	for(int i = 0; i < dir_len; i++)
 	{
 		filename[i] = dir[i];
@@ -113,7 +113,7 @@ const char* ProfileFilename(unsigned char* dir, unsigned char name[PROFILE_NAME_
 	filename[dir_len + size + 3] = 'r';
 	filename[dir_len + size + 4] = 'f';
 	filename[dir_len + size + 5] = '\0';
-	//const char* FILENAME = (const char*)RL_REALLOC(filename, size);
+	//const char* FILENAME = (const char*)_realloc(filename, size);
 	const char* FILENAME = (const char*)filename;
 	return FILENAME;
 }
@@ -134,8 +134,8 @@ Profile LoadProfile(const char* filename)
 		}
 		else if(data_size < PROFILE_SIZE)
 		{
-			TraceLog(LOG_INFO, "RL_REALLOC: load profile");
-			Profile* profile_save = (Profile*)RL_REALLOC(file_data, PROFILE_SIZE);
+			TraceLog(LOG_INFO, "REALLOC: load profile");
+			Profile* profile_save = (Profile*)_realloc(file_data, PROFILE_SIZE);
 			FillProfile(profile_save, data_size);
 			profile = *profile_save;
 
@@ -169,8 +169,8 @@ bool SaveProfile(Profile* profile, const char* filename)
 		if(data_size != PROFILE_SIZE)
 		{
 			save_data_size = PROFILE_SIZE;
-			TraceLog(LOG_INFO, "RL_REALLOC: save profile");
-			save_file_data = (unsigned char*)RL_REALLOC(file_data, save_data_size);
+			TraceLog(LOG_INFO, "REALLOC: save profile");
+			save_file_data = (unsigned char*)_realloc(file_data, save_data_size);
 
 			if(save_file_data != (void*)0)
 			{
@@ -195,14 +195,14 @@ bool SaveProfile(Profile* profile, const char* filename)
 		}
 
 		success = SaveFileData(filename, file_data, data_size);
-		TraceLog(LOG_INFO, "RL_FREE: profile save data");
-		RL_FREE(save_file_data);
+		TraceLog(LOG_INFO, "FREE: profile save data");
+		_free(save_file_data);
 	}
 	else
 	{
 		data_size = PROFILE_SIZE;
-		TraceLog(LOG_INFO, "RL_MALLOC: profile save data");
-		file_data = (unsigned char*)RL_MALLOC(data_size);
+		TraceLog(LOG_INFO, "MALLOC: profile save data");
+		file_data = (unsigned char*)_malloc(data_size);
 		Profile* savefile = (Profile*)file_data;
 	
 		*savefile = *profile;
@@ -259,16 +259,16 @@ void DrawProfileSelector(FilePathList fpl, int current)
 		}
 		unsigned char* filepath = fpl.paths[item];
 		unsigned int pos = TextFindLastChar(filepath, '/'), len = TextLength(filepath);
-		//TraceLog(LOG_INFO, "RL_MALLOC: draw profile selector");
-		unsigned char* file = (unsigned char*)RL_MALLOC(len - pos);
+		//TraceLog(LOG_INFO, "MALLOC: draw profile selector");
+		unsigned char* file = (unsigned char*)_malloc(len - pos);
 		for(int j = 0; j < len - pos - 1; j++)
 		{
 			file[j] = filepath[j + pos + 1];
 		}
 		file[len - pos - 1] = '\0';
 		DrawText(TextFormat("%s", file), POSITION.x + 32, POSITION.y + 32 + 32 * i, 32, color);
-		//TraceLog(LOG_INFO, "RL_FREE: draw profile selector");
-		RL_FREE(file);
+		//TraceLog(LOG_INFO, "FREE: draw profile selector");
+		_free(file);
 	}
 }
 

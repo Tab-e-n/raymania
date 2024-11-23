@@ -390,10 +390,10 @@ void DrawRacecarWalls(Racecar* car, bool ghost)
 
 	if(ghost)
 	{
-		DrawWallDebug(front, GRAY);
-		DrawWallDebug(back, GRAY);
-		DrawWallDebug(left, GRAY);
-		DrawWallDebug(right, GRAY);
+		DrawWallDebug(front, BLACK);
+		DrawWallDebug(back, BLACK);
+		DrawWallDebug(left, BLACK);
+		DrawWallDebug(right, BLACK);
 	}
 	else
 	{
