@@ -1,4 +1,4 @@
-output="raymania.out"
+output="raymania.exe"
 
 files=""
 files=$files" main.c"
@@ -10,4 +10,4 @@ files=$files" track.c"
 files=$files" profiles.c"
 files=$files" demos.c"
 
-gcc -o $output $files -lraylib
+gcc -o $output $files -lraylib -lgdi32 -lwinmm

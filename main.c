@@ -48,7 +48,7 @@ int main(void)
 	//TraceLog(LOG_INFO, "Size of Track %i.", sizeof(Track));
 	//TraceLog(LOG_INFO, "Size of Blocks in Track %i.", sizeof(Block) * MAX_BLOCK_AMOUNT);
 	//TraceLog(LOG_INFO, "Size of %i.", sizeof(DefaultCar));
-	
+
 	SetTargetFPS(60);
 	HideCursor();
 	SetExitKey(KEY_NULL);
@@ -59,7 +59,26 @@ int main(void)
 		TabinLogo();
 	}
 
-	if(!DirectoryExists(DEMO_DIRECTORY))
+#ifdef _IO_H_
+    if(!DirectoryExists(DEMO_DIRECTORY))
+	{
+		mkdir(DEMO_DIRECTORY);
+	}
+	if(!DirectoryExists(TRACK_DIRECTORY))
+	{
+		mkdir(TRACK_DIRECTORY);
+	}
+	if(!DirectoryExists(TextFormat("%s/%s", DEMO_DIRECTORY, TRACK_DIRECTORY)))
+	{
+		mkdir(TextFormat("%s/%s", DEMO_DIRECTORY, TRACK_DIRECTORY));
+	}
+	if(!DirectoryExists(PROFILE_DIRECTORY))
+	{
+		mkdir(PROFILE_DIRECTORY);
+
+	}
+#else
+    if(!DirectoryExists(DEMO_DIRECTORY))
 	{
 		mkdir(DEMO_DIRECTORY, 0b111111111);
 	}
@@ -75,6 +94,7 @@ int main(void)
 	{
 		mkdir(PROFILE_DIRECTORY, 0b111111111);
 	}
+#endif
 
 	// GENERIC VAR
 
@@ -117,12 +137,12 @@ int main(void)
 	PopupType popup = POPUP_OFF;
 	bool popup_confirmed = false;
 	int popup_opt = 0;
-	
+
 	unsigned char inputing_name = 0;
 	unsigned int name_lenght = 0;
 
 	// PROFILE VAR
-	
+
 	Profile profile = DefaultProfile();
 
 	bool load_profiles = true;
@@ -141,11 +161,11 @@ int main(void)
 	Vector2 vel_sign = Vector2Zero();
 
 	// RACE VAR
-	
+
 	bool reset_race = false;
 
 	CarStats car_stats = DefaultStats(track.car);
-	
+
 	Racecar car = InitRacecar(&car_stats);
 	car.position = Vector2Zero();
 	car.rotation = UP_VECTOR;
@@ -176,9 +196,9 @@ int main(void)
 	unsigned char playing_demo = DEMO_OFF;
 
 	// EDITOR VAR
-	
+
 	bool reset_editor = false;
-	
+
 	PieceInfo cursor_info = (PieceInfo){0};
 	cursor_info.placement = (Vector2int){15, 15};
 	//TraceLog(LOG_INFO, "%f", CheckPosition(cursor_info.placement).x);
@@ -194,10 +214,10 @@ int main(void)
 	bool validating_track = false;
 	bool saving_track = false;
 	unsigned char editor_four_option_selector = 0, efos_opt = 0;
-	
+
 
 	// TRACKS SELECTOR
-	
+
 	TraceLog(LOG_INFO, "MALLOC: track_dir");
 	unsigned char* track_dir = (unsigned char*)_malloc(TextLength(TRACK_DIRECTORY));
 	TextCopy(track_dir, TRACK_DIRECTORY);
@@ -207,7 +227,7 @@ int main(void)
 	bool skip_validate_check = false;
 
 	// TRACK
-	
+
 	unsigned char track_name[TRACK_NAME_LENGHT] = {0};
        	track_name[0] = 'M';
 	track_name[1] = 'E';
@@ -229,7 +249,7 @@ int main(void)
 		game_time = GetTime();
 
 		RMInput menu_input = (RMInput){0};
-	
+
 		if(playing_demo == DEMO_PLAY && !paused)
 		{
 			CheckKeyboardInput(&input);
@@ -667,7 +687,7 @@ int main(void)
 				{
 					piece_catalogue_item -= 9;
 				}
-				
+
 				if(InputPressed(input, INPUT_ENTER))
 				{
 					switch(piece_catalogue_item)
@@ -741,7 +761,7 @@ int main(void)
 			check_pos = track.start_pos;
 			check_rot = track.start_rot;
 
-			timer = 0.0;	
+			timer = 0.0;
 			start_time = game_time;
 
 			start_countdown = true;
@@ -903,14 +923,14 @@ int main(void)
 			meta.checkpoint = false;
 			meta.finish = false;
 			meta = ProcessRacecar(&car, &car_stats, blocks, block_walls, input, track.env);
-			
+
 			float speed_change = absf(previous_speed - Vector2Length(car.velocity));
 
 			if(GetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE) && speed_change > car_stats.camera_shake_threshold)
 			{
 				shake_time += (speed_change - car_stats.camera_shake_threshold) * car_stats.speed_to_shake_ratio;
 			}
-			
+
 			if(meta.checkpoint && checkpoints_gotten != track.checkpoint_amount)
 			{
 				bool new_check = true;
@@ -1120,7 +1140,7 @@ int main(void)
 			}
 			else
 			{
-				file_list_exit = true; 
+				file_list_exit = true;
 			}
 		}
 
@@ -1213,7 +1233,7 @@ int main(void)
 		}
 		else if(InputPressed(input, INPUT_ESC))
 		{
-			file_list_exit = true; 
+			file_list_exit = true;
 		}
 		if(file_list_exit)
 		{
@@ -1353,7 +1373,7 @@ int main(void)
 		// Gamespace
 
 		BeginMode2D(camera.data);
-		
+
 		for(int i = 0; i <= BLOCK_SIZE * TRACK_GRID_SIZE; i += BLOCK_SIZE)
 		{
 			DrawLine(i, 0, i, BLOCK_SIZE * TRACK_GRID_SIZE, GRAY);
