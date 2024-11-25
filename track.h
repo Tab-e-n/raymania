@@ -25,6 +25,9 @@
 //#define UNDO_LIST_LENGHT 10*BLOCKS_PER_PIECE 
 
 #define MAX_CHECKPOINTS 9
+#define MEDAL_BRONZ_MULT 1.6
+#define MEDAL_SILVER_MULT 1.3
+#define MEDAL_GOLD_MULT 1.15
 
 typedef enum PieceCataloguePage {PAGE_DEFAULT} PieceCataloguePage; 
 

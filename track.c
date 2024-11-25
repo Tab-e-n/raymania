@@ -423,6 +423,18 @@ void LoadTrackDirectory(FilePathList* fpl, unsigned char* track_dir)
 
 void CalculateMedalTimes(Track* track)
 {
+	if(track->medal_gold < track->medal_author)
+	{
+		track->medal_gold = track->medal_author * MEDAL_GOLD_MULT;
+	}
+	if(track->medal_silver < track->medal_gold)
+	{
+		track->medal_silver = track->medal_author * MEDAL_SILVER_MULT;
+	}
+	if(track->medal_bronz < track->medal_silver)
+	{
+		track->medal_bronz = track->medal_author * MEDAL_BRONZ_MULT;
+	}
 }
 
 void MoveEditorCursor(PieceInfo* info, int x, int y)
