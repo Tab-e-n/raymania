@@ -29,25 +29,8 @@ int main(void)
 {
 	InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "RAYMANIA");
 
-	/*
-	struct Testing1 {int a;} Testing1;
-	struct Testing2 {int a; int* b;} Testing2;
-	struct Testing3 {int* b;} Testing3;
-	struct Testing4 {char* b;} Testing4;
-	struct Testing5 {int a, b, c;} Testing5;
-	struct Testing6 {char a; int* b;} Testing6;
-	TraceLog(LOG_INFO, "Size of test1 %i", sizeof(Testing1));
-	TraceLog(LOG_INFO, "Size of test2 %i", sizeof(Testing2));
-	TraceLog(LOG_INFO, "Size of test3 %i", sizeof(Testing3));
-	TraceLog(LOG_INFO, "Size of test4 %i", sizeof(Testing4));
-	TraceLog(LOG_INFO, "Size of test5 %i", sizeof(Testing5));
-	TraceLog(LOG_INFO, "Size of test6 %i", sizeof(Testing6));
-	*/
-
-	//TraceLog(LOG_INFO, "Size of Track %i", DEMO_SIZE);
 	//TraceLog(LOG_INFO, "Size of Track %i.", sizeof(Track));
 	//TraceLog(LOG_INFO, "Size of Blocks in Track %i.", sizeof(Block) * MAX_BLOCK_AMOUNT);
-	//TraceLog(LOG_INFO, "Size of %i.", sizeof(DefaultCar));
 
 	SetTargetFPS(60);
 	HideCursor();
@@ -201,7 +184,6 @@ int main(void)
 
 	PieceInfo cursor_info = (PieceInfo){0};
 	cursor_info.placement = (Vector2int){15, 15};
-	//TraceLog(LOG_INFO, "%f", CheckPosition(cursor_info.placement).x);
 
 	bool placing_pieces = true;
 
@@ -233,13 +215,10 @@ int main(void)
 	track_name[1] = 'E';
 	track_name[2] = 'N';
 	track_name[3] = 'U';
-	//TraceLog(LOG_INFO, "[%s]", TrackFileName(track_dir, track_name));
-	//PrintProfile(&profile);
 
 	track = LoadTrack(TrackFileName(track_dir, track_name));
 	MakeTrackBlocks(&track, blocks);
 
-	//PrintProfile(&profile);
 
 	// GAME LOOP
 
@@ -254,17 +233,13 @@ int main(void)
 		{
 			CheckKeyboardInput(&input);
 			unsigned char d_input = GetDemoInput(demo);
-			//TraceLog(LOG_INFO, "%i %i", input.current, d_input);
 			input.current = (d_input & 0b00101111) | (input.current & 0b11010000);
-			//TraceLog(LOG_INFO, "%i", input.current);
 		}
 		else
 		{
 			CheckKeyboardInput(&input);
 		}
 		CheckMenuInput(&menu_input, input, &input_block);
-
-		//TraceLog(LOG_INFO, "%i %i, %f", input.current, menu_input.current, input_block);
 
 	if(popup)
 	{
@@ -1037,7 +1012,7 @@ int main(void)
 				}
 				demo_input.past = demo_input.current;
 				demo_input.current = GetDemoInput(ghost_demo) & 0b00101111;
-				//TraceLog(LOG_INFO, "%i", demo_input.current);
+
 				meta.checkpoint = false;
 				meta.finish = false;
 				meta = ProcessRacecar(&dcar, &car_stats, blocks, dblock_walls, demo_input, track.env);
@@ -1146,7 +1121,6 @@ int main(void)
 
 		if(fpl.count > 0 && (skip_validate_check || InputPressed(input, INPUT_ENTER)))
 		{
-			//TraceLog(LOG_INFO, "Validate Check %i", skip_validate_check);
 			const char* path = (const char*)fpl.paths[selected_file];
 			if(DirectoryExists(path))
 			{
@@ -1167,24 +1141,24 @@ int main(void)
 						current_game_screen = RACE;
 						reset_race = true;
 
-						unsigned char** pdtn;
-						Demo** pdemo = &ghost_demo;
-						if(LoadDemo(pdemo, pdtn, DemoFilename(DEMO_DIRECTORY, TrackFileName(track_dir,track_name), profile.name)))
+						bool result;
+						DemoSave* demosave = LoadDemo(&result, DemoFilename(DEMO_DIRECTORY, TrackFileName(track_dir,track_name), profile.name));
+						if(result)
 						{
-							TraceLog(LOG_INFO, "pdtn");
-							unsigned char* demo_track_name = *pdtn;
-							TraceLog(LOG_INFO, "pdemo convert");
-							ghost_demo = *pdemo;
-							TraceLog(LOG_INFO, "StartDemo");
+							ghost_demo = demosave->demo;
 							StartDemo(ghost_demo);
 							playing_demo = DEMO_GHOST_INIT;
-							_free(demo_track_name);
+							TraceLog(LOG_INFO, "FREE: trackname");
+							_free(demosave->track_name);
+							TraceLog(LOG_INFO, "FREE: demosave");
+							_free(demosave);
 						}
 						else
 						{
+							TraceLog(LOG_INFO, "FREE: demosave");
+							_free(demosave);
 							playing_demo = DEMO_OFF;
 						}
-						TraceLog(LOG_INFO, "FREE: demo_track_name");
 					}
 					else
 					{
@@ -1201,33 +1175,34 @@ int main(void)
 			}
 			else if(file_list_active == FL_DEMO)
 			{
-				unsigned char** pdtn;
+				unsigned char** pdtn = (unsigned char**){0};
 				//CopyNameToDemo(demo, profile.name);
 				Demo** pdemo = &demo;
-				TraceLog(LOG_INFO, "Currently in demo tab");
-				if(LoadDemo(pdemo, pdtn, path))
+				bool result;
+				DemoSave* demosave = LoadDemo(&result, path);
+				if(result)
 				{
-					TraceLog(LOG_INFO, "pdtn");
-					unsigned char* demo_track_name = *pdtn;
-					TraceLog(LOG_INFO, "pdemo convert");
-					demo = *pdemo;
-					TraceLog(LOG_INFO, "StartDemo");
+					demo = demosave->demo;
 					StartDemo(demo);
 					playing_demo = DEMO_INIT;
 
-					TraceLog(LOG_INFO, "LoadTrack");
-					track = LoadTrack((const char*)demo_track_name);
-					TraceLog(LOG_INFO, "TrackName");
-					TrackNameFromFilename((const char*)demo_track_name, track_name);
-					TraceLog(LOG_INFO, "MakeBlocks");
+					track = LoadTrack((const char*)demosave->track_name);
+					TrackNameFromFilename((const char*)demosave->track_name, track_name);
 					MakeTrackBlocks(&track, blocks);
 
 					file_list_active = FL_OFF;
 					current_game_screen = RACE;
 					reset_race = true;
-					_free(demo_track_name);
+					TraceLog(LOG_INFO, "FREE: demosave track_name");
+					_free(demosave->track_name);
+					TraceLog(LOG_INFO, "FREE: demosave");
+					_free(demosave);
 				}
-				TraceLog(LOG_INFO, "FREE: demo_track_name");
+				else
+				{
+					TraceLog(LOG_INFO, "FREE: demosave");
+					_free(demosave);
+				}
 			}
 			skip_validate_check = false;
 		}
@@ -1667,10 +1642,6 @@ int main(void)
 				}
 				/*
 				TraceLog(LOG_INFO, "Text size %i.", MeasureText("Resume", 32) / 2);
-				TraceLog(LOG_INFO, "Text size %i.", MeasureText("Reset To Check", 32) / 2);
-				TraceLog(LOG_INFO, "Text size %i.", MeasureText("Restart Race", 32) / 2);
-				TraceLog(LOG_INFO, "Text size %i.", MeasureText("Exit", 32) / 2);
-				//  ++|+\\\| |<++/\\\
 				*/
 			} break;
 		}

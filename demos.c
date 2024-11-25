@@ -9,8 +9,8 @@ Demo* InitDemo(void)
 	if(DEMO_DEBUG)
 	{
 		TraceLog(LOG_INFO, "DEMO: Initializing new demo");
-		TraceLog(LOG_INFO, "MALLOC: new demo");
 	}
+	TraceLog(LOG_INFO, "MALLOC: new demo");
 	Demo* demo;
 	demo = (Demo*)_malloc(sizeof(Demo) + DEMO_INPUT_ALLOC_SIZE);
 	*demo = (Demo){0};
@@ -38,6 +38,7 @@ void ClearDemo(Demo* demo)
 Demo* CopyDemo(Demo* demo)
 {
 	if(DEMO_DEBUG) TraceLog(LOG_INFO, "DEMO: Copying demo file %i", demo);
+	TraceLog(LOG_INFO, "MALLOC: copy demo");
 	Demo* copy = (Demo*)_malloc(sizeof(Demo) + demo->input_amount * DEMO_INPUT_ALLOC_SIZE);
 	*copy = *demo;
 	for(int i = 0; i < demo->input_amount * DEMO_INPUT_ALLOC_SIZE; i++)
@@ -105,12 +106,10 @@ unsigned char GetDemoInput(Demo* demo)
 {
 	if(demo->input_amount * DEMO_INPUT_ALLOC_SIZE <= demo->input_current)
 	{
-		//TraceLog(LOG_INFO, "END OF DEMO");
 		return 0;
 	}
 	unsigned char input = demo->inputs[demo->input_current];
 	demo->input_current++;
-	//TraceLog(LOG_INFO, "%c", input);
 	return input;
 }
 
@@ -124,7 +123,6 @@ void CopyNameToDemo(Demo* demo, unsigned char name[PROFILE_NAME_LENGHT])
 
 const char* DemoFilename(unsigned char* demo_dir, const char* track_filepath, unsigned char prof_name[PROFILE_NAME_LENGHT])
 {
-	TraceLog(LOG_INFO, "%s || %s || %s", demo_dir, track_filepath, prof_name);
 	unsigned int dir_len = TextLength(demo_dir),
 		     track_len = TextLength(track_filepath) - 4,
 		     prof_len = PROFILE_NAME_LENGHT,
@@ -154,7 +152,7 @@ const char* DemoFilename(unsigned char* demo_dir, const char* track_filepath, un
 	}
 	path_len = dir_len + track_len + prof_len + 6;
 
-	if(DEMO_DEBUG) TraceLog(LOG_INFO, "MALLOC: demo_filename %i", path_len);
+	TraceLog(LOG_INFO, "MALLOC: demo_filename %i", path_len);
 	unsigned char* filepath = (unsigned char*)_malloc(path_len);
 	for(int i = 0; i < dir_len; i++)
 	{
@@ -182,7 +180,7 @@ const char* DemoFilename(unsigned char* demo_dir, const char* track_filepath, un
 
 int SizeOfDemoSave(Demo* demo)
 {
-	int size = sizeof(DemoSave);
+	int size = sizeof(Demo) + DEMO_CHECKSUM_SIZE;
 	size += DEMO_INPUT_ALLOC_SIZE * demo->input_amount;
 	return size;
 }
@@ -214,86 +212,70 @@ bool ChecksumsMatch(unsigned char checksum_1[DEMO_CHECKSUM_SIZE], unsigned char 
 	return true;
 }
 
-bool LoadDemo(Demo** pdemo, unsigned char** ptn, const char* filename)
+DemoSave* LoadDemo(bool* result, const char* filename)
 {
-	Demo* demo = *pdemo;
-	ClearDemo(demo);
 	if(DEMO_DEBUG) TraceLog(LOG_INFO, "DEMO: Loading demo");
 	int data_size;
 	unsigned char* file_data = LoadFileData(filename, &data_size);
+	TraceLog(LOG_INFO, "MALLOC: demosave");
+	DemoSave* demosave = (DemoSave*)_malloc(sizeof(DemoSave));
 
 	if(file_data == PNULL)
 	{
-		demo = InitDemo();
 		if(DEMO_DEBUG)
 		{
 			TraceLog(LOG_INFO, "DEMO: Demo could not be loaded. %s", filename);
 			TraceLog(LOG_INFO, " -- -- -- -- -- -- -- -- ");
 		}
-		*pdemo = demo;
-		return false;
+		*result = false;
+		return demosave;
 	}
 	unsigned int track_name_len = 1;
 	while(file_data[track_name_len] != 0 && track_name_len < data_size - sizeof(DemoSave))
 	{
 		track_name_len++;
 	}
-	/*
-	if((data_size - sizeof(DemoSave) - track_name_len - 1) % DEMO_INPUT_ALLOC_SIZE != 0)
+	TraceLog(LOG_INFO, "MALLOC: load demo track_name %i", track_name_len);
+	demosave->track_name = (unsigned char*)_malloc(track_name_len);
+	for(int i = 0; i < track_name_len; i++)
 	{
-		demo = InitDemo();
-		if(DEMO_DEBUG)
-		{
-			TraceLog(LOG_INFO, "DEMO: Not a demo file. %s", filename);
-			TraceLog(LOG_INFO, "data %i, DemoSave %i, track_name %i, mod %i", data_size, sizeof(DemoSave), track_name_len, (data_size - sizeof(DemoSave) - track_name_len - 1) % DEMO_INPUT_ALLOC_SIZE);
-			TraceLog(LOG_INFO, " -- -- -- -- -- -- -- -- ");
-		}
-	}
-	else
-	*/
-	{
-		TraceLog(LOG_INFO, "MALLOC: load demo track_name %i", track_name_len);
-		unsigned char* track_name = (unsigned char*)_malloc(track_name_len);
-		TraceLog(LOG_INFO, "transfering file_data to track_name");
-		for(int i = 0; i < track_name_len; i++)
-		{
-			track_name[i] = (unsigned char)file_data[i];
-		}
-		TraceLog(LOG_INFO, "track_name: %s", track_name);
-		ptn = &track_name;
-		TraceLog(LOG_INFO, "casting file_data to DemoSave*");
-		DemoSave* savefile = (DemoSave*)(file_data + track_name_len);
-		unsigned char checksum[DEMO_CHECKSUM_SIZE];
-		TraceLog(LOG_INFO, "getting checksum");
-		ChecksumDemo(&savefile->demo, checksum);
-		TraceLog(LOG_INFO, "checksums match");
-		if(!ChecksumsMatch(checksum, savefile->checksum))
-		{
-			// Checksum Failed, file is inaccurate
-			TraceLog(LOG_WARNING, "FILEIO: [%s] Demo file is corrupted, checksums do not match.", filename);
-		}
-		TraceLog(LOG_INFO, "MALLOC: load demo");
-		demo = (Demo*)_malloc(sizeof(Demo) + savefile->demo.input_amount * DEMO_INPUT_ALLOC_SIZE);
-		*demo = savefile->demo;
-		for(int i = 0; i < demo->input_amount * DEMO_INPUT_ALLOC_SIZE; i++)
-		{
-			demo->inputs[i] = savefile->demo.inputs[i];
-		}
-
-		TraceLog(LOG_INFO, "FILEIO: [%s] Demo loaded successfully.", filename);
-
-		UnloadFileData(file_data);
-
-		if(DEMO_DEBUG)
-		{
-			TraceLog(LOG_INFO, "DEMO: Loaded demo at %i", demo);
-			TraceLog(LOG_INFO, " -- -- -- -- -- -- -- -- ");
-		}
+		demosave->track_name[i] = (unsigned char)file_data[i];
 	}
 
-	*pdemo = demo;
+	for(int i = 0; i < DEMO_CHECKSUM_SIZE; i++)
+	{
+		demosave->checksum[i] = file_data[track_name_len + i];
+	}
+	Demo* save_demo = (Demo*)(file_data + track_name_len + DEMO_CHECKSUM_SIZE);
+	unsigned char checksum[DEMO_CHECKSUM_SIZE];
+	ChecksumDemo(save_demo, checksum);
+	if(!ChecksumsMatch(checksum, demosave->checksum))
+	{
+		// Checksum Failed, file is inaccurate
+		TraceLog(LOG_WARNING, "FILEIO: [%s] Demo file is corrupted, checksums do not match.", filename);
+	}
 
-	return true;
+	TraceLog(LOG_INFO, "MALLOC: load demo");
+	demosave->demo = (Demo*)_malloc(sizeof(Demo) + save_demo->input_amount * DEMO_INPUT_ALLOC_SIZE);
+	*demosave->demo = *save_demo;
+	for(int i = 0; i < save_demo->input_amount * DEMO_INPUT_ALLOC_SIZE; i++)
+	{
+		demosave->demo->inputs[i] = save_demo->inputs[i];
+	}
+
+	TraceLog(LOG_INFO, "FILEIO: [%s] Demo loaded successfully.", filename);
+
+	UnloadFileData(file_data);
+
+	if(DEMO_DEBUG)
+	{
+		TraceLog(LOG_INFO, "DEMO: Loaded demo at %i", demosave->demo);
+		TraceLog(LOG_INFO, " -- -- -- -- -- -- -- -- ");
+	}
+
+	*result = true;
+
+	return demosave;
 }
 
 bool SaveDemoTime(Demo* demo, unsigned char* track_name)
@@ -328,13 +310,20 @@ bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename)
 					save_file_data[i] = (unsigned char)track_name[i];
 				}
 				save_file_data[trname - 1] = 0; 
-				DemoSave* savefile = (DemoSave*)(save_file_data + trname);
-				savefile->demo = *demo;
+				
+				unsigned char checksum[DEMO_CHECKSUM_SIZE];
+				ChecksumDemo(demo, checksum);
+				for(int i = 0; i < DEMO_CHECKSUM_SIZE; i++)
+				{
+					save_file_data[trname + i] = checksum[i];
+				}
+
+				Demo* savefile = (Demo*)(save_file_data + trname + DEMO_CHECKSUM_SIZE);
+				*savefile = *demo;
 				for(int i = 0; i < demo->input_amount * DEMO_INPUT_ALLOC_SIZE; i++)
 				{
-					savefile->demo.inputs[i] = demo->inputs[i];
+					savefile->inputs[i] = demo->inputs[i];
 				}
-				ChecksumDemo(demo, savefile->checksum);
 			}
 			else
 			{
@@ -354,13 +343,20 @@ bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename)
 				save_file_data[i] = (unsigned char)track_name[i];
 			}
 			save_file_data[trname - 1] = 0; 
-			DemoSave* savefile = (DemoSave*)(save_file_data + trname);
-			savefile->demo = *demo;
+			
+			unsigned char checksum[DEMO_CHECKSUM_SIZE];
+			ChecksumDemo(demo, checksum);
+			for(int i = 0; i < DEMO_CHECKSUM_SIZE; i++)
+			{
+				save_file_data[trname + i] = checksum[i];
+			}
+
+			Demo* savefile = (Demo*)(save_file_data + trname + DEMO_CHECKSUM_SIZE);
+			*savefile = *demo;
 			for(int i = 0; i < demo->input_amount * DEMO_INPUT_ALLOC_SIZE; i++)
 			{
-				savefile->demo.inputs[i] = demo->inputs[i];
+				savefile->inputs[i] = demo->inputs[i];
 			}
-			ChecksumDemo(demo, savefile->checksum);
 		}
 
 		success = SaveFileData(filename, save_file_data, save_data_size);
@@ -368,21 +364,29 @@ bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename)
 	}
 	else
 	{
-		data_size = SizeOfDemoSave(demo);
-		if(DEMO_DEBUG) TraceLog(LOG_INFO, "MALLOC: new demo save");
-		file_data = (unsigned char*)_malloc(data_size + trname);
+		data_size = SizeOfDemoSave(demo) + trname;
+		TraceLog(LOG_INFO, "MALLOC: new demo save");
+		file_data = (unsigned char*)_malloc(data_size);
+
 		for(int i = 0; i < trname - 1; i++)
 		{
 			file_data[i] = (unsigned char)track_name[i];
 		}
-		save_file_data[trname - 1] = 0; 
-		DemoSave* savefile = (DemoSave*)(file_data + trname);
-		savefile->demo = *demo;
+		file_data[trname - 1] = 0; 
+			
+		unsigned char checksum[DEMO_CHECKSUM_SIZE];
+		ChecksumDemo(demo, checksum);
+		for(int i = 0; i < DEMO_CHECKSUM_SIZE; i++)
+		{
+			file_data[trname + i] = checksum[i];
+		}
+
+		Demo* savefile = (Demo*)(file_data + trname + DEMO_CHECKSUM_SIZE);
+		*savefile = *demo;
 		for(int i = 0; i < demo->input_amount * DEMO_INPUT_ALLOC_SIZE; i++)
 		{
-			savefile->demo.inputs[i] = demo->inputs[i];
+			savefile->inputs[i] = demo->inputs[i];
 		}
-		ChecksumDemo(demo, savefile->checksum);
 
 		success = SaveFileData(filename, file_data, data_size);
 		UnloadFileData(file_data);

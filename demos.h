@@ -6,7 +6,7 @@
 #include "track.h"
 #include "profiles.h"
 
-#define DEMO_DEBUG true
+#define DEMO_DEBUG false
 
 #define DEMO_INPUT_ALLOC_SIZE 512
 #define DEMO_CHECKSUM_SIZE 32
@@ -25,8 +25,9 @@ typedef struct Demo {
 } Demo;
 
 typedef struct DemoSave {
+	unsigned char* track_name;
 	unsigned char checksum[DEMO_CHECKSUM_SIZE];
-	Demo demo;
+	Demo* demo;
 } DemoSave;
 
 Demo* InitDemo(void);
@@ -46,7 +47,7 @@ int SizeOfDemoSave(Demo* demo);
 void ChecksumDemo(Demo* demo, unsigned char checksum[DEMO_CHECKSUM_SIZE]);
 bool ChecksumsMatch(unsigned char checksum_1[DEMO_CHECKSUM_SIZE], unsigned char checksum_2[DEMO_CHECKSUM_SIZE]);
 
-bool LoadDemo(Demo** demo, unsigned char** ptn, const char* filename);
+DemoSave* LoadDemo(bool* result, const char* filename);
 bool SaveDemoTime(Demo* demo, unsigned char* track_name);
 bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename);
 
