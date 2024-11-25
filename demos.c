@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <time.h>
 #include "rmlib.h"
 #include "track.h"
 #include "profiles.h"
@@ -280,9 +281,7 @@ DemoSave* LoadDemo(bool* result, const char* filename)
 
 bool SaveDemoTime(Demo* demo, unsigned char* track_name)
 {
-	// TODO
-	
-	return SaveDemo(demo, track_name, "Demos/temp.dm\0");
+	return SaveDemo(demo, track_name, TextFormat("Demos/%s_%i.dm\0", track_name, time(0)));
 }
 
 bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename)
