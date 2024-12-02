@@ -209,6 +209,10 @@ void ClearTrack(Track* track)
 	track->env = ENV_STADIUM;
 	Vector2int pos = (Vector2int){0};
 	SetStart(track, pos, ROT_NORTH);
+	for(int i = 0; i < MAX_PIECES; i++)
+	{
+		track->pieces[i].id = 0;
+	}
 }
 
 void MakeTrackBlocks(Track* track, Block blocks[MAX_BLOCK_AMOUNT])

@@ -1,4 +1,5 @@
 COMPLETE
+Raylib Logo Startup
 
 FUNCTIONAL
 Racecar Movement
@@ -18,20 +19,20 @@ Editor
 Track Selection
 Other Enviroments
 Validating Tracks
-Raylib Logo Startup
 Pause Menu
 Inputs as one short int, binary calc in rmlib (To save it easier in replays)
 Fadeout Fadein 
 Profiles
 Input Replays
-
-IN PROGRESS
 Editor Buttons
 Medals
+
+IN PROGRESS
 Party Mode like OG Trackmania
 Options
 
 NOT DONE
+Arrow that points to the start in editor. (Could even be used for cps? maybe)
 Removing Tracks, Profiles and Replays
 Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
 Other Racecars

@@ -961,13 +961,22 @@ int main(void)
 				finished = true;
 				if(validating_track && track.has_start)
 				{
-					track.validated = true;
-					track.medal_author = timer;
+					if(!track.validated)
+					{
+						TraceLog(LOG_INFO, "TRACK VALIDATED.");
+						track.validated = true;
+						track.medal_author = timer;
+					}
+					else if(timer < track.medal_author)
+					{
+						TraceLog(LOG_INFO, "NEW AUTHOR TIME!");
+						track.medal_author = timer;
+					}
 					CalculateMedalTimes(&track);
 				}
 				if(ghost_demo != PNULL)
 				{
-					TraceLog(LOG_INFO, "Times: player %g, ghost %g", timer, ghost_demo->time);
+					TraceLog(LOG_INFO, "Times: player %.3f, ghost %.3f", timer, ghost_demo->time);
 				}
 				demo->time = timer;
 				bool save_new = false;
@@ -1734,6 +1743,25 @@ int main(void)
 				}
 				if(finished)
 				{
+					if(validating_track)
+					{
+					}
+					else if(timer < track.medal_author)
+					{
+						DrawText("AUTHOR MEDAL!!!", 192, 88, 96, BLACK);
+					}
+					else if(timer < track.medal_gold)
+					{
+						DrawText("GOLD MEDAL!!", 256, 88, 96, BLACK);
+					}
+					else if(timer < track.medal_silver)
+					{
+						DrawText("Silver medal!", 256, 88, 96, BLACK);
+					}
+					else if(timer < track.medal_bronz)
+					{
+						DrawText("Bronz medal.", 256, 88, 96, BLACK);
+					}
 					DrawText(TextFormat("%.3f", timer), 384, 192, 96, BLACK);
 				}
 				else
@@ -1782,15 +1810,12 @@ int main(void)
 						pos_y += 64;
 					}
 				}
-				/*
-				TraceLog(LOG_INFO, "Text size %i.", MeasureText("Resume", 32) / 2);
-				*/
+				//TraceLog(LOG_INFO, "Text size %i.", MeasureText("Resume", 32) / 2);
 			} break;
 		}
 
 		if(file_list_active)
 		{
-			//DrawText("SELECTING TRACKS", 256, 0, 64, BLACK);
 			Color bg1 = GREEN, bg2 = LIME;
 			if(current_game_screen == EDITOR)
 			{
@@ -1822,13 +1847,19 @@ int main(void)
 			switch(in_type)
 			{
 				case(1):
-					DrawText("Enter Time:", 384, 272, 32, BLACK);
+					float compare_timer = 0.0;
+					if(efos_opt == 0) compare_timer = track.medal_silver;
+					if(efos_opt == 1) compare_timer = track.medal_gold;
+					if(efos_opt == 2) compare_timer = track.medal_author;
+					DrawText("Enter Time:", 384, 264, 32, BLACK);
+					DrawText(TextFormat("Medal above %.3f", compare_timer), 104, 300, 32, BLACK);
+					DrawText(TextFormat("%.3f", (float)in_num * 0.001), 104, 336, 32, BLACK);
 					break;
 				case(2):
 					DrawText("Enter Page Number:", 352, 272, 32, BLACK);
+					DrawText(TextFormat("%i", in_num), 104, 336, 32, BLACK);
 					break;
 			}
-			DrawText(TextFormat("%i", (float)in_num * 0.001), 104, 336, 32, BLACK);
 		}
 
 		if(popup)
@@ -1863,20 +1894,8 @@ int main(void)
 			DrawFade(&camera, RAYWHITE);
 		}
 
-		//for(int i = 0; i < 200; i += 1)
-		//{
-		//	float v = AirQuotesNoise((float)i * 0.1, false);
-		//	Color color = (Color){v * 255, v * 255, v * 255, 255};
-		//	DrawLine(i, 0, i, 32, color);
-		//	v = AirQuotesNoise((float)i * 0.1, true);
-		//	color = (Color){v * 255, v * 255, v * 255, 255};
-		//	DrawLine(i, 32, i, 64, color);
-		//}
-
 	EndDrawing();
 	}
-
-	//SaveTrack(&track, TrackFileName(track_dir, test_name));
 
 	CloseWindow();
 
