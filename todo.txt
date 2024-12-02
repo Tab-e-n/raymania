@@ -23,17 +23,17 @@ Pause Menu
 Inputs as one short int, binary calc in rmlib (To save it easier in replays)
 Fadeout Fadein 
 Profiles
+Input Replays
 
 IN PROGRESS
 Editor Buttons
-Input Replays
+Medals
+Party Mode like OG Trackmania
+Options
 
 NOT DONE
 Removing Tracks, Profiles and Replays
 Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
-Medals
-Options
-Party Mode like OG Trackmania
 Other Racecars
 My Logo On Startup (Whatever That Is)
 Racecar Visuals + Colorswaps

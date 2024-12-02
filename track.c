@@ -437,6 +437,14 @@ void CalculateMedalTimes(Track* track)
 	}
 }
 
+void ResetMedalTimes(Track* track)
+{
+	track->medal_bronz = 0.0;
+       	track->medal_silver = 0.0;
+	track->medal_gold = 0.0;
+       	track->medal_author = 0.0;
+}
+
 void MoveEditorCursor(PieceInfo* info, int x, int y)
 {
 	info->placement.x += x;

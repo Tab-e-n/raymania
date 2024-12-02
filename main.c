@@ -10,10 +10,13 @@
 #include "demos.h"
 
 
+#define VALIDATE_DEMO_FILE "Demos/validation.dm\0"
+
+
 typedef enum GameScreen {PROFILES, MENU, EDITOR, RACE} GameScreen;
 typedef enum MenuOption {MENU_PLAY, MENU_EDITOR, MENU_PARTY, MENU_OPTIONS, MENU_EXIT, MENU_RACE = 10, MENU_DEMO, MENU_PLAY_EXIT} MenuOption;
 typedef enum EditorOption {EDITOR_EXIT = 9, EDITOR_LOAD, EDITOR_SAVE, EDITOR_CLEAR, EDITOR_ENVIROMENT, EDITOR_CAR, EDITOR_PAGE_JUMP, EDITOR_MEDALS, EDITOR_VALIDATE,} EditorOption;
-typedef enum PopupType {POPUP_OFF, POPUP_EDITOR_EXIT, POPUP_EDITOR_CLEAR, POPUP_VALIDATE, POPUP_NO_START} PopupType;
+typedef enum PopupType {POPUP_OFF, POPUP_EDITOR_EXIT, POPUP_EDITOR_CLEAR, POPUP_VALIDATE, POPUP_NO_START, POPUP_RESET_MEDALS} PopupType;
 typedef enum FileListType {FL_OFF, FL_TRACK, FL_DEMO} FileListType;
 typedef enum DemoPlay {DEMO_OFF, DEMO_INIT, DEMO_PLAY, DEMO_GHOST_INIT, DEMO_GHOST_PLAY} DemoPlay;
 
@@ -122,6 +125,9 @@ int main(void)
 	int popup_opt = 0;
 
 	unsigned char inputing_name = 0;
+	unsigned char inputing_number = 0;
+	unsigned char in_type = 0;
+	unsigned int in_num = 0;
 	unsigned int name_lenght = 0;
 
 	// PROFILE VAR
@@ -286,6 +292,10 @@ int main(void)
 				current_game_screen = RACE;
 				reset_race = true;
 				validating_track = true;
+			}
+			if(popup == POPUP_RESET_MEDALS)
+			{
+				ResetMedalTimes(&track);
 			}
 		}
 	}
@@ -485,12 +495,8 @@ int main(void)
 
 		float pcp_dir = 0.0;
 
-		if(popup)
+		if(popup > 0 || inputing_number > 0 || saving_track)
 		{
-		}
-		else if(saving_track)
-		{
-
 		}
 		else if(editor_four_option_selector > 0)
 		{
@@ -517,12 +523,27 @@ int main(void)
 			}
 			else if(InputPressed(input, INPUT_ENTER))
 			{
+				end_efos = true;
 				switch(editor_four_option_selector)
 				{
 					case(1): track.car = efos_opt; break;
 					case(2): track.env = efos_opt; break;
+					case(3):
+						if(efos_opt == 3)
+						{
+							popup = POPUP_RESET_MEDALS;
+						}
+						else
+						{
+							inputing_number = 1;
+							in_type = 1;
+							if(efos_opt == 0) in_num = track.medal_bronz * 1000;
+							if(efos_opt == 1) in_num = track.medal_silver * 1000;
+							if(efos_opt == 2) in_num = track.medal_gold * 1000;
+						}
+						end_efos = false;
+					break;
 				}
-				end_efos = true;
 			}
 			if(end_efos)
 			{
@@ -691,6 +712,14 @@ int main(void)
 							break;
 						case(EDITOR_CAR):
 							editor_four_option_selector = 1;
+							break;
+						case(EDITOR_PAGE_JUMP):
+							inputing_number = 1;
+							in_type = 2;
+							in_num = piece_catalogue_page_num;
+							break;
+						case(EDITOR_MEDALS):
+							editor_four_option_selector = 3;
 							break;
 						case(EDITOR_VALIDATE):
 							if(track.has_start)
@@ -926,49 +955,55 @@ int main(void)
 					check_rot = meta.check_rot;
 				}
 			}
-			if(meta.finish && !finished)
+			if(meta.finish && !finished && checkpoints_gotten == track.checkpoint_amount)
 			{
-				if(checkpoints_gotten == track.checkpoint_amount)
+				stop_inputs = true;
+				finished = true;
+				if(validating_track && track.has_start)
 				{
-					stop_inputs = true;
-					finished = true;
-					if(validating_track && track.has_start)
+					track.validated = true;
+					track.medal_author = timer;
+					CalculateMedalTimes(&track);
+				}
+				if(ghost_demo != PNULL)
+				{
+					TraceLog(LOG_INFO, "Times: player %g, ghost %g", timer, ghost_demo->time);
+				}
+				demo->time = timer;
+				bool save_new = false;
+				if(playing_demo == DEMO_PLAY || playing_demo == DEMO_INIT)
+				{
+					save_new = false;
+				}
+				else if(ghost_demo == PNULL)
+				{
+					save_new = true;
+				}
+				else if(timer < ghost_demo->time || ghost_demo->time == 0.0)
+				{
+					save_new = true;
+				}
+				if(save_new)
+				{
+					TraceLog(LOG_INFO, "NEW BEST TIME!");
+					unsigned char* demo_track_name = (unsigned char*)TrackFileName(track_dir, track_name);
+					const char* filename;
+					if(validating_track)
 					{
-						track.validated = true;
-						track.medal_author = timer;
-						CalculateMedalTimes(&track);
+						filename = VALIDATE_DEMO_FILE;
 					}
-					if(ghost_demo != PNULL)
+					else
 					{
-						TraceLog(LOG_INFO, "Times: player %g, ghost %g", timer, ghost_demo->time);
+						filename = DemoFilename(DEMO_DIRECTORY, (const char*)demo_track_name, profile.name);
 					}
-					demo->time = timer;
-					bool save_new = false;
-					if(playing_demo == DEMO_PLAY || playing_demo == DEMO_INIT)
+					SaveDemo(demo, demo_track_name, filename);
+					ClearDemo(ghost_demo);
+					ghost_demo = CopyDemo(demo);
+					StopDemo(ghost_demo);
+					playing_demo = DEMO_GHOST_PLAY;
+					if(demo_track_name != PNULL)
 					{
-						save_new = false;
-					}
-					else if(ghost_demo == PNULL)
-					{
-						save_new = true;
-					}
-					else if(timer < ghost_demo->time || ghost_demo->time == 0.0)
-					{
-						save_new = true;
-					}
-					if(save_new)
-					{
-						TraceLog(LOG_INFO, "NEW BEST TIME!");
-						unsigned char* demo_track_name = (unsigned char*)TrackFileName(track_dir, track_name);
-						SaveDemo(demo, demo_track_name, DemoFilename(DEMO_DIRECTORY, (const char*)demo_track_name, profile.name));
-						ClearDemo(ghost_demo);
-						ghost_demo = CopyDemo(demo);
-						StopDemo(ghost_demo);
-						playing_demo = DEMO_GHOST_PLAY;
-						if(demo_track_name != PNULL)
-						{
-							_free(demo_track_name);
-						}
+						_free(demo_track_name);
 					}
 				}
 			}
@@ -1141,23 +1176,26 @@ int main(void)
 						current_game_screen = RACE;
 						reset_race = true;
 
-						bool result;
-						DemoSave* demosave = LoadDemo(&result, DemoFilename(DEMO_DIRECTORY, TrackFileName(track_dir,track_name), profile.name));
-						if(result)
+						if(!validating_track)
 						{
-							ghost_demo = demosave->demo;
-							StartDemo(ghost_demo);
-							playing_demo = DEMO_GHOST_INIT;
-							TraceLog(LOG_INFO, "FREE: trackname");
-							_free(demosave->track_name);
-							TraceLog(LOG_INFO, "FREE: demosave");
-							_free(demosave);
-						}
-						else
-						{
-							TraceLog(LOG_INFO, "FREE: demosave");
-							_free(demosave);
-							playing_demo = DEMO_OFF;
+							const char* filename = DemoFilename(DEMO_DIRECTORY, TrackFileName(track_dir,track_name), profile.name);
+							DemoSave* demosave = LoadDemo(filename);
+							if(demosave->result)
+							{
+								ghost_demo = demosave->demo;
+								StartDemo(ghost_demo);
+								playing_demo = DEMO_GHOST_INIT;
+								TraceLog(LOG_INFO, "FREE: trackname");
+								_free(demosave->track_name);
+								TraceLog(LOG_INFO, "FREE: demosave");
+								_free(demosave);
+							}
+							else
+							{
+								TraceLog(LOG_INFO, "FREE: demosave");
+								_free(demosave);
+								playing_demo = DEMO_OFF;
+							}
 						}
 					}
 					else
@@ -1165,22 +1203,19 @@ int main(void)
 						popup = POPUP_VALIDATE;
 					}
 				}
-				else
+				else if(current_game_screen == EDITOR)
 				{
 					track = LoadTrack(path);
 					TrackNameFromFilename(path, track_name);
 					MakeTrackBlocks(&track, blocks);
 					file_list_active = FL_OFF;
+					cursor_info.placement = PositionToPlacement(track.start_pos);
 				}
 			}
 			else if(file_list_active == FL_DEMO)
 			{
-				unsigned char** pdtn = (unsigned char**){0};
-				//CopyNameToDemo(demo, profile.name);
-				Demo** pdemo = &demo;
-				bool result;
-				DemoSave* demosave = LoadDemo(&result, path);
-				if(result)
+				DemoSave* demosave = LoadDemo(path);
+				if(demosave->result)
 				{
 					demo = demosave->demo;
 					StartDemo(demo);
@@ -1310,6 +1345,111 @@ int main(void)
 		{
 			saving_track = false;
 			entering_profile_name = false;
+		}
+	}
+	//TraceLog(LOG_INFO, "%i %i", inputing_number, in_type);
+	if(inputing_number == 1)
+	{
+		inputing_number = 2;
+	}
+	else if(inputing_number > 0)
+	{
+		if(InputPressed(input, INPUT_ESC))
+		{
+			inputing_number = 0;
+		}
+		else if(InputPressed(input, INPUT_ENTER))
+		{
+			inputing_number = 0;
+			if(in_type == 1)
+			{
+				switch(efos_opt)
+				{
+					case(0):
+						track.medal_bronz = (float)in_num * 0.001;
+						break;
+					case(1):
+						track.medal_silver = (float)in_num * 0.001;
+						break;
+					case(2):
+						track.medal_gold = (float)in_num * 0.001;
+						break;
+				}
+				CalculateMedalTimes(&track);
+			}
+			if(in_type == 2)
+			{
+				piece_catalogue_page_num = in_num;
+				if(piece_catalogue_page_num < 0)
+				{
+					piece_catalogue_page_num = 0;
+				}
+				if(piece_catalogue_page_num >= PIECE_CATALOGUE_PAGE_AMOUNT)
+				{
+					piece_catalogue_page_num = PIECE_CATALOGUE_PAGE_AMOUNT - 1;
+				}
+				PiecesInPage(piece_catalogue_page, piece_catalogue_page_num);
+				LoadPieceCataloguePage(piece_catalogue, piece_catalogue_page);
+			}
+		}
+		else if(InputPressed(input, INPUT_BACK))
+		{
+			if(in_num >= 10)
+			{
+				in_num *= 0.1;
+			}
+			else if(in_num == 0)
+			{
+				inputing_number = 0;
+			}
+			else
+			{
+				in_num = 0;
+			}
+		}
+		else
+		{
+			unsigned char c = GetCharPressed();
+			if(c != 0)
+			{
+				in_num *= 10;
+				switch(c)
+				{
+					case('1'):
+						in_num += 1;
+						break;
+					case('2'):
+						in_num += 2;
+						break;
+					case('3'):
+						in_num += 3;
+						break;
+					case('4'):
+						in_num += 4;
+						break;
+					case('5'):
+						in_num += 5;
+						break;
+					case('6'):
+						in_num += 6;
+						break;
+					case('7'):
+						in_num += 7;
+						break;
+					case('8'):
+						in_num += 8;
+						break;
+					case('9'):
+						in_num += 9;
+						break;
+				}
+			}
+		}
+
+		if(inputing_number == 0)
+		{
+			in_type = 0;
+			in_num = 0;
 		}
 	}
 
@@ -1486,10 +1626,6 @@ int main(void)
 				}
 
 				//DrawText(TextFormat("%i", MeasureText("PLAY", 64) / 2), 8, 8, 16, BLACK);
-				//DrawText(TextFormat("%i", MeasureText("EDITOR", 64) / 2), 8, 24, 16, BLACK);
-				//DrawText(TextFormat("%i", MeasureText("PARTY", 64) / 2), 8, 40, 16, BLACK);
-				//DrawText(TextFormat("%i", MeasureText("OPTIONS", 64) / 2), 8, 56, 16, BLACK);
-				//DrawText(TextFormat("%i", MeasureText("EXIT", 64) / 2), 8, 72, 16, BLACK);
 			} break;
 			case EDITOR:
 			{
@@ -1579,6 +1715,12 @@ int main(void)
 						DrawText("QUARRY", 528, 264, 16, BLACK);
 						DrawText("ISLE", 624, 264, TEXT_SIZE, BLACK);
 						break;
+					case(3):
+						DrawText("BRONZ", 336, 264, TEXT_SIZE, BLACK);
+						DrawText("SILVER", 432, 264, 16, BLACK);
+						DrawText("GOLD", 528, 264, TEXT_SIZE, BLACK);
+						DrawText("AUTHOR", 624, 264, 16, BLACK);
+						break;
 					default: break;
 					}
 				}
@@ -1658,7 +1800,7 @@ int main(void)
 			DrawFileList(fpl, selected_file, bg1, bg2);
 		}
 
-		if(inputing_name)
+		if(inputing_name > 0)
 		{
 			DrawRectangle(88, 256, 848, 128, LIGHTGRAY);
 			DrawLine(104, 368, 920, 368, GRAY);
@@ -1672,6 +1814,21 @@ int main(void)
 				DrawText("Name of Profile:", 352, 272, 32, BLACK);
 				DrawText(TextFormat("%s", profile_name), 104, 336, 32, BLACK);
 			}
+		}
+		if(inputing_number > 0)
+		{
+			DrawRectangle(88, 256, 848, 128, LIGHTGRAY);
+			DrawLine(104, 368, 920, 368, GRAY);
+			switch(in_type)
+			{
+				case(1):
+					DrawText("Enter Time:", 384, 272, 32, BLACK);
+					break;
+				case(2):
+					DrawText("Enter Page Number:", 352, 272, 32, BLACK);
+					break;
+			}
+			DrawText(TextFormat("%i", (float)in_num * 0.001), 104, 336, 32, BLACK);
 		}
 
 		if(popup)
@@ -1694,6 +1851,9 @@ int main(void)
 				case(POPUP_VALIDATE):
 					DrawText("Track is not validated.", 328, 248, 32, BLACK);
 					DrawText("Validate?", 440, 280, 32, BLACK);
+					break;
+				case(POPUP_RESET_MEDALS):
+					DrawText("Clear medals?", 416, 272, 32, BLACK);
 					break;
 			}
 		}

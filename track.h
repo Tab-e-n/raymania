@@ -84,6 +84,7 @@ void TrackNameFromFilename(const char* filename, unsigned char name[TRACK_NAME_L
 void LoadTrackDirectory(FilePathList* fpl, unsigned char* track_dir);
 
 void CalculateMedalTimes(Track* track);
+void ResetMedalTimes(Track* track);
 
 void MoveEditorCursor(PieceInfo* info, int x, int y);
 

@@ -213,7 +213,7 @@ bool ChecksumsMatch(unsigned char checksum_1[DEMO_CHECKSUM_SIZE], unsigned char 
 	return true;
 }
 
-DemoSave* LoadDemo(bool* result, const char* filename)
+DemoSave* LoadDemo(const char* filename)
 {
 	if(DEMO_DEBUG) TraceLog(LOG_INFO, "DEMO: Loading demo");
 	int data_size;
@@ -228,7 +228,7 @@ DemoSave* LoadDemo(bool* result, const char* filename)
 			TraceLog(LOG_INFO, "DEMO: Demo could not be loaded. %s", filename);
 			TraceLog(LOG_INFO, " -- -- -- -- -- -- -- -- ");
 		}
-		*result = false;
+		demosave->result = false;
 		return demosave;
 	}
 	unsigned int track_name_len = 1;
@@ -274,7 +274,7 @@ DemoSave* LoadDemo(bool* result, const char* filename)
 		TraceLog(LOG_INFO, " -- -- -- -- -- -- -- -- ");
 	}
 
-	*result = true;
+	demosave->result = true;
 
 	return demosave;
 }

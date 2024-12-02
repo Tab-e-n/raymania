@@ -26,6 +26,7 @@ typedef struct Demo {
 } Demo;
 
 typedef struct DemoSave {
+	bool result;
 	unsigned char* track_name;
 	unsigned char checksum[DEMO_CHECKSUM_SIZE];
 	Demo* demo;
@@ -48,7 +49,7 @@ int SizeOfDemoSave(Demo* demo);
 void ChecksumDemo(Demo* demo, unsigned char checksum[DEMO_CHECKSUM_SIZE]);
 bool ChecksumsMatch(unsigned char checksum_1[DEMO_CHECKSUM_SIZE], unsigned char checksum_2[DEMO_CHECKSUM_SIZE]);
 
-DemoSave* LoadDemo(bool* result, const char* filename);
+DemoSave* LoadDemo(const char* filename);
 bool SaveDemoTime(Demo* demo, unsigned char* track_name);
 bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename);
 
