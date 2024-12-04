@@ -203,6 +203,13 @@ int main(void)
 	bool saving_track = false;
 	unsigned char editor_four_option_selector = 0, efos_opt = 0;
 
+	// PARTY VAR
+	
+	bool party_mode = false;
+
+	unsigned int party_count = 2;
+	Profile* party_profiles = PNULL;
+	double* party_timers = PNULL;
 
 	// TRACKS SELECTOR
 
@@ -411,7 +418,10 @@ int main(void)
 			vel_sign.y = -sign(camera_velocity.y) * AirQuotesNoise(game_time, false);
 		}
 
-		if(!file_list_active && !popup)
+		if(party_mode)
+		{
+		}
+		else if(!file_list_active && !popup)
 		{
 			if(InputHeld(menu_input, INPUT_UP))
 			{
@@ -448,6 +458,7 @@ int main(void)
 						reset_editor = true;
 						break;
 					case(MENU_PARTY):
+						//party_mode = true;
 						break;
 					case(MENU_OPTIONS):
 						break;
@@ -1613,12 +1624,16 @@ int main(void)
 							DrawText("EDITOR", 512 - 123, y_pos, 64, ORANGE);
 						break;
 						case(MENU_PARTY):
-							DrawRectangle(320, y_pos, 384, 64, PURPLE);
-							DrawText("PARTY", 512 - 111, y_pos, 64, DARKPURPLE);
+							DrawRectangle(320, y_pos, 384, 64, GRAY);
+							DrawText("PARTY", 512 - 111, y_pos, 64, DARKGRAY);
+							//DrawRectangle(320, y_pos, 384, 64, PURPLE);
+							//DrawText("PARTY", 512 - 111, y_pos, 64, DARKPURPLE);
 						break;
 						case(MENU_OPTIONS):
-							DrawRectangle(320, y_pos, 384, 64, SKYBLUE);
-							DrawText("OPTIONS", 512 - 146, y_pos, 64, DARKBLUE);
+							DrawRectangle(320, y_pos, 384, 64, GRAY);
+							DrawText("OPTIONS", 512 - 146, y_pos, 64, DARKGRAY);
+							//DrawRectangle(320, y_pos, 384, 64, SKYBLUE);
+							//DrawText("OPTIONS", 512 - 146, y_pos, 64, DARKBLUE);
 						break;
 						case(MENU_EXIT):
 							DrawRectangle(320, y_pos, 384, 64, PINK);
