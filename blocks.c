@@ -180,7 +180,7 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 	{
 		case(1):
 			block_walls.wall_amount = 1;
-			block_walls.walls[0] = (Wall){0, 0, 0, BU * 8};
+			block_walls.walls[0] = (Wall){0, 0, BU * 8, 0};
 			break;
 		case(2):
 		case(3):
