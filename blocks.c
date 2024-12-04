@@ -37,7 +37,6 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 	switch(id)
 	{
 		case(1):
-		case(4):
 			block.area = (Area){TYPE_GRASS, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
 			block.size = (Vector2int){1, 1};
 			break;
@@ -48,6 +47,10 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 		case(3):
 			block.area = (Area){TYPE_DIRT, 0, 0, BLOCK_SIZE * 2, BLOCK_SIZE * 2};
 			block.size = (Vector2int){2, 2};
+			break;
+		case(4):
+			block.area = (Area){TYPE_GRASS, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
+			block.size = (Vector2int){1, 1};
 			break;
 		case(5):
 			block.area = (Area){TYPE_ICE, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
