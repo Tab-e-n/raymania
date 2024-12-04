@@ -2,8 +2,21 @@
 Raymania is a 2D top down racing game inspired by Trackmania. and is also a spiritual successor to Web Racer.
 
 The game is made using:
- - c language
  - Raylib 5.0
+ - c language
+
+## Compiling
+
+Download Raylib 5.0 and this repository.
+Then in this repository, open the terminal and run:
+
+`bash compile.sh`
+
+Or on Windows:
+
+`bash win_compile.sh`
+
+This will make an executable file.
 
 ## Controls
 
