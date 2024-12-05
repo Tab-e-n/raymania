@@ -11,6 +11,7 @@
 
 
 #define VALIDATE_DEMO_FILE "Demos/validation.dm\0"
+#define MAX_PARTY_PROFILES 12
 
 
 typedef enum GameScreen {PROFILES, MENU, EDITOR, RACE} GameScreen;
@@ -26,6 +27,39 @@ void DrawCursor(Vector2 cursor_pos, float size, Color color)
 	DrawLine(cursor_pos.x, cursor_pos.y, cursor_pos.x, cursor_pos.y + size, color);
 	DrawLine(cursor_pos.x, cursor_pos.y + size, cursor_pos.x + size, cursor_pos.y + size, color);
 	DrawLine(cursor_pos.x + size, cursor_pos.y, cursor_pos.x + size, cursor_pos.y + size, color);
+}
+
+void DrawPartyMenu(int current_opt, unsigned int party_count, Profile* profiles)
+{
+	const Vector2 SIZE = (Vector2){768, 512};
+	const Vector2 POSITION = (Vector2){128, 64};
+
+	DrawRectangle(POSITION.x - 28, POSITION.y - 28, SIZE.x + 56, SIZE.y + 56, BLACK);
+	DrawRectangle(POSITION.x - 24, POSITION.y - 24, SIZE.x + 48, SIZE.y + 48, PURPLE);
+	DrawRectangle(POSITION.x, POSITION.y, SIZE.x, SIZE.y, VIOLET);
+
+	Color text_color = BLACK;
+	if(current_opt == 0) text_color = RAYWHITE;
+	DrawText(TextFormat("Number of players: %i", party_count), POSITION.x + 8, POSITION.y + 8, 32, text_color);
+
+	text_color = BLACK;
+	if(current_opt == MAX_PARTY_PROFILES + 1) text_color = RAYWHITE;
+	DrawText("> Next", POSITION.x + 8, POSITION.y + SIZE.y - 40, 32, text_color);
+
+	for(int i = 0; i < party_count; i++)
+	{
+		text_color = BLACK;
+		if(i + 1 == current_opt)
+		{
+			text_color = RAYWHITE;
+		}
+		unsigned char name[PROFILE_NAME_LENGHT] = {0};
+		for(int j = 0; j < PROFILE_NAME_LENGHT; j++)
+		{
+			name[j] = profiles[i].name[j];
+		}
+		DrawText(TextFormat("%s", name), POSITION.x + 8, POSITION.y + 64 + 32 * i, 32, text_color);
+	}
 }
 
 int main(void)
@@ -206,6 +240,8 @@ int main(void)
 	// PARTY VAR
 	
 	bool party_mode = false;
+	char party_current_menu = 0;
+	int party_current_opt = 0;
 
 	unsigned int party_count = 2;
 	Profile* party_profiles = PNULL;
@@ -353,13 +389,44 @@ int main(void)
 				}
 				else
 				{
+					current_game_screen = MENU;
 					const char* path = (const char*)fpl.paths[current_profile];
-					profile = LoadProfile(path);
+					if(party_mode)
+					{
+						party_profiles[party_current_opt - 1] = LoadProfile(path);
+					}
+					else
+					{
+						profile = LoadProfile(path);
+						reset_menu = true;
+					}
 					UnloadDirectoryFiles(fpl);
 					fpl.count = 0;
-					current_game_screen = MENU;
-					reset_menu = true;
 					//PrintProfile(&profile);
+				}
+			}
+			if(InputPressed(input, INPUT_BACK))
+			{
+				if(party_mode)
+				{
+					party_profiles[party_current_opt - 1] = DefaultProfile();
+				}
+				else
+				{
+					profile = DefaultProfile();
+					reset_menu = true;
+				}
+				current_game_screen = MENU;
+				UnloadDirectoryFiles(fpl);
+				fpl.count = 0;
+			}
+			if(party_mode)
+			{
+				if(InputPressed(input, INPUT_ESC))
+				{
+					current_game_screen = MENU;
+					UnloadDirectoryFiles(fpl);
+					fpl.count = 0;
 				}
 			}
 		}
@@ -418,8 +485,92 @@ int main(void)
 			vel_sign.y = -sign(camera_velocity.y) * AirQuotesNoise(game_time, false);
 		}
 
-		if(party_mode)
+		if(party_mode && party_current_menu == 0)
 		{
+			if(InputHeld(menu_input, INPUT_UP))
+			{
+				if(party_current_opt == MAX_PARTY_PROFILES + 1)
+				{
+					party_current_opt = party_count;
+				}
+				else if(party_current_opt > 0)
+				{
+					party_current_opt--;
+				}
+			}
+			if(InputHeld(menu_input, INPUT_DOWN))
+			{
+				if(party_current_opt < MAX_PARTY_PROFILES + 1)
+				{
+					party_current_opt++;
+					if(party_current_opt > party_count)
+					{
+						party_current_opt = MAX_PARTY_PROFILES + 1;
+					}
+				}
+			}
+			if(party_current_opt == 0)
+			{
+				if(InputHeld(menu_input, INPUT_RIGHT))
+				{
+					if(party_count < MAX_PARTY_PROFILES)
+					{
+						party_count++;
+						party_profiles = _realloc(party_profiles, sizeof(Profile) * party_count);
+						party_profiles[party_count - 1] = DefaultProfile();
+					}
+				}
+				if(InputHeld(menu_input, INPUT_LEFT))
+				{
+					if(party_count > 1)
+					{
+						party_count--;
+						party_profiles = _realloc(party_profiles, sizeof(Profile) * party_count);
+					}
+				}
+			}
+			if(InputPressed(input, INPUT_BACK))
+			{
+				party_mode = false;
+			}
+			if(InputPressed(input, INPUT_ENTER))
+			{
+				if(party_current_opt == 0)
+				{
+					party_count++;
+					if(party_count > MAX_PARTY_PROFILES)
+					{
+						party_count = 1;
+					}
+					party_profiles = _realloc(party_profiles, sizeof(Profile) * party_count);
+					if(party_count != 1)
+					{
+						party_profiles[party_count - 1] = DefaultProfile();
+					}
+				}
+				else if(party_current_opt == MAX_PARTY_PROFILES + 1)
+				{
+					party_current_menu = 1;
+					party_current_opt = 0;
+				}
+				else
+				{
+					current_game_screen = PROFILES;
+					load_profiles = true;
+				}
+			}
+			if(!party_mode)
+			{
+					_free(party_profiles);
+			}
+		}
+		else if(party_mode && party_current_menu == 1)
+		{
+			if(InputPressed(input, INPUT_BACK))
+			{
+				party_current_menu = 0;
+				party_current_opt = 0;
+			}
 		}
 		else if(!file_list_active && !popup)
 		{
@@ -458,7 +609,11 @@ int main(void)
 						reset_editor = true;
 						break;
 					case(MENU_PARTY):
-						//party_mode = true;
+						party_mode = true;
+						party_count = 2;
+						party_profiles = _malloc(sizeof(Profile) * party_count);
+						party_profiles[0] = profile;
+						party_profiles[1] = DefaultProfile();
 						break;
 					case(MENU_OPTIONS):
 						break;
@@ -1306,15 +1461,24 @@ int main(void)
 				const char* fname = ProfileFilename(PROFILE_DIRECTORY, profile_name);
 				if(!FileExists(fname))
 				{
+					Profile new_prof = DefaultProfile();
 					for(int i = 0; i < PROFILE_NAME_LENGHT; i++)
 					{
-						profile.name[i] = profile_name[i];
+						new_prof.name[i] = profile_name[i];
 					}
-					SaveProfile(&profile, fname);
+					SaveProfile(&new_prof, fname);
 					UnloadDirectoryFiles(fpl);
 					fpl.count = 0;
 					current_game_screen = MENU;
-					reset_menu = true;
+					if(party_mode)
+					{
+						party_profiles[party_current_opt - 1] = new_prof;
+					}
+					else
+					{
+						profile = new_prof;
+						reset_menu = true;
+					}
 				}
 				else
 				{
@@ -1573,7 +1737,14 @@ int main(void)
 			{
 				DrawText("RAYMANIA", 258, 56, 96, BLACK);
 
-				if(menu_option >= MENU_RACE) for(int i = 0; i < 3; i++)
+				if(party_mode && party_current_menu == 0)
+				{
+					DrawPartyMenu(party_current_opt, party_count, party_profiles);
+				}
+				else if(party_mode && party_current_menu == 1)
+				{
+				}
+				else if(menu_option >= MENU_RACE) for(int i = 0; i < 3; i++)
 				{
 					int y_pos = 192 + 80 * i;
 					if(i + MENU_RACE == menu_option)
@@ -1624,10 +1795,10 @@ int main(void)
 							DrawText("EDITOR", 512 - 123, y_pos, 64, ORANGE);
 						break;
 						case(MENU_PARTY):
-							DrawRectangle(320, y_pos, 384, 64, GRAY);
-							DrawText("PARTY", 512 - 111, y_pos, 64, DARKGRAY);
-							//DrawRectangle(320, y_pos, 384, 64, PURPLE);
-							//DrawText("PARTY", 512 - 111, y_pos, 64, DARKPURPLE);
+							//DrawRectangle(320, y_pos, 384, 64, GRAY);
+							//DrawText("PARTY", 512 - 111, y_pos, 64, DARKGRAY);
+							DrawRectangle(320, y_pos, 384, 64, PURPLE);
+							DrawText("PARTY", 512 - 111, y_pos, 64, DARKPURPLE);
 						break;
 						case(MENU_OPTIONS):
 							DrawRectangle(320, y_pos, 384, 64, GRAY);
