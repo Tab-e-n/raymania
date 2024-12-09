@@ -12,6 +12,8 @@
 
 #define VALIDATE_DEMO_FILE "Demos/validation.dm\0"
 #define MAX_PARTY_PROFILES 12
+#define MAX_PARTY_TIMER 20
+#define MIN_PARTY_TIMER 1
 
 
 typedef enum GameScreen {PROFILES, MENU, EDITOR, RACE} GameScreen;
@@ -245,6 +247,7 @@ int main(void)
 
 	unsigned int party_count = 2;
 	Profile* party_profiles = PNULL;
+	unsigned int party_timer_base = 10;
 	double* party_timers = PNULL;
 
 	// TRACKS SELECTOR
@@ -328,7 +331,10 @@ int main(void)
 			if(popup == POPUP_VALIDATE)
 			{
 				skip_validate_check = true;
-				validating_track = true;
+				if(!party_mode)
+				{
+					validating_track = true;
+				}
 			}
 			if(popup == POPUP_NO_START)
 			{
@@ -485,7 +491,10 @@ int main(void)
 			vel_sign.y = -sign(camera_velocity.y) * AirQuotesNoise(game_time, false);
 		}
 
-		if(party_mode && party_current_menu == 0)
+		if(file_list_active || popup)
+		{
+		}
+		else if(party_mode && party_current_menu == 0)
 		{
 			if(InputHeld(menu_input, INPUT_UP))
 			{
@@ -533,7 +542,7 @@ int main(void)
 			{
 				party_mode = false;
 			}
-			if(InputPressed(input, INPUT_ENTER))
+			else if(InputPressed(input, INPUT_ENTER))
 			{
 				if(party_current_opt == 0)
 				{
@@ -566,13 +575,63 @@ int main(void)
 		}
 		else if(party_mode && party_current_menu == 1)
 		{
+			
+			if(party_current_opt == 0)
+			{
+				if(InputHeld(menu_input, INPUT_RIGHT))
+				{
+					if(party_timer_base < MAX_PARTY_TIMER)
+					{
+						party_timer_base++;
+					}
+				}
+				if(InputHeld(menu_input, INPUT_LEFT))
+				{
+					if(party_timer_base > MIN_PARTY_TIMER)
+					{
+						party_timer_base--;
+					}
+				}
+			}
+			if(InputHeld(menu_input, INPUT_UP))
+			{
+				if(party_current_opt > 0)
+				{
+					party_current_opt--;
+				}
+			}
+			if(InputHeld(menu_input, INPUT_DOWN))
+			{
+				if(party_current_opt < 4)
+				{
+					party_current_opt++;
+				}
+			}
 			if(InputPressed(input, INPUT_BACK))
 			{
 				party_current_menu = 0;
 				party_current_opt = 0;
 			}
+			else if(InputPressed(input, INPUT_ENTER))
+			{
+				if(party_current_opt == 1)
+				{
+					file_list_active = FL_TRACK;
+					load_file_list = true;
+				}
+				else if(party_current_opt == 2)
+				{
+					current_game_screen = EDITOR;
+					reset_editor = true;
+				}
+				else if(party_current_opt == 3)
+				{
+					party_current_menu = 0;
+					party_current_opt = 0;
+				}
+			}
 		}
-		else if(!file_list_active && !popup)
+		else
 		{
 			if(InputHeld(menu_input, INPUT_UP))
 			{
@@ -1743,6 +1802,37 @@ int main(void)
 				}
 				else if(party_mode && party_current_menu == 1)
 				{
+					const Vector2 SIZE = (Vector2){768, 512};
+					const Vector2 POSITION = (Vector2){128, 64};
+
+					DrawRectangle(POSITION.x - 28, POSITION.y - 28, SIZE.x + 56, SIZE.y + 56, BLACK);
+					DrawRectangle(POSITION.x - 24, POSITION.y - 24, SIZE.x + 48, SIZE.y + 48, PURPLE);
+					DrawRectangle(POSITION.x, POSITION.y, SIZE.x, SIZE.y, VIOLET);
+
+					for(int i = 0; i < 4; i++)
+					{
+						Color text_color = BLACK;
+						if(party_current_opt == i) text_color = RAYWHITE;
+						Vector2 pos = POSITION;
+						pos.y += 8 + i * 32;
+						pos.x += 8;
+						if(i == 0)
+						{
+							DrawText(TextFormat("Timer: %.3f", (float)party_timer_base * 30.0), pos.x, pos.y, 32, text_color);
+						}
+						else if(i == 1)
+						{
+							DrawText("o Load track", pos.x, pos.y, 32, text_color);
+						}
+						else if(i == 2)
+						{
+							DrawText("+ Make new track", pos.x, pos.y, 32, text_color);
+						}
+						else if(i == 3)
+						{
+							DrawText("< Change players", pos.x, pos.y, 32, text_color);
+						}
+					}
 				}
 				else if(menu_option >= MENU_RACE) for(int i = 0; i < 3; i++)
 				{
@@ -2003,7 +2093,12 @@ int main(void)
 		if(file_list_active)
 		{
 			Color bg1 = GREEN, bg2 = LIME;
-			if(current_game_screen == EDITOR)
+			if(party_mode)
+			{
+				bg1 = PURPLE;
+				bg2 = VIOLET;
+			}
+			else if(current_game_screen == EDITOR)
 			{
 				bg1 = GOLD;
 				bg2 = ORANGE;
@@ -2067,7 +2162,14 @@ int main(void)
 					break;
 				case(POPUP_VALIDATE):
 					DrawText("Track is not validated.", 328, 248, 32, BLACK);
-					DrawText("Validate?", 440, 280, 32, BLACK);
+					if(party_mode)
+					{
+						DrawText("Play anyway?", 424, 280, 32, BLACK);
+					}
+					else
+					{
+						DrawText("Validate?", 440, 280, 32, BLACK);
+					}
 					break;
 				case(POPUP_RESET_MEDALS):
 					DrawText("Clear medals?", 416, 272, 32, BLACK);

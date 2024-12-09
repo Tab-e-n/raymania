@@ -31,8 +31,8 @@ IN PROGRESS
 Party Mode like OG Trackmania
  X Multiple profiles, users choose max and code uses MALLOC (no) to allocate space for prof
  X Choosing profiles in profile menu
- - You can choose the amount of time for each player
- - Choose track or make track
+ X You can choose the amount of time for each player
+ X Choose track or make track
  - Profiles take turns driving, each have an onscreen timer
  - Timer ticks down, once 0 player loses and is out
  - First goes the player with the biggest time, then from the first to the last
@@ -44,6 +44,7 @@ All name[] should be 1 larger with a \0 at end
 Options
 
 NOT DONE
+Standartized menus
 Arrow that points to the start in editor. (Could even be used for cps? maybe)
 Removing Tracks, Profiles and Replays
 Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
