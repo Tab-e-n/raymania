@@ -11,7 +11,7 @@
 
 
 #define VALIDATE_DEMO_FILE "Demos/validation.dm\0"
-#define MAX_PARTY_PROFILES 12
+#define MAX_PARTY_PROFILES 10
 #define MAX_PARTY_TIMER 20
 #define MIN_PARTY_TIMER 1
 
@@ -46,7 +46,11 @@ void DrawPartyMenu(int current_opt, unsigned int party_count, Profile* profiles)
 
 	text_color = BLACK;
 	if(current_opt == MAX_PARTY_PROFILES + 1) text_color = RAYWHITE;
-	DrawText("> Next", POSITION.x + 8, POSITION.y + SIZE.y - 40, 32, text_color);
+	DrawText("> Next", POSITION.x + 8, POSITION.y + SIZE.y - 72, 32, text_color);
+
+	text_color = BLACK;
+	if(current_opt == MAX_PARTY_PROFILES + 2) text_color = RAYWHITE;
+	DrawText("< Back", POSITION.x + 8, POSITION.y + SIZE.y - 40, 32, text_color);
 
 	for(int i = 0; i < party_count; i++)
 	{
@@ -249,6 +253,9 @@ int main(void)
 	Profile* party_profiles = PNULL;
 	unsigned int party_timer_base = 10;
 	double* party_timers = PNULL;
+	double* party_best_times = PNULL;
+
+	bool reset_party = false;
 
 	// TRACKS SELECTOR
 
@@ -509,10 +516,10 @@ int main(void)
 			}
 			if(InputHeld(menu_input, INPUT_DOWN))
 			{
-				if(party_current_opt < MAX_PARTY_PROFILES + 1)
+				if(party_current_opt < MAX_PARTY_PROFILES + 2)
 				{
 					party_current_opt++;
-					if(party_current_opt > party_count)
+					if(party_current_opt > party_count && party_current_opt < MAX_PARTY_PROFILES)
 					{
 						party_current_opt = MAX_PARTY_PROFILES + 1;
 					}
@@ -540,7 +547,14 @@ int main(void)
 			}
 			if(InputPressed(input, INPUT_BACK))
 			{
-				party_mode = false;
+				if(party_current_opt == MAX_PARTY_PROFILES + 2)
+				{
+					party_mode = false;
+				}
+				else
+				{
+					party_current_opt = MAX_PARTY_PROFILES + 2;
+				}
 			}
 			else if(InputPressed(input, INPUT_ENTER))
 			{
@@ -562,6 +576,10 @@ int main(void)
 					party_current_menu = 1;
 					party_current_opt = 0;
 				}
+				else if(party_current_opt == MAX_PARTY_PROFILES + 2)
+				{
+					party_mode = false;
+				}
 				else
 				{
 					current_game_screen = PROFILES;
@@ -571,11 +589,11 @@ int main(void)
 			if(!party_mode)
 			{
 					_free(party_profiles);
+					reset_party = false;
 			}
 		}
 		else if(party_mode && party_current_menu == 1)
 		{
-			
 			if(party_current_opt == 0)
 			{
 				if(InputHeld(menu_input, INPUT_RIGHT))
@@ -602,27 +620,44 @@ int main(void)
 			}
 			if(InputHeld(menu_input, INPUT_DOWN))
 			{
-				if(party_current_opt < 4)
+				if(party_current_opt < 3)
 				{
 					party_current_opt++;
 				}
 			}
 			if(InputPressed(input, INPUT_BACK))
 			{
-				party_current_menu = 0;
-				party_current_opt = 0;
+				if(party_current_opt == 3)
+				{
+					party_current_menu = 0;
+					party_current_opt = 0;
+				}
+				else
+				{
+					party_current_opt = 3;
+				}
 			}
 			else if(InputPressed(input, INPUT_ENTER))
 			{
+				if(party_current_opt == 0)
+				{
+					party_timer_base++;
+					if(party_timer_base > MAX_PARTY_TIMER)
+					{
+						party_timer_base = MIN_PARTY_TIMER;
+					}
+				}
 				if(party_current_opt == 1)
 				{
 					file_list_active = FL_TRACK;
 					load_file_list = true;
+					reset_party = true;
 				}
 				else if(party_current_opt == 2)
 				{
 					current_game_screen = EDITOR;
 					reset_editor = true;
+					reset_party = true;
 				}
 				else if(party_current_opt == 3)
 				{
@@ -951,7 +986,10 @@ int main(void)
 							{
 								current_game_screen = RACE;
 								reset_race = true;
-								validating_track = true;
+								if(!party_mode)
+								{
+									validating_track = true;
+								}
 							}
 							break;
 					}
@@ -974,8 +1012,31 @@ int main(void)
 		}
 		break;
 	case RACE:
+		if(reset_party)
+		{
+			reset_party = false;
+			if(party_timers == PNULL)
+			{
+				party_timers = _malloc(sizeof(double) * party_count);
+			}
+			if(party_best_times == PNULL)
+			{
+				party_best_times = _malloc(sizeof(double) * party_count);
+			}
+			for(int i = 0; i < party_count; i++)
+			{
+				party_timers[i] = (double)party_timer_base * 30.0;
+				party_best_times[i] = 0.0;
+			}
+		}
+		Profile* playing_profile = &profile;
+		if(party_mode)
+		{
+			playing_profile = &party_profiles[current_profile];
+		}
 		if(reset_race)
 		{
+			TraceLog(LOG_INFO, "%s", playing_profile->name);
 			reset_race = false;
 
 			ResetRacecar(&car, track.start_pos, track.start_rot, car_stats.size);
@@ -1003,11 +1064,14 @@ int main(void)
 			LoadNearbyBlockWalls(blocks, block_walls, load_placement);
 			LoadNearbyBlockWalls(blocks, dblock_walls, d_placement);
 
-			if(playing_demo == DEMO_OFF)
+			if(party_mode)
+			{
+			}
+			else if(playing_demo == DEMO_OFF)
 			{
 				ClearDemo(demo);
 				demo = InitDemo();
-				CopyNameToDemo(demo, profile.name);
+				CopyNameToDemo(demo, playing_profile->name);
 			}
 			else if(playing_demo == DEMO_PLAY)
 			{
@@ -1018,7 +1082,7 @@ int main(void)
 			{
 				ClearDemo(demo);
 				demo = InitDemo();
-				CopyNameToDemo(demo, profile.name);
+				CopyNameToDemo(demo, playing_profile->name);
 				StartDemo(ghost_demo);
 				playing_demo = DEMO_GHOST_INIT;
 			}
@@ -1082,6 +1146,11 @@ int main(void)
 			}
 			if(pause_exit)
 			{
+				if(party_mode)
+				{
+					_free(party_timers);
+					_free(party_best_times);
+				}
 				if(validating_track)
 				{
 					current_game_screen = EDITOR;
@@ -1112,7 +1181,7 @@ int main(void)
 				{
 					playing_demo = DEMO_PLAY;
 				}
-				if(playing_demo == DEMO_GHOST_INIT && GetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED))
+				if(playing_demo == DEMO_GHOST_INIT && GetProfileBool(playing_profile, PRF_BOOL_GHOST_ENABLED))
 				{
 					playing_demo = DEMO_GHOST_PLAY;
 					demo_input = (RMInput){0};
@@ -1155,7 +1224,7 @@ int main(void)
 
 			float speed_change = absf(previous_speed - Vector2Length(car.velocity));
 
-			if(GetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE) && speed_change > car_stats.camera_shake_threshold)
+			if(GetProfileBool(playing_profile, PRF_BOOL_SCREEN_SHAKE) && speed_change > car_stats.camera_shake_threshold)
 			{
 				shake_time += (speed_change - car_stats.camera_shake_threshold) * car_stats.speed_to_shake_ratio;
 			}
@@ -1228,7 +1297,7 @@ int main(void)
 					}
 					else
 					{
-						filename = DemoFilename(DEMO_DIRECTORY, (const char*)demo_track_name, profile.name);
+						filename = DemoFilename(DEMO_DIRECTORY, (const char*)demo_track_name, playing_profile->name);
 					}
 					SaveDemo(demo, demo_track_name, filename);
 					ClearDemo(ghost_demo);
@@ -1262,7 +1331,7 @@ int main(void)
 				SaveDemoTime(demo, (unsigned char*)TrackFileName(track_dir, track_name));
 			}
 
-			if(GetProfileBool(&profile, PRF_BOOL_CAM_CENTERED))
+			if(GetProfileBool(playing_profile, PRF_BOOL_CAM_CENTERED))
 			{
 				MoveCameraInstant(&camera, car.position);
 			}
@@ -1410,7 +1479,7 @@ int main(void)
 						current_game_screen = RACE;
 						reset_race = true;
 
-						if(!validating_track)
+						if(!validating_track && !party_mode)
 						{
 							const char* filename = DemoFilename(DEMO_DIRECTORY, TrackFileName(track_dir,track_name), profile.name);
 							DemoSave* demosave = LoadDemo(filename);
@@ -1430,6 +1499,10 @@ int main(void)
 								_free(demosave);
 								playing_demo = DEMO_OFF;
 							}
+						}
+						else
+						{
+							playing_demo = DEMO_OFF;
 						}
 					}
 					else
@@ -1609,13 +1682,13 @@ int main(void)
 				switch(efos_opt)
 				{
 					case(0):
-						track.medal_bronz = (float)in_num * 0.001;
+						track.medal_bronz = (double)in_num * 0.001;
 						break;
 					case(1):
-						track.medal_silver = (float)in_num * 0.001;
+						track.medal_silver = (double)in_num * 0.001;
 						break;
 					case(2):
-						track.medal_gold = (float)in_num * 0.001;
+						track.medal_gold = (double)in_num * 0.001;
 						break;
 				}
 				CalculateMedalTimes(&track);
@@ -1802,8 +1875,8 @@ int main(void)
 				}
 				else if(party_mode && party_current_menu == 1)
 				{
-					const Vector2 SIZE = (Vector2){768, 512};
-					const Vector2 POSITION = (Vector2){128, 64};
+					const Vector2 SIZE = (Vector2){480, 192};
+					const Vector2 POSITION = (Vector2){272, 64};
 
 					DrawRectangle(POSITION.x - 28, POSITION.y - 28, SIZE.x + 56, SIZE.y + 56, BLACK);
 					DrawRectangle(POSITION.x - 24, POSITION.y - 24, SIZE.x + 48, SIZE.y + 48, PURPLE);
@@ -1818,7 +1891,7 @@ int main(void)
 						pos.x += 8;
 						if(i == 0)
 						{
-							DrawText(TextFormat("Timer: %.3f", (float)party_timer_base * 30.0), pos.x, pos.y, 32, text_color);
+							DrawText(TextFormat("Timer: %.3f", (double)party_timer_base * 30.0), pos.x, pos.y, 32, text_color);
 						}
 						else if(i == 1)
 						{
@@ -1955,7 +2028,11 @@ int main(void)
 								DrawText("TIME", pos.x, pos.y, TEXT_SIZE, GRAY);
 								break;
 							case(EDITOR_VALIDATE):
-								if(track.has_start)
+								if(party_mode)
+								{
+									DrawText("PLAY", pos.x, pos.y, TEXT_SIZE, GREEN);
+								}
+								else if(track.has_start)
 								{
 									DrawText("VALI", pos.x, pos.y, TEXT_SIZE, GREEN);
 								}
@@ -2086,6 +2163,15 @@ int main(void)
 						pos_y += 64;
 					}
 				}
+				if(party_mode && !reset_party)
+				{
+					for(int i = 0; i < party_count; i++)
+					{
+						DrawText(TextFormat("%.3f", party_best_times[i]), 16, i * 48, 32, BLACK);
+						DrawText(party_profiles[i].name, 128, i * 48, 32, BLACK);
+						DrawRectangle(16, i * 48 + 34, party_timers[i], 12, VIOLET);
+					}
+				}
 				//TraceLog(LOG_INFO, "Text size %i.", MeasureText("Resume", 32) / 2);
 			} break;
 		}
@@ -2128,13 +2214,13 @@ int main(void)
 			switch(in_type)
 			{
 				case(1):
-					float compare_timer = 0.0;
+					double compare_timer = 0.0;
 					if(efos_opt == 0) compare_timer = track.medal_silver;
 					if(efos_opt == 1) compare_timer = track.medal_gold;
 					if(efos_opt == 2) compare_timer = track.medal_author;
 					DrawText("Enter Time:", 384, 264, 32, BLACK);
 					DrawText(TextFormat("Medal above %.3f", compare_timer), 104, 300, 32, BLACK);
-					DrawText(TextFormat("%.3f", (float)in_num * 0.001), 104, 336, 32, BLACK);
+					DrawText(TextFormat("%.3f", (double)in_num * 0.001), 104, 336, 32, BLACK);
 					break;
 				case(2):
 					DrawText("Enter Page Number:", 352, 272, 32, BLACK);

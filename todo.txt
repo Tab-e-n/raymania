@@ -35,9 +35,9 @@ Party Mode like OG Trackmania
  X Choose track or make track
  - Profiles take turns driving, each have an onscreen timer
  - Timer ticks down, once 0 player loses and is out
- - First goes the player with the biggest time, then from the first to the last
- - Validate -> play
- - Exiting race or editor goes to selecting profiles
+ - First goes the player with the worst time, then from the first to the last
+ X Validate -> play
+ X Exiting race or editor goes to selecting profiles
 Page indicator when selecting tracks, demos, profiles
 Show how to back out
 All name[] should be 1 larger with a \0 at end

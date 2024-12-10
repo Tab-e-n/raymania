@@ -48,10 +48,10 @@ typedef struct Track
 	unsigned int checkpoint_amount;
 	DefaultCar car;
 	DefaultEnviroment env;
-	float medal_bronz,
-	      medal_silver,
-	      medal_gold,
-	      medal_author;
+	double medal_bronz,
+	       medal_silver,
+	       medal_gold,
+	       medal_author;
 	PieceInfo pieces[MAX_PIECES];
 } Track;
 
