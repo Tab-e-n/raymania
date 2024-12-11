@@ -589,7 +589,6 @@ int main(void)
 			if(!party_mode)
 			{
 					_free(party_profiles);
-					reset_party = false;
 			}
 		}
 		else if(party_mode && party_current_menu == 1)
@@ -664,6 +663,14 @@ int main(void)
 					party_current_menu = 0;
 					party_current_opt = 0;
 				}
+			}
+		}
+		else if(party_mode && party_current_menu == 2)
+		{
+			if(InputPressed(input, INPUT_BACK) || InputPressed(input, INPUT_ENTER))
+			{
+				party_current_menu = 1;
+				party_current_opt = 0;
 			}
 		}
 		else
@@ -1028,6 +1035,7 @@ int main(void)
 				party_timers[i] = (double)party_timer_base * 30.0;
 				party_best_times[i] = 0.0;
 			}
+			current_profile = 0;
 		}
 		Profile* playing_profile = &profile;
 		if(party_mode)
@@ -1196,9 +1204,19 @@ int main(void)
 				pause_option = 0;
 			}
 
+			bool dnf = false;
+
 			if(!stop_inputs)
 			{
 				timer += FRAME;
+				if(party_mode)
+				{
+					party_timers[current_profile] -= FRAME;
+					if(party_timers[current_profile] <= 0.0)
+					{
+						dnf = true;
+					}
+				}
 				if(playing_demo != DEMO_PLAY)
 				{
 					demo = RecordDemoInput(demo, input.current);
@@ -1249,7 +1267,60 @@ int main(void)
 					check_rot = meta.check_rot;
 				}
 			}
-			if(meta.finish && !finished && checkpoints_gotten == track.checkpoint_amount)
+			bool did_finish = meta.finish && !finished && checkpoints_gotten == track.checkpoint_amount;
+			if(party_mode && (did_finish || dnf))
+			{
+				int profs_left = 0;
+				for(int i = 0; i < party_count; i++)
+				{
+					if(party_timers[i] > 0.0)
+					{
+						profs_left++;
+					}
+				}
+				if(profs_left <= 1)
+				{
+					current_game_screen = MENU;
+					reset_menu = true;
+					party_current_menu = 2;
+					_free(party_timers);
+					_free(party_best_times);
+				}
+				stop_inputs = true;
+				finished = true;
+				if(timer < party_best_times[current_profile] || party_best_times[current_profile] == 0.0)
+				{
+					party_best_times[current_profile] = timer;
+				}
+				double worst_time = 0.0;
+				int worst_prof = -1;
+				for(int i = party_count - 1; i >= 0; i--)
+				{
+					if(party_timers[i] > 0.0 && party_best_times[i] == 0.0)
+					{
+						worst_prof = i;
+					}
+				}
+				if(worst_prof == -1) for(int i = 0; i < party_count; i++)
+				{
+					if(party_timers[i] > 0.0 && party_best_times[i] > worst_time)
+					{
+						worst_time = party_best_times[i];
+						worst_prof = i;
+					}
+				}
+				if(worst_prof >= 0)
+				{
+					current_profile = worst_prof;
+				}
+				else
+				{
+					// Temporary, replace with showing who won and then going to track select
+					reset_race = true;
+					reset_party = true;
+				}
+			}
+			else if(did_finish)
 			{
 				stop_inputs = true;
 				finished = true;
@@ -1907,6 +1978,11 @@ int main(void)
 						}
 					}
 				}
+				else if(party_mode && party_current_menu == 2)
+				{
+					DrawText(TextFormat("%s", party_profiles[current_profile].name), 256, 192, 64, BLACK);
+					DrawText("IS THE WINNER!!!", 256, 256, 64, BLACK);
+				}
 				else if(menu_option >= MENU_RACE) for(int i = 0; i < 3; i++)
 				{
 					int y_pos = 192 + 80 * i;
@@ -2116,6 +2192,10 @@ int main(void)
 						DrawText("Bronz medal.", 256, 88, 96, BLACK);
 					}
 					DrawText(TextFormat("%.3f", timer), 384, 192, 96, BLACK);
+					if(party_mode)
+					{
+						DrawText(TextFormat("Up next: %i. %s", current_profile + 1, party_profiles[current_profile].name), 384, 320, 32, BLACK);
+					}
 				}
 				else
 				{
@@ -2165,11 +2245,30 @@ int main(void)
 				}
 				if(party_mode && !reset_party)
 				{
-					for(int i = 0; i < party_count; i++)
+					Color ctext = BLACK, btext = VIOLET;
+					bool render_timers = true;
+					if(timer == 0.0 || stop_inputs)
 					{
-						DrawText(TextFormat("%.3f", party_best_times[i]), 16, i * 48, 32, BLACK);
-						DrawText(party_profiles[i].name, 128, i * 48, 32, BLACK);
-						DrawRectangle(16, i * 48 + 34, party_timers[i], 12, VIOLET);
+						ctext.a = 255;
+						btext.a = 255;
+					}
+					else if(timer < 2.0)
+					{
+						ctext.a = (int)(128 * (2.0 - timer));
+						btext.a = (int)(128 * (2.0 - timer));
+					}
+					else
+					{
+						render_timers = false;
+					}
+					if(render_timers)
+					{
+						for(int i = 0; i < party_count; i++)
+						{
+							DrawText(TextFormat("%.3f", party_best_times[i]), 16, i * 32 + 16, 16, ctext);
+							DrawText(TextFormat("%i. %s", i + 1, party_profiles[i].name), 96, i * 32 + 16, 16, ctext);
+							DrawRectangle(16, i * 32 + 34, party_timers[i] / party_timer_base * 10, 12, btext);
+						}
 					}
 				}
 				//TraceLog(LOG_INFO, "Text size %i.", MeasureText("Resume", 32) / 2);
