@@ -242,7 +242,9 @@ void DrawProfileSelector(FilePathList fpl, int current)
 	DrawRectangle(POSITION.x, POSITION.y, SIZE.x, SIZE.y, LIGHTGRAY);
 	DrawRectangle(POSITION.x + 24, POSITION.y + 24, SIZE.x - 48, SIZE.y - 80, GRAY);
 
+	DrawText("EMPTY USER - BACKSPACE", POSITION.x + SIZE.x - 244, POSITION.y + SIZE.y - 36, 16, BLACK);
 	int page = current / PROFILE_SELECTOR_PAGE_ITEMS;
+	DrawText(TextFormat("%i/%i", page + 1, fpl.count / PROFILE_SELECTOR_PAGE_ITEMS + 1), POSITION.x + 24, POSITION.y + SIZE.y - 36, 16, BLACK);
 
 	for(int i = 0; i < PROFILE_SELECTOR_PAGE_ITEMS; i++)
 	{

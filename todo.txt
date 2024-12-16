@@ -26,22 +26,10 @@ Profiles
 Input Replays
 Editor Buttons
 Medals
+Party Mode like OG Trackmania
 
 IN PROGRESS
-Party Mode like OG Trackmania
- X Multiple profiles, users choose max and code uses MALLOC (no) to allocate space for prof
- X Choosing profiles in profile menu
- X You can choose the amount of time for each player
- X Choose track or make track
- - Show who won
- X Profiles take turns driving, each have an onscreen timer
- X Timer ticks down, once 0 player loses and is out
- X First goes the player with the worst time, then from the first to the last
- X Validate -> play
- X Exiting race or editor goes to selecting profiles
-Page indicator when selecting tracks, demos, profiles
-Show how to back out
-All name[] should be 1 larger with a \0 at end
+All name[] should be 32 large with a \0 at end
 Options
 
 NOT DONE
