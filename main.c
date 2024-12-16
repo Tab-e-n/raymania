@@ -224,6 +224,8 @@ int main(void)
 	int pause_option = 0;
 	unsigned char playing_demo = DEMO_OFF;
 
+	bool race_showcase = false;
+
 	// EDITOR VAR
 
 	bool reset_editor = false;
@@ -348,6 +350,7 @@ int main(void)
 				current_game_screen = RACE;
 				reset_race = true;
 				validating_track = true;
+				race_showcase = true;
 			}
 			if(popup == POPUP_RESET_MEDALS)
 			{
@@ -993,7 +996,11 @@ int main(void)
 							{
 								current_game_screen = RACE;
 								reset_race = true;
-								if(!party_mode)
+								if(party_mode)
+								{
+									race_showcase = true;
+								}
+								else
 								{
 									validating_track = true;
 								}
@@ -1098,7 +1105,14 @@ int main(void)
 
 		bool cp_reset = false;
 
-		ZoomCameraSmooth(&camera, 1.0, CAM_ZOOM_SPEED);
+		if(race_showcase)
+		{
+			ZoomCameraSmooth(&camera, 0.75, CAM_ZOOM_SPEED);
+		}
+		else
+		{
+			ZoomCameraSmooth(&camera, 1.0, CAM_ZOOM_SPEED);
+		}
 		if(paused)
 		{
 			if(InputHeld(menu_input, INPUT_UP))
@@ -1171,6 +1185,42 @@ int main(void)
 					reset_menu = true;
 				}
 			}
+		}
+		else if(race_showcase)
+		{
+			if(InputPressed(input, INPUT_ESC))
+			{
+				paused = true;
+				pause_option = 0;
+			}
+			if(InputPressed(input, INPUT_ENTER))
+			{
+				race_showcase = false;
+				start_time = game_time;
+			}
+
+			Vector2 cam_pos = camera.data.target;
+			Vector2 offset = (Vector2){0, 0};
+
+			if(InputHeld(input, INPUT_DOWN))
+			{
+				offset.y += 16;
+			}
+			if(InputHeld(input, INPUT_UP))
+			{
+				offset.y -= 16;
+			}
+			if(InputHeld(input, INPUT_RIGHT))
+			{
+				offset.x += 16;
+			}
+			if(InputHeld(input, INPUT_LEFT))
+			{
+				offset.x -= 16;
+			}
+			cam_pos = Vector2Add(cam_pos, offset);
+
+			MoveCameraInstant(&camera, cam_pos);
 		}
 		else if(start_countdown)
 		{
@@ -1508,18 +1558,23 @@ int main(void)
 		if(InputPressed(input, INPUT_BACK))
 		{
 			unsigned char* file_dir;
+			const char* top_dir;
 			if(file_list_active == FL_TRACK)
 			{
 				file_dir = track_dir;
+				top_dir = TRACK_DIRECTORY;
 			}
 			else if(file_list_active == FL_DEMO)
 			{
 				file_dir = demo_dir;
+				top_dir = DEMO_DIRECTORY;
 			}
 
-			if(!TextIsEqual(demo_dir, TRACK_DIRECTORY))
+			//TraceLog(LOG_INFO, "%s, %s", file_dir, top_dir);
+
+			if(!TextIsEqual(file_dir, top_dir))
 			{
-				ReturnToParentDirectory(demo_dir);
+				ReturnToParentDirectory(file_dir);
 				load_file_list = true;
 			}
 			else
@@ -1549,6 +1604,7 @@ int main(void)
 						file_list_active = FL_OFF;
 						current_game_screen = RACE;
 						reset_race = true;
+						race_showcase = true;
 
 						if(!validating_track && !party_mode)
 						{
@@ -1606,6 +1662,7 @@ int main(void)
 					file_list_active = FL_OFF;
 					current_game_screen = RACE;
 					reset_race = true;
+					race_showcase = true;
 					TraceLog(LOG_INFO, "FREE: demosave track_name");
 					_free(demosave->track_name);
 					TraceLog(LOG_INFO, "FREE: demosave");
@@ -2205,7 +2262,11 @@ int main(void)
 						DrawText(TextFormat("%i/%i", checkpoints_gotten, track.checkpoint_amount), 896, 576, 64, BLUE);
 					}
 				}
-				if(start_countdown)
+				if(race_showcase)
+				{
+					// TODO
+				}
+				else if(start_countdown)
 				{
 					DrawText(TextFormat("%i", 3 - (int)((game_time - start_time) / COUNTDOWN_TIME * 3)), 576, 256, 128, BLACK);
 				}

@@ -29,6 +29,7 @@ Medals
 Party Mode like OG Trackmania
 
 IN PROGRESS
+Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
 All name[] should be 32 large with a \0 at end
 Options
 
@@ -36,7 +37,6 @@ NOT DONE
 Standartized menus
 Arrow that points to the start in editor. (Could even be used for cps? maybe)
 Removing Tracks, Profiles and Replays
-Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
 Other Racecars
 My Logo On Startup (Whatever That Is)
 Racecar Visuals + Colorswaps
