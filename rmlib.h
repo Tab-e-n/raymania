@@ -33,13 +33,11 @@ typedef struct RMInput
 } RMInput;
 
 
-void RaylibLogo(void);
-void TabinLogo(void);
-
 extern void* _malloc(size_t size);
 extern void* _realloc(void* ptr, size_t size);
 extern void _free(void* ptr);
 
+int absi(int x);
 int sign(float x);
 float absf(float x);
 float min(float x, float y);

@@ -20,27 +20,25 @@ Track Selection
 Other Enviroments
 Validating Tracks
 Pause Menu
-Inputs as one short int, binary calc in rmlib (To save it easier in replays)
 Fadeout Fadein 
 Profiles
 Input Replays
 Editor Buttons
 Medals
 Party Mode like OG Trackmania
+Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
+My Logo On Startup (Whatever That Is)
 
 IN PROGRESS
-Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
-All name[] should be 32 large with a \0 at end
 Options
+Block Visuals (Only the ones near you render)
+Actual Blocks
+Racecar Visuals + Colorswaps
+Other Racecars
 
 NOT DONE
 Standartized menus
 Arrow that points to the start in editor.
 Removing Tracks, Profiles and Replays
-Other Racecars
-My Logo On Startup (Whatever That Is)
-Racecar Visuals + Colorswaps
-Enviroment Visuals
 Skid Lines
-Block Visuals (Only the ones near you render)
-Actual Blocks
+Enviroment Visuals

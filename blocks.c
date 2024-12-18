@@ -34,6 +34,8 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 
 	block.z = 0;
 
+	// BLOCK AREA DEFINITIONS
+	
 	switch(id)
 	{
 		case(1):
@@ -98,6 +100,38 @@ void ClearPlacedBlocks(Block blocks[MAX_BLOCK_AMOUNT])
 	for(int i = 0; i < MAX_BLOCK_AMOUNT; i++)
 	{
 		blocks[i] = MakeBlock(0, pos, ROT_NORTH);
+	}
+}
+
+void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], Block block_layer[], Vector2int placement, int z)
+{
+	// TODO
+}
+
+void DrawBlock(Block block, double game_time)
+{
+	Vector2 pos = (Vector2){0, 0};
+	DrawBlockAdv(block, 1.0, pos, game_time);
+}
+
+void DrawBlockAdv(Block block, float scale, Vector2 position, double game_time)
+{
+	if(block.id == 0)
+	{
+		return;
+	}
+
+	// TODO
+	// *= scale
+	// += position
+	
+}
+
+void DrawLoadedBlocks(Block blocks[], unsigned int amount, double game_time)
+{
+	for(int i = 0; i < amount; i++)
+	{
+		DrawBlock(blocks[i], game_time);
 	}
 }
 
@@ -176,6 +210,9 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 {
 	BlockWallArray block_walls;
 	block_walls.block_id = block_id;
+
+	// BLOCK WALL DEFINITIONS
+
 	switch(block.id)
 	{
 		case(1):

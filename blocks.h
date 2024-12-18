@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include "rmlib.h"
+#include "asset.h"
 
 
 #define BLOCK_SIZE 256
@@ -55,7 +56,11 @@ void DrawWallDebug(Wall wall, Color color);
 
 Block MakeBlock(int id, Vector2int pos, int rot);
 void ClearPlacedBlocks(Block blocks[MAX_BLOCK_AMOUNT]);
+void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], Block block_layer[], Vector2int placement, int z);
 
+void DrawBlock(Block block, double game_time);
+void DrawBlockAdv(Block block, float scale, Vector2 position, double game_time);
+void DrawLoadedBlocks(Block blocks[], unsigned int amount, double game_time);
 void DrawBlockDebug(Block block);
 void DrawBlockDebugAdv(Block block, float scale, Vector2 position);
 void DrawPlacedBlocksDebug(Block blocks[MAX_BLOCK_AMOUNT], int z);

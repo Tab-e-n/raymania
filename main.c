@@ -8,6 +8,7 @@
 #include "track.h"
 #include "profiles.h"
 #include "demos.h"
+#include "asset.h"
 
 
 #define VALIDATE_DEMO_FILE "Demos/validation.dm\0"
@@ -397,7 +398,7 @@ int main(void)
 				{
 					entering_profile_name = true;
 					inputing_name = 1;
-					name_lenght = PROFILE_NAME_LENGHT;
+					name_lenght = PROFILE_NAME_LENGHT - 1;
 					for(int i = 0; i < PROFILE_NAME_LENGHT; i++)
 					{
 						profile_name[i] = 0;
@@ -968,11 +969,11 @@ int main(void)
 						case(EDITOR_SAVE):
 							saving_track = true;
 							inputing_name = 1;
-							name_lenght = TRACK_NAME_LENGHT;
-							//for(int i = 0; i < TRACK_NAME_LENGHT; i++)
-							//{
-							//	track_name[i] = 0;
-							//}
+							name_lenght = TRACK_NAME_LENGHT - 1;
+							for(int i = 0; i < TRACK_NAME_LENGHT; i++)
+							{
+								track_name[i] = 0;
+							}
 							break;
 						case(EDITOR_CLEAR):
 							popup = POPUP_EDITOR_CLEAR;
