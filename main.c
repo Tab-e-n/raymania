@@ -2120,6 +2120,8 @@ int main(void)
 			} break;
 			case EDITOR:
 			{
+				DrawText(TextFormat("x: %i", cursor_info.placement.x), 8, 8, 16, BLACK);
+				DrawText(TextFormat("y: %i", cursor_info.placement.y), 8, 24, 16, BLACK);
 				if(piece_catalogue_pulled > 0.0)
 				{
 					int catalogue_pos_y = 640 - piece_catalogue_pulled * 224;
@@ -2254,7 +2256,7 @@ int main(void)
 						DrawText(TextFormat("Up next: %i. %s", current_profile + 1, party_profiles[current_profile].name), 384, 320, 32, BLACK);
 					}
 				}
-				else
+				else if(!race_showcase)
 				{
 					DrawText(TextFormat("%.3f", timer), 8, 572, 64, BLACK);
 					if(track.checkpoint_amount > 0)
@@ -2262,9 +2264,14 @@ int main(void)
 						DrawText(TextFormat("%i/%i", checkpoints_gotten, track.checkpoint_amount), 896, 576, 64, BLUE);
 					}
 				}
-				if(race_showcase)
+				if(race_showcase || paused)
 				{
-					// TODO
+					DrawText(TextFormat("%s", track_name), 8, 8, 16, BLACK);
+					DrawText(TextFormat("By: %s", track.author), 8, 24, 16, BLACK);
+					DrawText(TextFormat("Bronz: %.3f", track.medal_bronz), 8, 40, 16, BLACK);
+					DrawText(TextFormat("Silver: %.3f", track.medal_silver), 8, 56, 16, BLACK);
+					DrawText(TextFormat("Gold: %.3f", track.medal_gold), 8, 72, 16, BLACK);
+					DrawText("Press enter to play", 8, 88, 16, BLACK);
 				}
 				else if(start_countdown)
 				{

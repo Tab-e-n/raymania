@@ -35,7 +35,7 @@ Options
 
 NOT DONE
 Standartized menus
-Arrow that points to the start in editor. (Could even be used for cps? maybe)
+Arrow that points to the start in editor.
 Removing Tracks, Profiles and Replays
 Other Racecars
 My Logo On Startup (Whatever That Is)
