@@ -12,12 +12,11 @@
 #define BU 0.125*BLOCK_SIZE
 
 #define MAX_BLOCK_AMOUNT 2048
+#define MAX_LOADED_BLOCK_AMOUNT 64 // TODO
 #define MAX_LOADED_BLOCK_WALLS 18
 #define MAX_BLOCK_WALL_AMOUNT 32
 
 #define SURFACE_AMOUNT 5
-
-typedef enum BlockRotation {ROT_NORTH = 0, ROT_EAST, ROT_SOUTH, ROT_WEST} BlockRotation;
 
 typedef enum Surface {SURFACE_ASPHALT = 0, SURFACE_GRASS, SURFACE_DIRT, SURFACE_ICE, SURFACE_WATER} Surface;
 
@@ -56,11 +55,11 @@ void DrawWallDebug(Wall wall, Color color);
 
 Block MakeBlock(int id, Vector2int pos, int rot);
 void ClearPlacedBlocks(Block blocks[MAX_BLOCK_AMOUNT]);
-void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], Block block_layer[], Vector2int placement, int z);
+void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], Block block_layer[MAX_LOADED_BLOCK_AMOUNT], Vector2int placement, int z);
 
 void DrawBlock(Block block, double game_time);
 void DrawBlockAdv(Block block, float scale, Vector2 position, double game_time);
-void DrawLoadedBlocks(Block blocks[], unsigned int amount, double game_time);
+void DrawLoadedBlocks(Block blocks[MAX_LOADED_BLOCK_AMOUNT], unsigned int amount, double game_time);
 void DrawBlockDebug(Block block);
 void DrawBlockDebugAdv(Block block, float scale, Vector2 position);
 void DrawPlacedBlocksDebug(Block blocks[MAX_BLOCK_AMOUNT], int z);

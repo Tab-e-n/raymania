@@ -103,7 +103,7 @@ void ClearPlacedBlocks(Block blocks[MAX_BLOCK_AMOUNT])
 	}
 }
 
-void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], Block block_layer[], Vector2int placement, int z)
+void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], Block block_layer[MAX_LOADED_BLOCK_AMOUNT], Vector2int placement, int z)
 {
 	// TODO
 }
@@ -127,7 +127,7 @@ void DrawBlockAdv(Block block, float scale, Vector2 position, double game_time)
 	
 }
 
-void DrawLoadedBlocks(Block blocks[], unsigned int amount, double game_time)
+void DrawLoadedBlocks(Block blocks[MAX_LOADED_BLOCK_AMOUNT], unsigned int amount, double game_time)
 {
 	for(int i = 0; i < amount; i++)
 	{

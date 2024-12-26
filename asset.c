@@ -220,4 +220,34 @@ void TabinLogo(void)
 	}
 }
 
+Tri MoveTri(Tri tri, Vector2 position)
+{
+	tri.a = Vector2Add(tri.a, position);
+	tri.b = Vector2Add(tri.b, position);
+	tri.c = Vector2Add(tri.c, position);
+	return tri;
+}
+
+Asset* AllocAsset(int asset_id, float scale, BlockRotation rot, double game_time)
+{
+	// TODO
+}
+
+void FreeAsset(Asset* asset)
+{
+	if(asset != PNULL)
+	{
+		TraceLog(LOG_INFO, "FREE: Free asset.");
+		_free(asset);
+	}
+}
+
+void DrawAsset(Asset* asset, Vector2 position)
+{
+	for(int i = 0; i < asset->tri_amount; i++)
+	{
+		Tri tri = MoveTri(asset->tris[i], position);
+		DrawTriangle(tri.a, tri.b, tri.c, tri.color);
+	}
+}
 

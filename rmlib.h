@@ -22,6 +22,8 @@
 
 typedef enum InputKeys {INPUT_LEFT, INPUT_RIGHT, INPUT_UP, INPUT_DOWN, INPUT_BACK, INPUT_ENTER, INPUT_ESC, INPUT_R} InputKeys;
 
+typedef enum BlockRotation {ROT_NORTH = 0, ROT_EAST, ROT_SOUTH, ROT_WEST} BlockRotation;
+
 typedef struct Vector2int
 {
 	int x, y;
