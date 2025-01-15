@@ -12,9 +12,12 @@
 #define BU 0.125*BLOCK_SIZE
 
 #define MAX_BLOCK_AMOUNT 2048
-#define MAX_LOADED_BLOCK_AMOUNT 64 // TODO
 #define MAX_LOADED_BLOCK_WALLS 18
 #define MAX_BLOCK_WALL_AMOUNT 32
+
+#define PLAYER_LAYER 2
+#define Z_LAYERS 4
+#define LOAD_DISTANCE (Vector2){4, 3}
 
 #define SURFACE_AMOUNT 5
 
@@ -54,12 +57,13 @@ bool CheckWallCollision(Wall wall1, Wall wall2, Vector2* collision_point);
 void DrawWallDebug(Wall wall, Color color);
 
 Block MakeBlock(int id, Vector2int pos, int rot);
+void ClearBlocks(int block_amount, Block blocks[]);
 void ClearPlacedBlocks(Block blocks[MAX_BLOCK_AMOUNT]);
-void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], Block block_layer[MAX_LOADED_BLOCK_AMOUNT], Vector2int placement, int z);
+void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], int layers[Z_LAYERS][ASSET_AMOUNT], Vector2int placement);
 
 void DrawBlock(Block block, double game_time);
 void DrawBlockAdv(Block block, float scale, Vector2 position, double game_time);
-void DrawLoadedBlocks(Block blocks[MAX_LOADED_BLOCK_AMOUNT], unsigned int amount, double game_time);
+void DrawLoadedBlocks(Block blocks[MAX_BLOCK_AMOUNT], int layer[ASSET_AMOUNT], double game_time);
 void DrawBlockDebug(Block block);
 void DrawBlockDebugAdv(Block block, float scale, Vector2 position);
 void DrawPlacedBlocksDebug(Block blocks[MAX_BLOCK_AMOUNT], int z);

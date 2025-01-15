@@ -73,7 +73,7 @@ int main(void)
 {
 	InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "RAYMANIA");
 
-	//TraceLog(LOG_INFO, "Size of Track %i.", sizeof(Track));
+	//TraceLog(LOG_INFO, "Size of %i.", sizeof(Asset));
 	//TraceLog(LOG_INFO, "Size of Blocks in Track %i.", sizeof(Block) * MAX_BLOCK_AMOUNT);
 
 	SetTargetFPS(60);
@@ -501,6 +501,8 @@ int main(void)
 		{
 			vel_sign.y = -sign(camera_velocity.y) * AirQuotesNoise(game_time, false);
 		}
+
+		load_placement = PositionToPlacement(camera.data.target);
 
 		if(file_list_active || popup)
 		{
@@ -1016,6 +1018,7 @@ int main(void)
 				pcp_dir = 1.0;
 			}
 		}
+		load_placement = cursor_info.placement;
 
 		if(pcp_dir != 0.0)
 		{
@@ -1940,7 +1943,16 @@ int main(void)
 			DrawLine(0, i, BLOCK_SIZE * TRACK_GRID_SIZE, i, GRAY);
 		}
 
-		DrawPlacedBlocksDebug(blocks, 0);
+		int layers[Z_LAYERS][ASSET_AMOUNT];
+
+		LoadNearbyBlocks(blocks, layers, load_placement);
+
+		for(int i = 0; i < PLAYER_LAYER; i ++)
+		{
+			DrawLoadedBlocks(blocks, layers[i], game_time);
+		}
+
+		//DrawPlacedBlocksDebug(blocks, 0);
 		DrawLoadedBlockWallsDebug(block_walls);
 
 		switch(current_game_screen)
@@ -1980,7 +1992,12 @@ int main(void)
 			} break;
 		}
 
-		DrawPlacedBlocksDebug(blocks, 1);
+		for(int i = PLAYER_LAYER; i < Z_LAYERS; i ++)
+		{
+			DrawLoadedBlocks(blocks, layers[i], game_time);
+		}
+
+		//DrawPlacedBlocksDebug(blocks, 1);
 
 		EndMode2D();
 
@@ -2272,7 +2289,10 @@ int main(void)
 					DrawText(TextFormat("Bronz: %.3f", track.medal_bronz), 8, 40, 16, BLACK);
 					DrawText(TextFormat("Silver: %.3f", track.medal_silver), 8, 56, 16, BLACK);
 					DrawText(TextFormat("Gold: %.3f", track.medal_gold), 8, 72, 16, BLACK);
-					DrawText("Press enter to play", 8, 88, 16, BLACK);
+					if(race_showcase)
+					{
+						DrawText("Press enter to play", 8, 88, 16, BLACK);
+					}
 				}
 				else if(start_countdown)
 				{
@@ -2343,6 +2363,15 @@ int main(void)
 				//TraceLog(LOG_INFO, "Text size %i.", MeasureText("Resume", 32) / 2);
 			} break;
 		}
+
+		/*
+		Asset* asset = AllocAsset(1, ROT_NORTH, game_time);
+		//TraceLog(LOG_INFO, "%i %i", asset->tri_amount, asset->tris[0].color);
+		DrawTriangle(asset->tris[0].a, asset->tris[0].b, asset->tris[0].c, RAYWHITE);
+		Vector2 pos = (Vector2){0.0, 0.0};
+		DrawAsset(asset, 1.0, pos);
+		FreeAsset(asset);
+		*/
 
 		if(file_list_active)
 		{

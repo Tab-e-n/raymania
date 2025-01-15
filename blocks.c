@@ -94,18 +94,71 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 	return block;
 }
 
-void ClearPlacedBlocks(Block blocks[MAX_BLOCK_AMOUNT])
+void ClearBlocks(int block_amount, Block blocks[])
 {
 	Vector2int pos = (Vector2int){0, 0};
-	for(int i = 0; i < MAX_BLOCK_AMOUNT; i++)
+	for(int i = 0; i < block_amount; i++)
 	{
 		blocks[i] = MakeBlock(0, pos, ROT_NORTH);
 	}
 }
 
-void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], Block block_layer[MAX_LOADED_BLOCK_AMOUNT], Vector2int placement, int z)
+void ClearPlacedBlocks(Block blocks[MAX_BLOCK_AMOUNT])
 {
-	// TODO
+	ClearBlocks(MAX_BLOCK_AMOUNT, blocks);
+}
+
+void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], int layers[Z_LAYERS][ASSET_AMOUNT], Vector2int placement)
+{
+	for(int j = 0; j < Z_LAYERS; j++)
+	{
+		for(int i = 0; i < ASSET_AMOUNT; i++)
+		{
+			layers[j][i] = -1;
+		}
+	}
+	int i_a[Z_LAYERS] = {0};
+	for(int i = 0; i < MAX_BLOCK_AMOUNT; i++)
+	{
+		if(blocks[i].id == 0)
+		{
+			continue;
+		}
+		int z = blocks[i].z;
+		if(z < 0 || z >= Z_LAYERS)
+		{
+			continue;
+		}
+		if(i_a[z] == ASSET_AMOUNT)
+		{
+			continue;
+		}
+		int max_dist_x = LOAD_DISTANCE.x;
+		int max_dist_y = LOAD_DISTANCE.y;
+		if(blocks[i].rot == ROT_EAST || blocks[i].rot == ROT_WEST)
+		{
+			max_dist_x += blocks[i].size.y;
+			max_dist_y += blocks[i].size.x;
+		}
+		else
+		{
+			max_dist_x += blocks[i].size.x;
+			max_dist_y += blocks[i].size.y;
+		}
+		Vector2int dist;
+		dist.x = absi(blocks[i].pos.x - placement.x);
+		if(dist.x > max_dist_x)
+		{
+			continue;
+		}
+		dist.y = absi(blocks[i].pos.y - placement.y);
+		if(dist.y > max_dist_y)
+		{
+			continue;
+		}
+		layers[z][i_a[z]] = i;
+		i_a[z]++;
+	}
 }
 
 void DrawBlock(Block block, double game_time)
@@ -122,16 +175,35 @@ void DrawBlockAdv(Block block, float scale, Vector2 position, double game_time)
 	}
 
 	// TODO
+	// Alloc asset
 	// *= scale
 	// += position
+	// Draw Asset
+	// Free Asset
+	// TEMP
+
+	//TraceLog(LOG_INFO, "DRAWING ASSET");
 	
+	Vector2 asset_pos = (Vector2){0};
+
+	asset_pos.x = (float)block.pos.x * BLOCK_SIZE + position.x;
+	asset_pos.y = (float)block.pos.y * BLOCK_SIZE + position.y;
+	
+	//TraceLog(LOG_INFO, "%f %f", asset_pos.x, asset_pos.y);
+	Asset* asset = AllocAsset(1, block.rot, game_time);
+	DrawAsset(asset, scale, asset_pos);
+	FreeAsset(asset);
 }
 
-void DrawLoadedBlocks(Block blocks[MAX_LOADED_BLOCK_AMOUNT], unsigned int amount, double game_time)
+void DrawLoadedBlocks(Block blocks[MAX_BLOCK_AMOUNT], int layer[ASSET_AMOUNT], double game_time)
 {
-	for(int i = 0; i < amount; i++)
+	for(int i = 0; i < ASSET_AMOUNT; i++)
 	{
-		DrawBlock(blocks[i], game_time);
+		if(layer[i] < 0)
+		{
+			continue;
+		}
+		DrawBlock(blocks[layer[i]], game_time);
 	}
 }
 

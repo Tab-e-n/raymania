@@ -5,7 +5,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-#define DEBUG false
+#define DEBUG true
 
 #define SCREEN_SIZE (Vector2){1024, 640}
 #define SCREEN_CENTER (Vector2){512, 320}

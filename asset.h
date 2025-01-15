@@ -5,6 +5,9 @@
 #include <raymath.h>
 #include "rmlib.h"
 
+#define ASSET_AMOUNT 64
+#define AU 32
+
 
 typedef struct Tri
 {
@@ -23,10 +26,11 @@ void RaylibLogo(void);
 void TabinLogo(void);
 
 Tri MoveTri(Tri tri, Vector2 position);
+Color TriColor(Tri tri);
 
-Asset* AllocAsset(int asset_id, float scale, BlockRotation rot, double game_time);
+Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time);
 void FreeAsset(Asset* asset);
 
-void DrawAsset(Asset* asset, Vector2 position);
+void DrawAsset(Asset* asset, float scale, Vector2 position);
 
 #endif

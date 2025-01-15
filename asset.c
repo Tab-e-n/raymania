@@ -138,7 +138,12 @@ void TabinLogo(void)
 
 	while(state != END)
 	{
-		if(state == JUMP_IN)
+		if(GetKeyPressed() && state < WAIT)
+		{
+			state_change = true;
+			state = WAIT;
+		}
+		else if(state == JUMP_IN)
 		{
 			frames++;
 			if(frames >= FRAMES_PER_LETTER)
@@ -215,7 +220,6 @@ void TabinLogo(void)
 				DrawText(TextFormat("%c", text[i]), text_pos.x + i * 28 + mid * f * 2, text_pos.y - 72 + fy * fy * 0.5, 32, BLACK);
 			}
 		}
-			// HOWDOESONENAME
 		EndDrawing();
 	}
 }
@@ -228,26 +232,68 @@ Tri MoveTri(Tri tri, Vector2 position)
 	return tri;
 }
 
-Asset* AllocAsset(int asset_id, float scale, BlockRotation rot, double game_time)
+Color TriColor(Tri tri)
+{
+	tri.color;
+	return RAYWHITE;
+}
+
+void PrintTri(Tri tri)
+{
+	TraceLog(LOG_INFO, "%.0f, %.0f | %.0f, %.0f | %.0f, %.0f | %i",
+			tri.a.x, tri.a.y,
+			tri.b.x, tri.b.y,
+			tri.c.x, tri.c.y,
+			tri.color
+		);
+}
+
+Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 {
 	// TODO
+	Asset* asset;
+	//TraceLog(LOG_INFO, "MALLOC: Asset");
+	/*
+	 * IMPORTANT!!!!!
+	 * Triangle points always need to go in counter clockwise order!
+	 * 
+	 *    A**
+	 *    *  **
+	 *   *   ***C
+	 *   B***
+	 *
+	 */
+	switch(asset_id)
+	{
+		case(1):
+			int anim_time = (int)(Wrap((float)game_time, 0.0, 4.0) * 16.0);
+			asset = (Asset*)_malloc(sizeof(Asset) + sizeof(Tri));
+			asset->tri_amount = 1;
+			asset->tris[0] = (Tri){0, 0, 0, AU, AU, anim_time, 16};
+			//PrintTri(asset->tris[0]);
+			break;
+	}
+	return asset;
 }
 
 void FreeAsset(Asset* asset)
 {
 	if(asset != PNULL)
 	{
-		TraceLog(LOG_INFO, "FREE: Free asset.");
+		//TraceLog(LOG_INFO, "FREE: Free asset.");
 		_free(asset);
 	}
 }
 
-void DrawAsset(Asset* asset, Vector2 position)
+void DrawAsset(Asset* asset, float scale, Vector2 position)
 {
+	//TraceLog(LOG_INFO, "Drawing");
 	for(int i = 0; i < asset->tri_amount; i++)
 	{
 		Tri tri = MoveTri(asset->tris[i], position);
-		DrawTriangle(tri.a, tri.b, tri.c, tri.color);
+		//PrintTri(tri);
+		Color color = TriColor(tri);
+		DrawTriangle(tri.a, tri.b, tri.c, color);
 	}
 }
 
