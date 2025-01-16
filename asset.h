@@ -11,7 +11,7 @@
 typedef struct Tri
 {
 	Vector2 a, b, c;
-	short unsigned int color;
+	char color;
 } Tri;
 
 typedef struct Asset

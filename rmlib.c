@@ -191,7 +191,7 @@ unsigned int TextFindLastChar(const char* text, unsigned char ch)
 	return pos;
 }
 
-Color ColorFromIndex(short unsigned int i)
+Color ColorFromIndex(char i)
 {
 	// TODO: Replace with custom colors
 	switch(i)

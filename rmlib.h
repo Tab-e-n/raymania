@@ -65,7 +65,7 @@ void DrawUnitVector(Vector2 position, Vector2 magnitude, Color color);
 
 unsigned int TextFindLastChar(const char* text, unsigned char ch);
 
-Color ColorFromIndex(short unsigned int i);
+Color ColorFromIndex(char i);
 
 void MoveFileListCursor(unsigned int count, int* current, int move);
 void DrawFileList(FilePathList fpl, int current, Color bg1, Color bg2);

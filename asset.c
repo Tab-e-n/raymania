@@ -324,7 +324,6 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			//PrintTri(asset->tris[0]);
 			break;
 		case(2):
-			// Rotsize Test
 			size = (Vector2){BLOCK_SIZE * 2, BLOCK_SIZE};
 			asset = MallocAsset(4);
 			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 3};
@@ -333,7 +332,6 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 12};
 			break;
 		case(3):
-			// Rotsize Test
 			size = (Vector2){BLOCK_SIZE * 2, BLOCK_SIZE * 2};
 			asset = MallocAsset(4);
 			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 3};
@@ -342,7 +340,6 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 12};
 			break;
 		default:
-			// Rotation Test
 			asset = MallocAsset(4);
 			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 3};
 			asset->tris[1] = (Tri){8*BU, 0, 7*BU, 0, 8*BU, BU, 6};
