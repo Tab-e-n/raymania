@@ -314,10 +314,10 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 		for(int i = 0; i < block_walls.wall_amount; i++)
 		{
 			Wall wall = block_walls.walls[i];
-			wall.pos_x.x = BLOCK_SIZE - wall.pos_x.x + BLOCK_SIZE * (block.size.x - 1);
-			wall.pos_x.y = BLOCK_SIZE - wall.pos_x.y + BLOCK_SIZE * (block.size.y - 1);
-			wall.pos_y.x = BLOCK_SIZE - wall.pos_y.x + BLOCK_SIZE * (block.size.x - 1);
-			wall.pos_y.y = BLOCK_SIZE - wall.pos_y.y + BLOCK_SIZE * (block.size.y - 1);
+			wall.pos_x.x = BLOCK_SIZE * block.size.x - wall.pos_x.x;
+			wall.pos_x.y = BLOCK_SIZE * block.size.y - wall.pos_x.y;
+			wall.pos_y.x = BLOCK_SIZE * block.size.x - wall.pos_y.x;
+			wall.pos_y.y = BLOCK_SIZE * block.size.y - wall.pos_y.y;
 			block_walls.walls[i] = wall;
 		}
 	}
@@ -327,9 +327,9 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 		{
 			Wall wall = block_walls.walls[i];
 			wall.pos_x.y = block_walls.walls[i].pos_x.x;
-			wall.pos_x.x = BLOCK_SIZE - block_walls.walls[i].pos_x.y + BLOCK_SIZE * (block.size.y - 1);
+			wall.pos_x.x = BLOCK_SIZE * block.size.y - block_walls.walls[i].pos_x.y;
 			wall.pos_y.y = block_walls.walls[i].pos_y.x;
-			wall.pos_y.x = BLOCK_SIZE - block_walls.walls[i].pos_y.y + BLOCK_SIZE * (block.size.y - 1);
+			wall.pos_y.x = BLOCK_SIZE * block.size.y - block_walls.walls[i].pos_y.y;
 			block_walls.walls[i] = wall;
 		}
 	}
@@ -339,9 +339,9 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 		{
 			Wall wall = block_walls.walls[i];
 			wall.pos_x.x = block_walls.walls[i].pos_x.y;
-			wall.pos_x.y = BLOCK_SIZE - block_walls.walls[i].pos_x.x + BLOCK_SIZE * (block.size.x - 1);
+			wall.pos_x.y = BLOCK_SIZE * block.size.x - block_walls.walls[i].pos_x.x;
 			wall.pos_y.x = block_walls.walls[i].pos_y.y;
-			wall.pos_y.y = BLOCK_SIZE - block_walls.walls[i].pos_y.x + BLOCK_SIZE * (block.size.x - 1);
+			wall.pos_y.y = BLOCK_SIZE * block.size.x - block_walls.walls[i].pos_y.x;
 			block_walls.walls[i] = wall;
 		}
 	}
