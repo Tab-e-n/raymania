@@ -76,6 +76,14 @@ Vector2 Vector2Sign(Vector2 vector)
 	return (Vector2){sign(vector.x), sign(vector.y)};
 }
 
+Vector2 Vector2Swap(Vector2 vector)
+{
+	float t = vector.x;
+	vector.x = vector.y;
+	vector.y = t;
+	return vector;
+}
+
 Vector2 InvertAroundPoint(Vector2 position, Vector2 point)
 {
 	Vector2 dif = Vector2Subtract(point, position);
@@ -181,6 +189,64 @@ unsigned int TextFindLastChar(const char* text, unsigned char ch)
 		i++;
 	}
 	return pos;
+}
+
+Color ColorFromIndex(short unsigned int i)
+{
+	// TODO: Replace with custom colors
+	switch(i)
+	{
+		case(0):
+			return LIGHTGRAY;
+		case(1):
+			return GRAY;
+		case(2):
+			return DARKGRAY;
+		case(3):
+			return YELLOW;
+		case(4):
+			return GOLD;
+		case(5):
+			return ORANGE;
+		case(6):
+			return PINK;
+		case(7):
+			return RED;
+		case(8):
+			return MAROON;
+		case(9):
+			return GREEN;
+		case(10):
+			return LIME;
+		case(11):
+			return DARKGREEN;
+		case(12):
+			return SKYBLUE;
+		case(13):
+			return BLUE;
+		case(14):
+			return DARKBLUE;
+		case(15):
+			return PURPLE;
+		case(16):
+			return VIOLET;
+		case(17):
+			return DARKPURPLE;
+		case(18):
+			return BEIGE;
+		case(19):
+			return BROWN;
+		case(20):
+			return DARKBROWN;
+		case(21):
+			return WHITE;
+		case(22):
+			return BLACK;
+		case(23):
+			return MAGENTA;
+		case(24):
+			return RAYWHITE;
+	}
 }
 
 void MoveFileListCursor(unsigned int count, int* current, int move)

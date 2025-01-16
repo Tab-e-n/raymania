@@ -6,7 +6,6 @@
 #include "rmlib.h"
 
 #define ASSET_AMOUNT 64
-#define AU 32
 
 
 typedef struct Tri
@@ -27,7 +26,10 @@ void TabinLogo(void);
 
 Tri MoveTri(Tri tri, Vector2 position);
 Color TriColor(Tri tri);
+void PrintTri(Tri tri);
 
+Asset* RotateAsset(Asset* asset, BlockRotation rot, float size);
+Asset* MallocAsset(int tri_count);
 Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time);
 void FreeAsset(Asset* asset);
 

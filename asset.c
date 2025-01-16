@@ -234,8 +234,7 @@ Tri MoveTri(Tri tri, Vector2 position)
 
 Color TriColor(Tri tri)
 {
-	tri.color;
-	return RAYWHITE;
+	return ColorFromIndex(tri.color);
 }
 
 void PrintTri(Tri tri)
@@ -248,10 +247,61 @@ void PrintTri(Tri tri)
 		);
 }
 
+Asset* RotateAsset(Asset* asset, BlockRotation rot, float size)
+{
+	if(rot == ROT_NORTH)
+	{
+		return asset;
+	}
+	if(rot == ROT_EAST)
+	{
+		// switch, s-x
+		for(int i = 0; i < asset->tri_amount; i++)
+		{
+			asset->tris[i].a = Vector2Swap(asset->tris[i].a);
+			asset->tris[i].b = Vector2Swap(asset->tris[i].b);
+			asset->tris[i].c = Vector2Swap(asset->tris[i].c);
+			asset->tris[i].a.x = size - asset->tris[i].a.x;
+			asset->tris[i].b.x = size - asset->tris[i].b.x;
+			asset->tris[i].c.x = size - asset->tris[i].c.x;
+		}
+	}
+	if(rot == ROT_SOUTH)
+	{
+		// s-xy
+		Vector2 sv = (Vector2){size, size};
+		for(int i = 0; i < asset->tri_amount; i++)
+		{
+			asset->tris[i].a = Vector2Subtract(sv, asset->tris[i].a);
+			asset->tris[i].b = Vector2Subtract(sv, asset->tris[i].b);
+			asset->tris[i].c = Vector2Subtract(sv, asset->tris[i].c);
+		}
+	}
+	if(rot == ROT_WEST)
+	{
+		// switch, s-y
+		for(int i = 0; i < asset->tri_amount; i++)
+		{
+			asset->tris[i].a = Vector2Swap(asset->tris[i].a);
+			asset->tris[i].b = Vector2Swap(asset->tris[i].b);
+			asset->tris[i].c = Vector2Swap(asset->tris[i].c);
+			asset->tris[i].a.y = size - asset->tris[i].a.y;
+			asset->tris[i].b.y = size - asset->tris[i].b.y;
+			asset->tris[i].c.y = size - asset->tris[i].c.y;
+		}
+	}
+	return asset;
+}
+
+Asset* MallocAsset(int tri_count)
+{
+	Asset* asset = (Asset*)_malloc(sizeof(Asset) + sizeof(Tri) * tri_count);
+	asset->tri_amount = tri_count;
+	return asset;
+}
+
 Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 {
-	// TODO
-	Asset* asset;
 	//TraceLog(LOG_INFO, "MALLOC: Asset");
 	/*
 	 * IMPORTANT!!!!!
@@ -263,17 +313,27 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 	 *   B***
 	 *
 	 */
+	//asset->tris[i] = (Tri){ax, ay, bx, by, cx, cy, color};
+	Asset* asset;
+	float size = BLOCK_SIZE;
 	switch(asset_id)
 	{
 		case(1):
 			int anim_time = (int)(Wrap((float)game_time, 0.0, 4.0) * 16.0);
-			asset = (Asset*)_malloc(sizeof(Asset) + sizeof(Tri));
-			asset->tri_amount = 1;
-			asset->tris[0] = (Tri){0, 0, 0, AU, AU, anim_time, 16};
+			asset = MallocAsset(1);
+			asset->tris[0] = (Tri){0, 0, 0, BU, BU, anim_time, 24};
 			//PrintTri(asset->tris[0]);
 			break;
+		case(2):
+			// Rotation Test
+			asset = MallocAsset(4);
+			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 3};
+			asset->tris[1] = (Tri){8*BU, 0, 7*BU, 0, 8*BU, BU, 6};
+			asset->tris[2] = (Tri){8*BU, 8*BU, 8*BU, 7*BU, 7*BU, 8*BU, 9};
+			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 12};
 	}
-	return asset;
+
+	return RotateAsset(asset, rot, size);
 }
 
 void FreeAsset(Asset* asset)

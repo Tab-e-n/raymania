@@ -190,7 +190,7 @@ void DrawBlockAdv(Block block, float scale, Vector2 position, double game_time)
 	asset_pos.y = (float)block.pos.y * BLOCK_SIZE + position.y;
 	
 	//TraceLog(LOG_INFO, "%f %f", asset_pos.x, asset_pos.y);
-	Asset* asset = AllocAsset(1, block.rot, game_time);
+	Asset* asset = AllocAsset(block.id, block.rot, game_time);
 	DrawAsset(asset, scale, asset_pos);
 	FreeAsset(asset);
 }

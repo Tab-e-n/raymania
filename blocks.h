@@ -7,17 +7,13 @@
 #include "asset.h"
 
 
-#define BLOCK_SIZE 256
-#define INV_BLOCK_SIZE 1/BLOCK_SIZE
-#define BU 0.125*BLOCK_SIZE
-
 #define MAX_BLOCK_AMOUNT 2048
 #define MAX_LOADED_BLOCK_WALLS 18
 #define MAX_BLOCK_WALL_AMOUNT 32
 
 #define PLAYER_LAYER 2
 #define Z_LAYERS 4
-#define LOAD_DISTANCE (Vector2){4, 3}
+#define LOAD_DISTANCE (Vector2){4, 2}
 
 #define SURFACE_AMOUNT 5
 

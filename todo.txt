@@ -27,14 +27,14 @@ Editor Buttons
 Medals
 Party Mode like OG Trackmania
 Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
-My Logo On Startup (Whatever That Is)
+Block Visuals (Only the ones near you render)
 
 IN PROGRESS
 Options
-Block Visuals (Only the ones near you render)
 Actual Blocks
 Racecar Visuals + Colorswaps
 Other Racecars
+My Logo On Startup (Whatever That Is)
 
 NOT DONE
 Standartized menus
