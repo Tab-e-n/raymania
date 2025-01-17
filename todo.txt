@@ -35,10 +35,10 @@ Actual Blocks
 Racecar Visuals + Colorswaps
 Other Racecars
 My Logo On Startup (Whatever That Is)
+Enviroment Visuals
 
 NOT DONE
 Standartized menus
 Arrow that points to the start in editor.
 Removing Tracks, Profiles and Replays
 Skid Lines
-Enviroment Visuals

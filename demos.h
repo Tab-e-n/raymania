@@ -32,6 +32,7 @@ typedef struct DemoSave {
 	Demo* demo;
 } DemoSave;
 
+
 Demo* InitDemo(void);
 void ClearDemo(Demo* demo);
 Demo* CopyDemo(Demo* demo);

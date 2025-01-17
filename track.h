@@ -15,19 +15,20 @@
 
 #define TRACK_DIRECTORY "Tracks\0"
 
-#define TRACK_SIZE_BLOCK sizeof(PieceInfo)
-#define TRACK_SIZE_MAX_BLOCK sizeof(PieceInfo)*MAX_PIECES
-#define TRACK_SIZE_OTHER sizeof(TrackSave)-TRACK_SIZE_MAX_BLOCK
+#define TRACK_SIZE_BLOCK (sizeof(PieceInfo))
+#define TRACK_SIZE_MAX_BLOCK (sizeof(PieceInfo)*MAX_PIECES)
+#define TRACK_SIZE_OTHER (sizeof(TrackSave)-TRACK_SIZE_MAX_BLOCK)
 
-#define PIECE_CATALOGUE_LENGHT 9*BLOCKS_PER_PIECE 
-#define CATALOGUE_BLOCK_SCALE 80.0/BLOCK_SIZE
+#define PIECE_CATALOGUE_LENGHT (9*BLOCKS_PER_PIECE)
+#define CATALOGUE_BLOCK_SCALE (80.0/BLOCK_SIZE)
 #define PIECE_CATALOGUE_PAGE_AMOUNT 2
-//#define UNDO_LIST_LENGHT 10*BLOCKS_PER_PIECE 
+//#define UNDO_LIST_LENGHT (10*BLOCKS_PER_PIECE)
 
 #define MAX_CHECKPOINTS 9
 #define MEDAL_BRONZ_MULT 1.6
 #define MEDAL_SILVER_MULT 1.3
 #define MEDAL_GOLD_MULT 1.15
+
 
 typedef enum PieceCataloguePage {PAGE_DEFAULT} PieceCataloguePage; 
 
@@ -62,6 +63,7 @@ typedef struct TrackSave
 		     size_other;
 	Track track;
 } TrackSave;
+
 
 void SetStart(Track* track, Vector2int placement, BlockRotation rot);
 

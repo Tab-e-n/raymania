@@ -68,6 +68,7 @@ typedef struct MetaInfo
 		check_rot;
 } MetaInfo;
 
+
 CarStats DefaultStats(DefaultCar car);
 Racecar InitRacecar(CarStats* stats);
 
