@@ -158,7 +158,7 @@ int main(void)
 	BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS] = {0};
 	BlockWallArray dblock_walls[MAX_LOADED_BLOCK_WALLS] = {0};
 
-	Vector2int load_placement = (Vector2int){0, 0};
+	Vector2int load_placement = PositionToPlacement(camera.data.target); //(Vector2int){0, 0};
 	Vector2int d_placement = (Vector2int){0, 0};
 
 	PopupType popup = POPUP_OFF;
