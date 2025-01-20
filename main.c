@@ -17,7 +17,7 @@
 #define MIN_PARTY_TIMER 1
 
 
-typedef enum GameScreen {PROFILES, MENU, EDITOR, RACE} GameScreen;
+typedef enum GameScreen {PROFILES, MENU, EDITOR, RACE, OPTIONS} GameScreen;
 typedef enum MenuOption {MENU_PLAY, MENU_EDITOR, MENU_PARTY, MENU_OPTIONS, MENU_EXIT, MENU_RACE = 10, MENU_DEMO, MENU_PLAY_EXIT} MenuOption;
 typedef enum EditorOption {EDITOR_EXIT = 9, EDITOR_LOAD, EDITOR_SAVE, EDITOR_CLEAR, EDITOR_ENVIROMENT, EDITOR_CAR, EDITOR_PAGE_JUMP, EDITOR_MEDALS, EDITOR_VALIDATE,} EditorOption;
 typedef enum PopupType {POPUP_OFF, POPUP_EDITOR_EXIT, POPUP_EDITOR_CLEAR, POPUP_VALIDATE, POPUP_NO_START, POPUP_RESET_MEDALS} PopupType;
@@ -87,7 +87,7 @@ int main(void)
 	}
 
 #ifdef _IO_H_
-    if(!DirectoryExists(DEMO_DIRECTORY))
+	if(!DirectoryExists(DEMO_DIRECTORY))
 	{
 		mkdir(DEMO_DIRECTORY);
 	}
@@ -105,7 +105,7 @@ int main(void)
 
 	}
 #else
-    if(!DirectoryExists(DEMO_DIRECTORY))
+	if(!DirectoryExists(DEMO_DIRECTORY))
 	{
 		mkdir(DEMO_DIRECTORY, 0b111111111);
 	}
@@ -245,6 +245,10 @@ int main(void)
 	bool validating_track = false;
 	bool saving_track = false;
 	unsigned char editor_four_option_selector = 0, efos_opt = 0;
+
+	// OPTIONS VAR
+	
+	bool reset_options = false;
 
 	// PARTY VAR
 	
@@ -502,9 +506,7 @@ int main(void)
 			vel_sign.y = -sign(camera_velocity.y) * AirQuotesNoise(game_time, false);
 		}
 
-		TraceLog(LOG_INFO, "-M: %i %i", load_placement.x, load_placement.y);
 		load_placement = PositionToPlacement(camera.data.target);
-		TraceLog(LOG_INFO, "M: %i %i", load_placement.x, load_placement.y);
 
 		if(file_list_active || popup)
 		{
@@ -725,6 +727,8 @@ int main(void)
 						party_profiles[1] = DefaultProfile();
 						break;
 					case(MENU_OPTIONS):
+						current_game_screen = OPTIONS;
+						reset_options = true;
 						break;
 					case(MENU_EXIT):
 						exit = true;
@@ -1020,16 +1024,14 @@ int main(void)
 				pcp_dir = 1.0;
 			}
 		}
-		TraceLog(LOG_INFO, "-E: %i %i", load_placement.x, load_placement.y);
 		load_placement = cursor_info.placement;
-		TraceLog(LOG_INFO, "E: %i %i", load_placement.x, load_placement.y);
 
 		if(pcp_dir != 0.0)
 		{
 			float target = (pcp_dir + 1.0) * 0.5;
 			float dif = absf(target - piece_catalogue_pulled);
 			piece_catalogue_pulled += 0.10 * pcp_dir * dif;
-			if(piece_catalogue_pulled < 0.0) piece_catalogue_pulled = 0.0;
+			if(piece_catalogue_pulled < 0.005) piece_catalogue_pulled = 0.0;
 			if(piece_catalogue_pulled > 1.0) piece_catalogue_pulled = 1.0;
 		}
 		break;
@@ -1082,9 +1084,7 @@ int main(void)
 			stop_inputs = false;
 			finished = false;
 
-			TraceLog(LOG_INFO, "-R: %i %i", load_placement.x, load_placement.y);
 			load_placement = RacecarPlacement(&car);
-			TraceLog(LOG_INFO, "R: %i %i", load_placement.x, load_placement.y);
 			d_placement = RacecarPlacement(&car);
 			LoadNearbyBlockWalls(blocks, block_walls, load_placement);
 			LoadNearbyBlockWalls(blocks, dblock_walls, d_placement);
@@ -1290,9 +1290,7 @@ int main(void)
 			Vector2int new_placement = RacecarPlacement(&car);
 			if(!Vector2intEqual(load_placement, new_placement))
 			{
-				TraceLog(LOG_INFO, "-RN: %i %i", load_placement.x, load_placement.y);
 				load_placement = new_placement;
-				TraceLog(LOG_INFO, "RN: %i %i", load_placement.x, load_placement.y);
 				LoadNearbyBlockWalls(blocks, block_walls, load_placement);
 			}
 
@@ -1524,6 +1522,18 @@ int main(void)
 			MoveCameraInstant(&camera, car.position);
 		}
 
+		break;
+	case OPTIONS:
+		if(reset_options)
+		{
+			reset_options = false;
+		}
+
+		if(InputPressed(input, INPUT_ESC))
+		{
+			current_game_screen = MENU;
+			reset_menu = true;
+		}
 		break;
 	}
 	if(popup)
@@ -2120,16 +2130,12 @@ int main(void)
 							DrawText("EDITOR", 512 - 123, y_pos, 64, ORANGE);
 						break;
 						case(MENU_PARTY):
-							//DrawRectangle(320, y_pos, 384, 64, GRAY);
-							//DrawText("PARTY", 512 - 111, y_pos, 64, DARKGRAY);
 							DrawRectangle(320, y_pos, 384, 64, PURPLE);
 							DrawText("PARTY", 512 - 111, y_pos, 64, DARKPURPLE);
 						break;
 						case(MENU_OPTIONS):
-							DrawRectangle(320, y_pos, 384, 64, GRAY);
-							DrawText("OPTIONS", 512 - 146, y_pos, 64, DARKGRAY);
-							//DrawRectangle(320, y_pos, 384, 64, SKYBLUE);
-							//DrawText("OPTIONS", 512 - 146, y_pos, 64, DARKBLUE);
+							DrawRectangle(320, y_pos, 384, 64, SKYBLUE);
+							DrawText("OPTIONS", 512 - 146, y_pos, 64, DARKBLUE);
 						break;
 						case(MENU_EXIT):
 							DrawRectangle(320, y_pos, 384, 64, PINK);

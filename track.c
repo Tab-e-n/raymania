@@ -541,7 +541,7 @@ void PutPieceIntoCatalogue(Block piece_catalogue[PIECE_CATALOGUE_LENGHT], unsign
 	unsigned int block_amount = GetPieceAdv(piece_id, placement, ROT_NORTH, piece);
 	for(int i = 0; i < block_amount; i++)
 	{
-		piece[i].pos = (Vector2int){piece_count, 0};
+		piece[i].pos = (Vector2int){0, 0};
 		piece_catalogue[piece_count * BLOCKS_PER_PIECE + i] = piece[i];
 	}
 }

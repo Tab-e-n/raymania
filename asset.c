@@ -320,47 +320,54 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 	 *   B***
 	 *
 	 */
-	//asset->tris[i] = (Tri){ax, ay, bx, by, cx, cy, color};
+	//asset->tris[i] = (Tri){ax*BU, ay*BU, bx*BU, by*BU, cx*BU, cy*BU, color};
 	Asset* asset;
 	Vector2 size = (Vector2){BLOCK_SIZE, BLOCK_SIZE};
 	switch(asset_id)
 	{
 		case(1):
-			int anim_time = (int)(Wrap((float)game_time, 0.0, 4.0) * 16.0);
 			asset = MallocAsset(4);
-			asset->tris[0] = (Tri){0, 0, 0, BU, BU, anim_time, 24};
-			asset->tris[1] = (Tri){8*BU, 0, 7*BU, 0, 8*BU, BU, 6};
-			asset->tris[2] = (Tri){8*BU, 8*BU, 8*BU, 7*BU, 7*BU, 8*BU, 9};
-			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 12};
+			asset->tris[0] = (Tri){0, 0, 0, BU, 8*BU, 0, 9};
+			asset->tris[1] = (Tri){8*BU, 0, 0, BU, 8*BU, BU, 10};
+			asset->tris[2] = (Tri){8*BU, 8*BU, 8*BU, 7*BU, 7*BU, 8*BU, 11};
+			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 10};
 			break;
 		case(2):
 			size = (Vector2){BLOCK_SIZE * 2, BLOCK_SIZE};
-			asset = MallocAsset(4);
-			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 3};
-			asset->tris[1] = (Tri){16*BU, 0, 15*BU, 0, 16*BU, BU, 6};
-			asset->tris[2] = (Tri){16*BU, 8*BU, 16*BU, 7*BU, 15*BU, 8*BU, 9};
-			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 12};
+			asset = MallocAsset(8);
+			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 0};
+			asset->tris[1] = (Tri){16*BU, 0, 15*BU, 0, 16*BU, BU, 1};
+			asset->tris[2] = (Tri){16*BU, 8*BU, 16*BU, 7*BU, 15*BU, 8*BU, 2};
+			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 1};
+			asset->tris[4] = (Tri){4*BU, 2*BU, 4*BU, 6*BU, 5*BU, 6*BU, 0};
+			asset->tris[5] = (Tri){4*BU, 6*BU, 4*BU, 2*BU, 3*BU, 2*BU, 2};
+			asset->tris[6] = (Tri){14*BU, 6*BU, 10*BU, 2*BU, 10*BU, 6*BU, 0};
+			asset->tris[7] = (Tri){14*BU, 2*BU, 10*BU, 2*BU, 14*BU, 6*BU, 2};
 			break;
 		case(3):
 			size = (Vector2){BLOCK_SIZE * 2, BLOCK_SIZE * 2};
-			asset = MallocAsset(4);
-			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 3};
-			asset->tris[1] = (Tri){16*BU, 0, 15*BU, 0, 16*BU, BU, 6};
-			asset->tris[2] = (Tri){16*BU, 16*BU, 16*BU, 15*BU, 15*BU, 16*BU, 9};
-			asset->tris[3] = (Tri){0, 16*BU, BU, 16*BU, 0, 15*BU, 12};
+			asset = MallocAsset(8);
+			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 18};
+			asset->tris[1] = (Tri){16*BU, 0, 15*BU, 0, 16*BU, BU, 19};
+			asset->tris[2] = (Tri){16*BU, 16*BU, 16*BU, 15*BU, 15*BU, 16*BU, 20};
+			asset->tris[3] = (Tri){0, 16*BU, BU, 16*BU, 0, 15*BU, 19};
+			asset->tris[4] = (Tri){4*BU, 2*BU, 4*BU, 6*BU, 5*BU, 6*BU, 18};
+			asset->tris[5] = (Tri){4*BU, 6*BU, 4*BU, 2*BU, 3*BU, 2*BU, 20};
+			asset->tris[6] = (Tri){14*BU, 6*BU, 10*BU, 2*BU, 10*BU, 6*BU, 18};
+			asset->tris[7] = (Tri){14*BU, 2*BU, 10*BU, 2*BU, 14*BU, 6*BU, 20};
 			break;
 		case(4):
 			asset = MallocAsset(4);
-			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 3};
-			asset->tris[1] = (Tri){8*BU, 0, 7*BU, 0, 8*BU, BU, 6};
-			asset->tris[2] = (Tri){8*BU, 8*BU, 8*BU, 7*BU, 7*BU, 8*BU, 9};
-			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 12};
+			asset->tris[0] = (Tri){0, 0, 8*BU, 8*BU, BU, 0, 9};
+			asset->tris[1] = (Tri){8*BU, 0, 7*BU, 0, 8*BU, BU, 10};
+			asset->tris[2] = (Tri){8*BU, 8*BU, 0, 0, 7*BU, 8*BU, 11};
+			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 10};
 			break;
 		case(5):
 			asset = MallocAsset(4);
-			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 4};
-			asset->tris[1] = (Tri){8*BU, 0, 7*BU, 0, 8*BU, BU, 7};
-			asset->tris[2] = (Tri){8*BU, 8*BU, 8*BU, 7*BU, 7*BU, 8*BU, 10};
+			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 12};
+			asset->tris[1] = (Tri){8*BU, 0, 7*BU, 0, 8*BU, BU, 13};
+			asset->tris[2] = (Tri){8*BU, 8*BU, 8*BU, 7*BU, 7*BU, 8*BU, 14};
 			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 13};
 			break;
 		case(6):
@@ -374,9 +381,11 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[1] = (Tri){8*BU, 3.5*BU, 0, 4.5*BU, 8*BU, 4.5*BU, 7};
 			break;
 		case(8):
-			asset = MallocAsset(2);
+			int anim_time = (int)(Wrap((float)game_time, 0.0, 4.0) * 16.0);
+			asset = MallocAsset(3);
 			asset->tris[0] = (Tri){0, 3.5*BU, 0, 4.5*BU, 8*BU, 3.5*BU, 9};
 			asset->tris[1] = (Tri){8*BU, 3.5*BU, 0, 4.5*BU, 8*BU, 4.5*BU, 9};
+			asset->tris[2] = (Tri){0, 0, 0, BU, BU, anim_time, 24};
 			break;
 		default:
 			asset = MallocAsset(4);
