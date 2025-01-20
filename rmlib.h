@@ -11,7 +11,7 @@
 #define SCREEN_CENTER (Vector2){512, 320}
 
 #define FRAME 0.016
-#define INV_PI (1.0/PI)
+#define INV_PI 1.0/PI
 #define UP_VECTOR (Vector2){0.0, -1.0}
 #define PNULL (void*)0
 
@@ -21,8 +21,8 @@
 #define FILE_LIST_PAGE_ITEMS 11
 
 #define BLOCK_SIZE 256
-#define INV_BLOCK_SIZE (1/BLOCK_SIZE)
-#define BU (0.125*BLOCK_SIZE)
+#define INV_BLOCK_SIZE 1/BLOCK_SIZE
+#define BU 0.125*BLOCK_SIZE
 
 
 typedef enum InputKeys {INPUT_LEFT, INPUT_RIGHT, INPUT_UP, INPUT_DOWN, INPUT_BACK, INPUT_ENTER, INPUT_ESC, INPUT_R} InputKeys;

@@ -502,7 +502,9 @@ int main(void)
 			vel_sign.y = -sign(camera_velocity.y) * AirQuotesNoise(game_time, false);
 		}
 
+		TraceLog(LOG_INFO, "-M: %i %i", load_placement.x, load_placement.y);
 		load_placement = PositionToPlacement(camera.data.target);
+		TraceLog(LOG_INFO, "M: %i %i", load_placement.x, load_placement.y);
 
 		if(file_list_active || popup)
 		{
@@ -1018,7 +1020,9 @@ int main(void)
 				pcp_dir = 1.0;
 			}
 		}
+		TraceLog(LOG_INFO, "-E: %i %i", load_placement.x, load_placement.y);
 		load_placement = cursor_info.placement;
+		TraceLog(LOG_INFO, "E: %i %i", load_placement.x, load_placement.y);
 
 		if(pcp_dir != 0.0)
 		{
@@ -1078,7 +1082,9 @@ int main(void)
 			stop_inputs = false;
 			finished = false;
 
+			TraceLog(LOG_INFO, "-R: %i %i", load_placement.x, load_placement.y);
 			load_placement = RacecarPlacement(&car);
+			TraceLog(LOG_INFO, "R: %i %i", load_placement.x, load_placement.y);
 			d_placement = RacecarPlacement(&car);
 			LoadNearbyBlockWalls(blocks, block_walls, load_placement);
 			LoadNearbyBlockWalls(blocks, dblock_walls, d_placement);
@@ -1284,7 +1290,9 @@ int main(void)
 			Vector2int new_placement = RacecarPlacement(&car);
 			if(!Vector2intEqual(load_placement, new_placement))
 			{
+				TraceLog(LOG_INFO, "-RN: %i %i", load_placement.x, load_placement.y);
 				load_placement = new_placement;
+				TraceLog(LOG_INFO, "RN: %i %i", load_placement.x, load_placement.y);
 				LoadNearbyBlockWalls(blocks, block_walls, load_placement);
 			}
 
@@ -1953,7 +1961,10 @@ int main(void)
 		}
 
 		//DrawPlacedBlocksDebug(blocks, 0);
-		DrawLoadedBlockWallsDebug(block_walls);
+		if(DEBUG)
+		{
+			DrawLoadedBlockWallsDebug(block_walls);
+		}
 
 		switch(current_game_screen)
 		{
@@ -1967,7 +1978,7 @@ int main(void)
 			{
 				for(int i = 0; i < BLOCKS_PER_PIECE; i++)
 				{
-					DrawBlockDebug(held_piece[i]);
+					DrawBlock(held_piece[i], game_time);
 				}
 				Vector2 cursor_pos = (Vector2){BLOCK_SIZE * cursor_info.placement.x, BLOCK_SIZE * cursor_info.placement.y};
 				DrawCursor(cursor_pos, BLOCK_SIZE, BLACK);

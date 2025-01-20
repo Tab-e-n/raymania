@@ -232,6 +232,14 @@ Tri MoveTri(Tri tri, Vector2 position)
 	return tri;
 }
 
+Tri ScaleTri(Tri tri, float scale)
+{
+	tri.a = Vector2Scale(tri.a, scale);
+	tri.b = Vector2Scale(tri.b, scale);
+	tri.c = Vector2Scale(tri.c, scale);
+	return tri;
+}
+
 Color TriColor(Tri tri)
 {
 	return ColorFromIndex(tri.color);
@@ -319,9 +327,11 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 	{
 		case(1):
 			int anim_time = (int)(Wrap((float)game_time, 0.0, 4.0) * 16.0);
-			asset = MallocAsset(1);
+			asset = MallocAsset(4);
 			asset->tris[0] = (Tri){0, 0, 0, BU, BU, anim_time, 24};
-			//PrintTri(asset->tris[0]);
+			asset->tris[1] = (Tri){8*BU, 0, 7*BU, 0, 8*BU, BU, 6};
+			asset->tris[2] = (Tri){8*BU, 8*BU, 8*BU, 7*BU, 7*BU, 8*BU, 9};
+			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 12};
 			break;
 		case(2):
 			size = (Vector2){BLOCK_SIZE * 2, BLOCK_SIZE};
@@ -335,9 +345,38 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			size = (Vector2){BLOCK_SIZE * 2, BLOCK_SIZE * 2};
 			asset = MallocAsset(4);
 			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 3};
+			asset->tris[1] = (Tri){16*BU, 0, 15*BU, 0, 16*BU, BU, 6};
+			asset->tris[2] = (Tri){16*BU, 16*BU, 16*BU, 15*BU, 15*BU, 16*BU, 9};
+			asset->tris[3] = (Tri){0, 16*BU, BU, 16*BU, 0, 15*BU, 12};
+			break;
+		case(4):
+			asset = MallocAsset(4);
+			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 3};
 			asset->tris[1] = (Tri){8*BU, 0, 7*BU, 0, 8*BU, BU, 6};
 			asset->tris[2] = (Tri){8*BU, 8*BU, 8*BU, 7*BU, 7*BU, 8*BU, 9};
 			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 12};
+			break;
+		case(5):
+			asset = MallocAsset(4);
+			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 4};
+			asset->tris[1] = (Tri){8*BU, 0, 7*BU, 0, 8*BU, BU, 7};
+			asset->tris[2] = (Tri){8*BU, 8*BU, 8*BU, 7*BU, 7*BU, 8*BU, 10};
+			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 13};
+			break;
+		case(6):
+			asset = MallocAsset(2);
+			asset->tris[0] = (Tri){0, 3.5*BU, 0, 4.5*BU, 8*BU, 3.5*BU, 13};
+			asset->tris[1] = (Tri){8*BU, 3.5*BU, 0, 4.5*BU, 8*BU, 4.5*BU, 13};
+			break;
+		case(7):
+			asset = MallocAsset(2);
+			asset->tris[0] = (Tri){0, 3.5*BU, 0, 4.5*BU, 8*BU, 3.5*BU, 7};
+			asset->tris[1] = (Tri){8*BU, 3.5*BU, 0, 4.5*BU, 8*BU, 4.5*BU, 7};
+			break;
+		case(8):
+			asset = MallocAsset(2);
+			asset->tris[0] = (Tri){0, 3.5*BU, 0, 4.5*BU, 8*BU, 3.5*BU, 9};
+			asset->tris[1] = (Tri){8*BU, 3.5*BU, 0, 4.5*BU, 8*BU, 4.5*BU, 9};
 			break;
 		default:
 			asset = MallocAsset(4);
@@ -364,7 +403,8 @@ void DrawAsset(Asset* asset, float scale, Vector2 position)
 	//TraceLog(LOG_INFO, "Drawing");
 	for(int i = 0; i < asset->tri_amount; i++)
 	{
-		Tri tri = MoveTri(asset->tris[i], position);
+		Tri tri = ScaleTri(asset->tris[i], scale);
+		tri = MoveTri(tri, position);
 		//PrintTri(tri);
 		Color color = TriColor(tri);
 		DrawTriangle(tri.a, tri.b, tri.c, color);

@@ -25,6 +25,7 @@ void RaylibLogo(void);
 void TabinLogo(void);
 
 Tri MoveTri(Tri tri, Vector2 position);
+Tri ScaleTri(Tri tri, float scale);
 Color TriColor(Tri tri);
 void PrintTri(Tri tri);
 

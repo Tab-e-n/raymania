@@ -566,6 +566,6 @@ void DrawPieceCatalogue(Block piece_catalogue[PIECE_CATALOGUE_LENGHT], Vector2 p
 		float piece_n = i / BLOCKS_PER_PIECE;
 		Vector2 pos = position;
 		pos.x = CataloguePosition(position.x, piece_n);
-		DrawBlockDebugAdv(block, size, pos);
+		DrawBlockAdv(block, size, pos, 0);
 	}
 }
