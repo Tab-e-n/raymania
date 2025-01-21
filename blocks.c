@@ -38,38 +38,46 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 	
 	switch(id)
 	{
-		case(1):
+		case(D1x1GWN):
 			block.area = (Area){TYPE_GRASS, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
 			block.size = (Vector2int){1, 1};
 			break;
-		case(2):
+		case(D2x1AIO):
 			block.area = (Area){TYPE_ASPHALT, 0, 0, BLOCK_SIZE * 2, BLOCK_SIZE};
 			block.size = (Vector2int){2, 1};
 			break;
-		case(3):
+		case(D2x2DIO):
 			block.area = (Area){TYPE_DIRT, 0, 0, BLOCK_SIZE * 2, BLOCK_SIZE * 2};
 			block.size = (Vector2int){2, 2};
 			break;
-		case(4):
+		case(D1x1GWS):
 			block.area = (Area){TYPE_GRASS, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
 			block.size = (Vector2int){1, 1};
 			break;
-		case(5):
+		case(D1x1I):
 			block.area = (Area){TYPE_ICE, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
 			block.size = (Vector2int){1, 1};
 			break;
-		case(6):
+		case(D1x1C):
 			block.area = (Area){TYPE_CHECKPOINT, 0, BU * 3.5, BLOCK_SIZE, BU};
 			block.size = (Vector2int){1, 1};
 			break;
-		case(7):
+		case(D1x1F):
 			block.area = (Area){TYPE_FINISH, 0, BU * 3.5, BLOCK_SIZE, BU};
 			block.size = (Vector2int){1, 1};
 			break;
-		case(8):
+		case(D1x1S):
 			block.area = (Area){TYPE_START, 0, BU * 3.5, BLOCK_SIZE, BU};
 			block.size = (Vector2int){1, 1};
 			block.z = 1;
+			break;
+		case(D1x1A):
+			block.area = (Area){TYPE_ASPHALT, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
+			block.size = (Vector2int){1, 1};
+			break;
+		case(B1x1AR0):
+			block.area = (Area){TYPE_ASPHALT, BU, 0, 7*BU, 8*BU};
+			block.size = (Vector2int){1, 1};
 			break;
 		default:
 			block.id = 0;
@@ -287,12 +295,12 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 
 	switch(block.id)
 	{
-		case(1):
+		case(D1x1GWN):
 			block_walls.wall_amount = 1;
 			block_walls.walls[0] = (Wall){0, 0, BU * 8, 0};
 			break;
-		case(2):
-		case(3):
+		case(D2x1AIO):
+		case(D2x2DIO):
 			block_walls.wall_amount = 5;
 			block_walls.walls[0] = (Wall){BU * 10, BU * 2, BU * 14, BU * 2};
 			block_walls.walls[1] = (Wall){BU * 10, BU * 2, BU * 10, BU * 6};
@@ -300,9 +308,25 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 			block_walls.walls[3] = (Wall){BU * 14, BU * 2, BU * 14, BU * 6};
 			block_walls.walls[4] = (Wall){BU * 4, BU * 2, BU * 4, BU * 6};
 			break;
-		case(4):
+		case(D1x1GWS):
 			block_walls.wall_amount = 1;
 			block_walls.walls[0] = (Wall){0, 0, BU * 8, BU * 8};
+			break;
+		case(B1x1AR0):
+			// 2 side walls, basic road
+			block_walls.wall_amount = 12;
+			block_walls.walls[0] = (Wall){0.5*BU, 0, 0.5*BU, 8*BU};
+			block_walls.walls[1] = (Wall){1*BU, 0, 1*BU, 8*BU};
+			block_walls.walls[2] = (Wall){7*BU, 0, 7*BU, 8*BU};
+			block_walls.walls[3] = (Wall){7.5*BU, 0, 7.5*BU, 8*BU};
+			block_walls.walls[4] = (Wall){0.5*BU, 0, .75*BU, -0.25*BU};
+			block_walls.walls[5] = (Wall){1*BU, 0, .75*BU, -0.25*BU};
+			block_walls.walls[6] = (Wall){7*BU, 0, 7.25*BU, -0.25*BU};
+			block_walls.walls[7] = (Wall){7.5*BU, 0, 7.25*BU, -0.25*BU};
+			block_walls.walls[8] = (Wall){0.5*BU, 8*BU, .75*BU, 8.25*BU};
+			block_walls.walls[9] = (Wall){1*BU, 8*BU, .75*BU, 8.25*BU};
+			block_walls.walls[10] = (Wall){7*BU, 8*BU, 7.25*BU, 8.25*BU};
+			block_walls.walls[11] = (Wall){7.5*BU, 8*BU, 7.25*BU, 8.25*BU};
 			break;
 		default:
 			block_walls.wall_amount = 0;

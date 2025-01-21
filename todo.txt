@@ -30,6 +30,7 @@ Track Showcase before starting (From start through cp to finish, also shows meda
 Block Visuals (Only the ones near you render)
 
 IN PROGRESS
+Big blocks prevent other blocks from being placed
 Options
 Actual Blocks
 Racecar Visuals + Colorswaps

@@ -311,6 +311,7 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 {
 	//TraceLog(LOG_INFO, "MALLOC: Asset");
 	/*
+	 * BLOCK ASSET DEFINITIONS
 	 * IMPORTANT!!!!!
 	 * Triangle points always need to go in counter clockwise order!
 	 * 
@@ -325,14 +326,14 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 	Vector2 size = (Vector2){BLOCK_SIZE, BLOCK_SIZE};
 	switch(asset_id)
 	{
-		case(1):
+		case(D1x1GWN):
 			asset = MallocAsset(4);
 			asset->tris[0] = (Tri){0, 0, 0, BU, 8*BU, 0, 9};
 			asset->tris[1] = (Tri){8*BU, 0, 0, BU, 8*BU, BU, 10};
 			asset->tris[2] = (Tri){8*BU, 8*BU, 8*BU, 7*BU, 7*BU, 8*BU, 11};
 			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 10};
 			break;
-		case(2):
+		case(D2x1AIO):
 			size = (Vector2){BLOCK_SIZE * 2, BLOCK_SIZE};
 			asset = MallocAsset(8);
 			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 0};
@@ -344,7 +345,7 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[6] = (Tri){14*BU, 6*BU, 10*BU, 2*BU, 10*BU, 6*BU, 0};
 			asset->tris[7] = (Tri){14*BU, 2*BU, 10*BU, 2*BU, 14*BU, 6*BU, 2};
 			break;
-		case(3):
+		case(D2x2DIO):
 			size = (Vector2){BLOCK_SIZE * 2, BLOCK_SIZE * 2};
 			asset = MallocAsset(8);
 			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 18};
@@ -356,36 +357,58 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[6] = (Tri){14*BU, 6*BU, 10*BU, 2*BU, 10*BU, 6*BU, 18};
 			asset->tris[7] = (Tri){14*BU, 2*BU, 10*BU, 2*BU, 14*BU, 6*BU, 20};
 			break;
-		case(4):
+		case(D1x1GWS):
 			asset = MallocAsset(4);
 			asset->tris[0] = (Tri){0, 0, 8*BU, 8*BU, BU, 0, 9};
 			asset->tris[1] = (Tri){8*BU, 0, 7*BU, 0, 8*BU, BU, 10};
 			asset->tris[2] = (Tri){8*BU, 8*BU, 0, 0, 7*BU, 8*BU, 11};
 			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 10};
 			break;
-		case(5):
+		case(D1x1I):
 			asset = MallocAsset(4);
 			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 12};
 			asset->tris[1] = (Tri){8*BU, 0, 7*BU, 0, 8*BU, BU, 13};
 			asset->tris[2] = (Tri){8*BU, 8*BU, 8*BU, 7*BU, 7*BU, 8*BU, 14};
 			asset->tris[3] = (Tri){0, 8*BU, BU, 8*BU, 0, 7*BU, 13};
 			break;
-		case(6):
+		case(D1x1C):
 			asset = MallocAsset(2);
 			asset->tris[0] = (Tri){0, 3.5*BU, 0, 4.5*BU, 8*BU, 3.5*BU, 13};
 			asset->tris[1] = (Tri){8*BU, 3.5*BU, 0, 4.5*BU, 8*BU, 4.5*BU, 13};
 			break;
-		case(7):
+		case(D1x1F):
 			asset = MallocAsset(2);
 			asset->tris[0] = (Tri){0, 3.5*BU, 0, 4.5*BU, 8*BU, 3.5*BU, 7};
 			asset->tris[1] = (Tri){8*BU, 3.5*BU, 0, 4.5*BU, 8*BU, 4.5*BU, 7};
 			break;
-		case(8):
+		case(D1x1S):
 			int anim_time = (int)(Wrap((float)game_time, 0.0, 4.0) * 16.0);
 			asset = MallocAsset(3);
 			asset->tris[0] = (Tri){0, 3.5*BU, 0, 4.5*BU, 8*BU, 3.5*BU, 9};
 			asset->tris[1] = (Tri){8*BU, 3.5*BU, 0, 4.5*BU, 8*BU, 4.5*BU, 9};
+			asset = RotateAsset(asset, rot, size);
+			rot = ROT_NORTH;
 			asset->tris[2] = (Tri){0, 0, 0, BU, BU, anim_time, 24};
+			break;
+		case(D1x1A):
+			asset = MallocAsset(16);
+			for(int i = 0; i < 16; i++)
+			{
+				asset->tris[i] = (Tri){0, 0.5*i*BU, 0, 0.5*BU + 0.5*i*BU, BU, 0.5*i*BU};
+			}
+			break;
+		case(B1x1AR0):
+			asset = MallocAsset(10);
+			asset->tris[0] = (Tri){0.5*BU, 0*BU, 1*BU, 0*BU, 0.75*BU, -0.25*BU, 2};
+			asset->tris[1] = (Tri){0.5*BU, 0*BU, 1*BU, 8*BU, 1*BU, 0*BU, 2};
+			asset->tris[2] = (Tri){0.5*BU, 0*BU, 0.5*BU, 8*BU, 1*BU, 8*BU, 2};
+			asset->tris[3] = (Tri){0.5*BU, 8*BU, 0.75*BU, 8.25*BU, 1*BU, 8*BU, 2};
+			asset->tris[4] = (Tri){7*BU, 0*BU, 7.5*BU, 0*BU, 7.25*BU, -0.25*BU, 2};
+			asset->tris[5] = (Tri){7*BU, 0*BU, 7.5*BU, 8*BU, 7.5*BU, 0*BU, 2};
+			asset->tris[6] = (Tri){7*BU, 0*BU, 7*BU, 8*BU, 7.5*BU, 8*BU, 2};
+			asset->tris[7] = (Tri){7*BU, 8*BU, 7.25*BU, 8.25*BU, 7.5*BU, 8*BU, 2};
+			asset->tris[8] = (Tri){1*BU, 0*BU, 1*BU, 8*BU, 7*BU, 8*BU, 1};
+			asset->tris[9] = (Tri){1*BU, 0*BU, 7*BU, 8*BU, 7*BU, 0*BU, 1};
 			break;
 		default:
 			asset = MallocAsset(4);

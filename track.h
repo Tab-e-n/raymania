@@ -30,7 +30,7 @@
 #define MEDAL_GOLD_MULT 1.15
 
 
-typedef enum PieceCataloguePage {PAGE_DEFAULT} PieceCataloguePage; 
+typedef enum PieceCataloguePage {PAGE_DEBUG, PAGE_DEBUG_2} PieceCataloguePage; 
 
 typedef struct PieceInfo
 {

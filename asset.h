@@ -8,6 +8,32 @@
 #define ASSET_AMOUNT 64
 
 
+/*
+ * [Set][Size XxY][Surface][Other info]
+ * Set
+ *  - D, Debug blocks
+ *  - B, Normal Blocks
+ * Size
+ *  - 1x1, Size 1 by 1
+ *  - 2x1, 2 wide 1 tall
+ * Surface
+ *  - V, Void
+ *  - A, Asphalt
+ *  - G, Grass
+ *  - D, Dirt
+ *  - I, Ice
+ *  - W, Water
+ *  - C, Checkpoint
+ *  - F, Finish
+ *  - S, Start
+ */
+typedef enum BlockID {
+	DVOID,
+	D1x1GWN, D2x1AIO, D2x2DIO, D1x1GWS, D1x1I, D1x1C, D1x1F, D1x1S,
+	D1x1A, D2, D3, D4, D5, D6, D7, D8, D9,
+	B1x1AR0
+} BlockID;
+
 typedef struct Tri
 {
 	Vector2 a, b, c;
