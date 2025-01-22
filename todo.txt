@@ -33,12 +33,14 @@ IN PROGRESS
 Big blocks prevent other blocks from being placed
 Options
 Actual Blocks
-Racecar Visuals + Colorswaps
 Other Racecars
 My Logo On Startup (Whatever That Is)
-Enviroment Visuals
 
 NOT DONE
+Racecar Visuals + Colorswaps
+Audio omg
+Enviroment Visuals
+
 Standartized menus
 Arrow that points to the start in editor.
 Removing Tracks, Profiles and Replays

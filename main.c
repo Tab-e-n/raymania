@@ -69,6 +69,122 @@ void DrawPartyMenu(int current_opt, unsigned int party_count, Profile* profiles)
 	}
 }
 
+void DrawOptions(int current, int page, int max)
+{
+	const Vector2 SIZE = (Vector2){768, 512};
+	const Vector2 POSITION = (Vector2){128, 64};
+
+	DrawRectangle(POSITION.x - 28, POSITION.y - 28, SIZE.x + 56, SIZE.y + 56, BLACK);
+	DrawRectangle(POSITION.x - 24, POSITION.y - 24, SIZE.x + 48, SIZE.y + 48, SKYBLUE);
+	DrawRectangle(POSITION.x, POSITION.y, SIZE.x, SIZE.y, BLUE);
+
+	Color text_color = BLACK;
+
+	if(page == 0)
+	{
+		for(int i = 0; i < max; i++)
+		{
+			text_color = BLACK;
+			if(i == current)
+			{
+				text_color = RAYWHITE;
+			}
+			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
+			if(i == 0)
+			{
+				DrawText("PROFILE", pos.x, pos.y, 32, text_color);
+			}
+			else if(i == 1)
+			{
+				DrawText("GAMEPLAY", pos.x, pos.y, 32, text_color);
+			}
+			else
+			{
+				DrawText("AUDIO", pos.x, pos.y, 32, text_color);
+			}
+		}
+	}
+	if(page == 1)
+	{
+		for(int i = 0; i < max; i++)
+		{
+			text_color = BLACK;
+			if(i == current)
+			{
+				text_color = RAYWHITE;
+			}
+			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
+			if(i == 0)
+			{
+				DrawText("Name", pos.x, pos.y, 32, text_color);
+			}
+			else if(i == 1)
+			{
+				DrawText("MODELS", pos.x, pos.y, 32, text_color);
+			}
+			else
+			{
+				DrawText("PALETTES", pos.x, pos.y, 32, text_color);
+			}
+		}
+	}
+	if(page == 2)
+	{
+		for(int i = 0; i < max; i++)
+		{
+			text_color = BLACK;
+			if(i == current)
+			{
+				text_color = RAYWHITE;
+			}
+			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
+			if(i == 0)
+			{
+				DrawText("Screen Shake", pos.x, pos.y, 32, text_color);
+			}
+			else if(i == 1)
+			{
+				DrawText("Centered Camera", pos.x, pos.y, 32, text_color);
+			}
+			else
+			{
+				DrawText("Ghosts", pos.x, pos.y, 32, text_color);
+			}
+		}
+	}
+	if(page == 3)
+	{
+		for(int i = 0; i < max; i++)
+		{
+			text_color = BLACK;
+			if(i == current)
+			{
+				text_color = RAYWHITE;
+			}
+			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
+			if(i == 0)
+			{
+				DrawText("Master", pos.x, pos.y, 32, text_color);
+			}
+			else if(i == 1)
+			{
+				DrawText("SFX", pos.x, pos.y, 32, text_color);
+			}
+			else
+			{
+				DrawText("Music", pos.x, pos.y, 32, text_color);
+			}
+		}
+	}
+	text_color = BLACK;
+	if(max == current)
+	{
+		text_color = RAYWHITE;
+	}
+	Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * max};
+	DrawText("< Exit", pos.x, pos.y, 32, text_color);
+}
+
 int main(void)
 {
 	InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "RAYMANIA");
@@ -249,6 +365,10 @@ int main(void)
 	// OPTIONS VAR
 	
 	bool reset_options = false;
+
+	int options_current = 0;
+	int options_page = 0;
+	int options_max = 0;
 
 	// PARTY VAR
 	
@@ -1527,12 +1647,81 @@ int main(void)
 		if(reset_options)
 		{
 			reset_options = false;
+			options_current = 0;
+			options_max = 3;
+			options_page = 0;
 		}
 
 		if(InputPressed(input, INPUT_ESC))
 		{
 			current_game_screen = MENU;
 			reset_menu = true;
+		}
+
+		switch(options_page)
+		{
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+				options_max = 3;
+				break;
+		}
+		if(InputHeld(menu_input, INPUT_DOWN))
+		{
+			if(options_current <= options_max)
+			{
+				options_current++;
+			}
+		}
+		if(InputHeld(menu_input, INPUT_UP))
+		{
+			if(options_current > 0)
+			{
+				options_current--;
+			}
+		}
+		if(InputHeld(menu_input, INPUT_RIGHT))
+		{
+			TraceLog(LOG_INFO, "Nothin");
+		}
+		if(InputHeld(menu_input, INPUT_LEFT))
+		{
+			TraceLog(LOG_INFO, "Nothin");
+		}
+		if(InputPressed(input, INPUT_ENTER))
+		{
+			if(options_current == options_max)
+			{
+				if(options_page == 0)
+				{
+					current_game_screen = MENU;
+					reset_menu = true;
+				}
+				else
+				{
+					options_page = 0;
+					options_current = 0;
+				}
+			}
+			else if(options_page == 0)
+			{
+				if(options_current == 0)
+				{
+					options_page = 1;
+					options_current = 0;
+				}
+				else if(options_current == 1)
+				{
+					options_page = 2;
+					options_current = 0;
+				}
+				else
+				{
+					options_page = 3;
+					options_current = 0;
+				}
+			}
 		}
 		break;
 	}
@@ -2378,6 +2567,10 @@ int main(void)
 					}
 				}
 				//TraceLog(LOG_INFO, "Text size %i.", MeasureText("Resume", 32) / 2);
+			} break;
+			case OPTIONS:
+			{
+				DrawOptions(options_current, options_page, options_max);
 			} break;
 		}
 
