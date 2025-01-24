@@ -3,129 +3,6 @@
 #include <raymath.h>
 #include "rmlib.h"
 
-void RaylibLogo(void)
-{
-    // Copyright (c) 2014-2024 Ramon Santamaria (@raysan5)
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    int logoPositionX = (int)(SCREEN_SIZE.x*0.5) - 128;
-    int logoPositionY = (int)(SCREEN_SIZE.y*0.5) - 128;
-
-    int framesCounter = 0;
-    int lettersCount = 0;
-
-    int topSideRecWidth = 16;
-    int leftSideRecHeight = 16;
-
-    int bottomSideRecWidth = 16;
-    int rightSideRecHeight = 16;
-
-    int state = 0;                  // Tracking animation states (State Machine)
-    float alpha = 1.0f;             // Useful for fading
-
-    // Main game loop
-    while (state != 4)    // Detect window close button or ESC key
-    {
-	if(GetKeyPressed() && state != 3)
-	{
-	    state = 3;
-            topSideRecWidth = 256;
-            leftSideRecHeight = 256;
-            bottomSideRecWidth = 256;
-            rightSideRecHeight = 256;
-	    lettersCount = 6;
-	}
-        // Update
-        if (state == 0)                 // State 0: Small box blinking
-        {
-            framesCounter++;
-
-            if (framesCounter == 120)
-            {
-                state = 1;
-                framesCounter = 0;      // Reset counter... will be used later...
-            }
-        }
-        else if (state == 1)            // State 1: Top and left bars growing
-        {
-            topSideRecWidth += 4;
-            leftSideRecHeight += 4;
-
-            if (topSideRecWidth == 256) state = 2;
-        }
-        else if (state == 2)            // State 2: Bottom and right bars growing
-        {
-            bottomSideRecWidth += 4;
-            rightSideRecHeight += 4;
-
-            if (bottomSideRecWidth == 256) state = 3;
-        }
-        else if (state == 3)            // State 3: Letters appearing (one by one)
-        {
-            framesCounter++;
-
-            if (framesCounter/12)       // Every 12 frames, one more letter!
-            {
-                lettersCount++;
-                framesCounter = 0;
-            }
-
-            if (lettersCount >= 10)     // When all letters have appeared, just fade out everything
-            {
-                alpha -= 0.02f;
-
-                if (alpha <= 0.0f)
-                {
-                    alpha = 0.0f;
-                    state = 4;
-                }
-            }
-        }
-
-        // Draw
-        BeginDrawing();
-
-            ClearBackground(RAYWHITE);
-
-            if (state == 0)
-            {
-                if ((framesCounter/15)%2) DrawRectangle(logoPositionX, logoPositionY, 16, 16, BLACK);
-            }
-            else if (state == 1)
-            {
-                DrawRectangle(logoPositionX, logoPositionY, topSideRecWidth, 16, BLACK);
-                DrawRectangle(logoPositionX, logoPositionY, 16, leftSideRecHeight, BLACK);
-            }
-            else if (state == 2)
-            {
-                DrawRectangle(logoPositionX, logoPositionY, topSideRecWidth, 16, BLACK);
-                DrawRectangle(logoPositionX, logoPositionY, 16, leftSideRecHeight, BLACK);
-
-                DrawRectangle(logoPositionX + 240, logoPositionY, 16, rightSideRecHeight, BLACK);
-                DrawRectangle(logoPositionX, logoPositionY + 240, bottomSideRecWidth, 16, BLACK);
-            }
-            else if (state == 3)
-            {
-                DrawRectangle(logoPositionX, logoPositionY, topSideRecWidth, 16, Fade(BLACK, alpha));
-                DrawRectangle(logoPositionX, logoPositionY + 16, 16, leftSideRecHeight - 32, Fade(BLACK, alpha));
-
-                DrawRectangle(logoPositionX + 240, logoPositionY + 16, 16, rightSideRecHeight - 32, Fade(BLACK, alpha));
-                DrawRectangle(logoPositionX, logoPositionY + 240, bottomSideRecWidth, 16, Fade(BLACK, alpha));
-
-                DrawRectangle(GetScreenWidth()/2 - 112, GetScreenHeight()/2 - 112, 224, 224, Fade(RAYWHITE, alpha));
-
-                DrawText(TextSubtext("raylib", 0, lettersCount), GetScreenWidth()/2 - 44, GetScreenHeight()/2 + 48, 50, Fade(BLACK, alpha));
-            }
-
-        EndDrawing();
-    }
-}
-
-void TabinLogo(void)
-{
-
-}
-
 extern void* _malloc(size_t size)
 {
 	return malloc(size);
@@ -141,6 +18,11 @@ extern void _free(void* ptr)
 	return free(ptr);
 }
 
+int absi(int x)
+{
+	return (x < 0 ? -x : x);
+}
+
 int sign(float x)
 {
 	return (x > 0) - (x < 0);
@@ -148,7 +30,7 @@ int sign(float x)
 
 float absf(float x)
 {
-	return (x < 0 ? -x : x);
+	return (x < 0.0 ? -x : x);
 }
 
 float min(float x, float y)
@@ -192,6 +74,14 @@ float AirQuotesNoise(float point, bool flipped)
 Vector2 Vector2Sign(Vector2 vector)
 {
 	return (Vector2){sign(vector.x), sign(vector.y)};
+}
+
+Vector2 Vector2Swap(Vector2 vector)
+{
+	float t = vector.x;
+	vector.x = vector.y;
+	vector.y = t;
+	return vector;
 }
 
 Vector2 InvertAroundPoint(Vector2 position, Vector2 point)
@@ -301,6 +191,64 @@ unsigned int TextFindLastChar(const char* text, unsigned char ch)
 	return pos;
 }
 
+Color ColorFromIndex(char i)
+{
+	// TODO: Replace with custom colors
+	switch(i)
+	{
+		case(0):
+			return LIGHTGRAY;
+		case(1):
+			return GRAY;
+		case(2):
+			return DARKGRAY;
+		case(3):
+			return YELLOW;
+		case(4):
+			return GOLD;
+		case(5):
+			return ORANGE;
+		case(6):
+			return PINK;
+		case(7):
+			return RED;
+		case(8):
+			return MAROON;
+		case(9):
+			return GREEN;
+		case(10):
+			return LIME;
+		case(11):
+			return DARKGREEN;
+		case(12):
+			return SKYBLUE;
+		case(13):
+			return BLUE;
+		case(14):
+			return DARKBLUE;
+		case(15):
+			return PURPLE;
+		case(16):
+			return VIOLET;
+		case(17):
+			return DARKPURPLE;
+		case(18):
+			return BEIGE;
+		case(19):
+			return BROWN;
+		case(20):
+			return DARKBROWN;
+		case(21):
+			return WHITE;
+		case(22):
+			return BLACK;
+		case(23):
+			return MAGENTA;
+		case(24):
+			return RAYWHITE;
+	}
+}
+
 void MoveFileListCursor(unsigned int count, int* current, int move)
 {
 	*current = *current + move;
@@ -322,8 +270,10 @@ void DrawFileList(FilePathList fpl, int current, Color bg1, Color bg2)
 	DrawRectangle(POSITION.x - 4, POSITION.y - 4, SIZE.x + 8, SIZE.y + 8, BLACK);
 	DrawRectangle(POSITION.x, POSITION.y, SIZE.x, SIZE.y, bg1); // GREEN
 	DrawRectangle(POSITION.x + 24, POSITION.y + 24, SIZE.x - 48, SIZE.y - 80, bg2); // LIME
-
+	
+	//DrawText("Exit - Backspace", POSITION.x + SIZE.x - 182, POSITION.y + SIZE.y - 44, 32, BLACK);
 	int page = current / FILE_LIST_PAGE_ITEMS;
+	DrawText(TextFormat("%i/%i", page + 1, fpl.count / FILE_LIST_PAGE_ITEMS + 1), POSITION.x + 24, POSITION.y + SIZE.y - 44, 32, BLACK);
 
 	for(int i = 0; i < FILE_LIST_PAGE_ITEMS; i++)
 	{

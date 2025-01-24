@@ -8,7 +8,7 @@
 #include "profiles.h"
 
 #define BLOCKS_PER_PIECE 2
-#define MAX_PIECES (unsigned int)(MAX_BLOCK_AMOUNT/BLOCKS_PER_PIECE)
+#define MAX_PIECES (unsigned int)MAX_BLOCK_AMOUNT/BLOCKS_PER_PIECE
 
 #define TRACK_NAME_LENGHT 32
 #define TRACK_GRID_SIZE 32
@@ -19,17 +19,18 @@
 #define TRACK_SIZE_MAX_BLOCK sizeof(PieceInfo)*MAX_PIECES
 #define TRACK_SIZE_OTHER sizeof(TrackSave)-TRACK_SIZE_MAX_BLOCK
 
-#define PIECE_CATALOGUE_LENGHT 9*BLOCKS_PER_PIECE 
+#define PIECE_CATALOGUE_LENGHT 9*BLOCKS_PER_PIECE
 #define CATALOGUE_BLOCK_SCALE 80.0/BLOCK_SIZE
 #define PIECE_CATALOGUE_PAGE_AMOUNT 2
-//#define UNDO_LIST_LENGHT 10*BLOCKS_PER_PIECE 
+//#define UNDO_LIST_LENGHT 10*BLOCKS_PER_PIECE
 
 #define MAX_CHECKPOINTS 9
 #define MEDAL_BRONZ_MULT 1.6
 #define MEDAL_SILVER_MULT 1.3
 #define MEDAL_GOLD_MULT 1.15
 
-typedef enum PieceCataloguePage {PAGE_DEFAULT} PieceCataloguePage; 
+
+typedef enum PieceCataloguePage {PAGE_DEBUG, PAGE_DEBUG_2} PieceCataloguePage; 
 
 typedef struct PieceInfo
 {
@@ -48,10 +49,10 @@ typedef struct Track
 	unsigned int checkpoint_amount;
 	DefaultCar car;
 	DefaultEnviroment env;
-	float medal_bronz,
-	      medal_silver,
-	      medal_gold,
-	      medal_author;
+	double medal_bronz,
+	       medal_silver,
+	       medal_gold,
+	       medal_author;
 	PieceInfo pieces[MAX_PIECES];
 } Track;
 
@@ -62,6 +63,7 @@ typedef struct TrackSave
 		     size_other;
 	Track track;
 } TrackSave;
+
 
 void SetStart(Track* track, Vector2int placement, BlockRotation rot);
 

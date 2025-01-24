@@ -20,7 +20,14 @@
 
 #define FILE_LIST_PAGE_ITEMS 11
 
+#define BLOCK_SIZE 256
+#define INV_BLOCK_SIZE 1/BLOCK_SIZE
+#define BU 0.125*BLOCK_SIZE
+
+
 typedef enum InputKeys {INPUT_LEFT, INPUT_RIGHT, INPUT_UP, INPUT_DOWN, INPUT_BACK, INPUT_ENTER, INPUT_ESC, INPUT_R} InputKeys;
+
+typedef enum BlockRotation {ROT_NORTH = 0, ROT_EAST, ROT_SOUTH, ROT_WEST} BlockRotation;
 
 typedef struct Vector2int
 {
@@ -33,13 +40,11 @@ typedef struct RMInput
 } RMInput;
 
 
-void RaylibLogo(void);
-void TabinLogo(void);
-
 extern void* _malloc(size_t size);
 extern void* _realloc(void* ptr, size_t size);
 extern void _free(void* ptr);
 
+int absi(int x);
 int sign(float x);
 float absf(float x);
 float min(float x, float y);
@@ -47,6 +52,7 @@ float max(float x, float y);
 float AirQuotesNoise(float point, bool flipped);
 
 Vector2 Vector2Sign(Vector2 vector);
+Vector2 Vector2Swap(Vector2 vector);
 Vector2 InvertAroundPoint(Vector2 position, Vector2 point);
 
 bool Vector2intEqual(Vector2int a, Vector2int b);
@@ -59,6 +65,8 @@ void CheckMenuInput(RMInput* menu, RMInput input, float* block);
 void DrawUnitVector(Vector2 position, Vector2 magnitude, Color color);
 
 unsigned int TextFindLastChar(const char* text, unsigned char ch);
+
+Color ColorFromIndex(char i);
 
 void MoveFileListCursor(unsigned int count, int* current, int move);
 void DrawFileList(FilePathList fpl, int current, Color bg1, Color bg2);

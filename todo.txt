@@ -20,34 +20,28 @@ Track Selection
 Other Enviroments
 Validating Tracks
 Pause Menu
-Inputs as one short int, binary calc in rmlib (To save it easier in replays)
 Fadeout Fadein 
 Profiles
 Input Replays
 Editor Buttons
 Medals
+Party Mode like OG Trackmania
+Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
+Block Visuals (Only the ones near you render)
 
 IN PROGRESS
-Party Mode like OG Trackmania
- - Multiple profiles, users choose max and code uses MALLOC (no) to allocate space for prof
- - Choosing profiles in profile menu
- - You can choose the amount of time for each player
- - Choose track or make track
- - Profiles take turns driving, each have an onscreen timer
- - Timer ticks down, once 0 player loses and is out
- - First goes the player with the biggest time, then from the first to the last
- - Validate -> play
- - Exiting race or editor goes to selecting profiles
+Big blocks prevent other blocks from being placed
 Options
-
-NOT DONE
-Arrow that points to the start in editor. (Could even be used for cps? maybe)
-Removing Tracks, Profiles and Replays
-Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
+Actual Blocks
 Other Racecars
 My Logo On Startup (Whatever That Is)
+
+NOT DONE
 Racecar Visuals + Colorswaps
+Audio omg
 Enviroment Visuals
+
+Standartized menus
+Arrow that points to the start in editor.
+Removing Tracks, Profiles and Replays
 Skid Lines
-Block Visuals (Only the ones near you render)
-Actual Blocks

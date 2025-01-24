@@ -15,6 +15,8 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 {
 	unsigned int id[BLOCKS_PER_PIECE], blocks_used;
 
+	// PIECE DEFINITIONS
+
 	for(int i = 0; i < BLOCKS_PER_PIECE; i++)
 	{
 		id[i] = 0;
@@ -24,48 +26,58 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 	{
 		case(1):
 			blocks_used = 1;
-			id[0] = 1;
-			id[1] = 0;
+			id[0] = D1x1GWN;
+			id[1] = DVOID;
 			break;
 		case(2):
 			blocks_used = 1;
-			id[0] = 2;
-			id[1] = 0;
+			id[0] = D2x1AIO;
+			id[1] = DVOID;
 			break;
 		case(3):
 			blocks_used = 1;
-			id[0] = 3;
-			id[1] = 0;
+			id[0] = D2x2DIO;
+			id[1] = DVOID;
 			break;
 		case(4):
 			blocks_used = 1;
-			id[0] = 4;
-			id[1] = 0;
+			id[0] = D1x1GWS;
+			id[1] = DVOID;
 			break;
 		case(5):
 			blocks_used = 1;
-			id[0] = 5;
-			id[1] = 0;
+			id[0] = D1x1I;
+			id[1] = DVOID;
 			break;
 		case(6):
 			blocks_used = 1;
-			id[0] = 6;
-			id[1] = 0;
+			id[0] = D1x1C;
+			id[1] = DVOID;
 			break;
 		case(7):
 			blocks_used = 1;
-			id[0] = 7;
-			id[1] = 0;
+			id[0] = D1x1F;
+			id[1] = DVOID;
 			break;
 		case(8):
 			blocks_used = 1;
-			id[0] = 8;
-			id[1] = 0;
+			id[0] = D1x1S;
+			id[1] = DVOID;
 			break;
 		case(9):
 			blocks_used = 2;
-			id[0] = 5;
-			id[1] = 6;
+			id[0] = D1x1I;
+			id[1] = D1x1C;
+			break;
+		case(10):
+			blocks_used = 1;
+			id[0] = D1x1A;
+			id[1] = DVOID;
+			break;
+		case(11):
+			blocks_used = 1;
+			id[0] = B1x1AR0;
+			id[1] = DVOID;
 			break;
 		default:
 			blocks_used = 0;
@@ -469,66 +481,19 @@ float CataloguePosition(float initial, unsigned int piece_n)
 
 void PiecesInPage(unsigned int page[9], unsigned int page_num)
 {
+	// PIECE CATALOGUE DEFINITIONS
 	switch(page_num)
 	{
-		case(PAGE_DEFAULT):
+		case(PAGE_DEBUG):
 			for(int i = 0; i < 9; i++)
 			{
 				page[i] = i + 1;
 			}
 			break;
-		case(1):
+		case(PAGE_DEBUG_2):
 			for(int i = 0; i < 9; i++)
 			{
-				page[i] = 9 - i;
-			}
-			break;
-		case(2):
-			for(int i = 0; i < 9; i++)
-			{
-				page[i] = i + 1;
-			}
-			break;
-		case(3):
-			for(int i = 0; i < 9; i++)
-			{
-				page[i] = 9 - i;
-			}
-			break;
-		case(4):
-			for(int i = 0; i < 9; i++)
-			{
-				page[i] = i + 1;
-			}
-			break;
-		case(5):
-			for(int i = 0; i < 9; i++)
-			{
-				page[i] = 9 - i;
-			}
-			break;
-		case(6):
-			for(int i = 0; i < 9; i++)
-			{
-				page[i] = i + 1;
-			}
-			break;
-		case(7):
-			for(int i = 0; i < 9; i++)
-			{
-				page[i] = 9 - i;
-			}
-			break;
-		case(8):
-			for(int i = 0; i < 9; i++)
-			{
-				page[i] = i + 1;
-			}
-			break;
-		case(9):
-			for(int i = 0; i < 9; i++)
-			{
-				page[i] = 9 - i;
+				page[i] = i + 10;
 			}
 			break;
 	}
@@ -541,13 +506,17 @@ void PutPieceIntoCatalogue(Block piece_catalogue[PIECE_CATALOGUE_LENGHT], unsign
 	unsigned int block_amount = GetPieceAdv(piece_id, placement, ROT_NORTH, piece);
 	for(int i = 0; i < block_amount; i++)
 	{
-		piece[i].pos = (Vector2int){piece_count, 0};
+		piece[i].pos = (Vector2int){0, 0};
 		piece_catalogue[piece_count * BLOCKS_PER_PIECE + i] = piece[i];
 	}
 }
 
 void LoadPieceCataloguePage(Block piece_catalogue[PIECE_CATALOGUE_LENGHT], unsigned int page[9])
 {
+	for(int i = 0; i < PIECE_CATALOGUE_LENGHT; i++)
+	{
+		piece_catalogue[i] = (Block){0};
+	}
 	for(int i = 0; i < 9; i++)
 	{
 		PutPieceIntoCatalogue(piece_catalogue, page[i], i);
@@ -566,6 +535,6 @@ void DrawPieceCatalogue(Block piece_catalogue[PIECE_CATALOGUE_LENGHT], Vector2 p
 		float piece_n = i / BLOCKS_PER_PIECE;
 		Vector2 pos = position;
 		pos.x = CataloguePosition(position.x, piece_n);
-		DrawBlockDebugAdv(block, size, pos);
+		DrawBlockAdv(block, size, pos, 0);
 	}
 }

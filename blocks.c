@@ -34,40 +34,50 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 
 	block.z = 0;
 
+	// BLOCK AREA DEFINITIONS
+	
 	switch(id)
 	{
-		case(1):
+		case(D1x1GWN):
 			block.area = (Area){TYPE_GRASS, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
 			block.size = (Vector2int){1, 1};
 			break;
-		case(2):
+		case(D2x1AIO):
 			block.area = (Area){TYPE_ASPHALT, 0, 0, BLOCK_SIZE * 2, BLOCK_SIZE};
 			block.size = (Vector2int){2, 1};
 			break;
-		case(3):
+		case(D2x2DIO):
 			block.area = (Area){TYPE_DIRT, 0, 0, BLOCK_SIZE * 2, BLOCK_SIZE * 2};
 			block.size = (Vector2int){2, 2};
 			break;
-		case(4):
+		case(D1x1GWS):
 			block.area = (Area){TYPE_GRASS, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
 			block.size = (Vector2int){1, 1};
 			break;
-		case(5):
+		case(D1x1I):
 			block.area = (Area){TYPE_ICE, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
 			block.size = (Vector2int){1, 1};
 			break;
-		case(6):
+		case(D1x1C):
 			block.area = (Area){TYPE_CHECKPOINT, 0, BU * 3.5, BLOCK_SIZE, BU};
 			block.size = (Vector2int){1, 1};
 			break;
-		case(7):
+		case(D1x1F):
 			block.area = (Area){TYPE_FINISH, 0, BU * 3.5, BLOCK_SIZE, BU};
 			block.size = (Vector2int){1, 1};
 			break;
-		case(8):
+		case(D1x1S):
 			block.area = (Area){TYPE_START, 0, BU * 3.5, BLOCK_SIZE, BU};
 			block.size = (Vector2int){1, 1};
 			block.z = 1;
+			break;
+		case(D1x1A):
+			block.area = (Area){TYPE_ASPHALT, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
+			block.size = (Vector2int){1, 1};
+			break;
+		case(B1x1AR0):
+			block.area = (Area){TYPE_ASPHALT, BU, 0, 7*BU, 8*BU};
+			block.size = (Vector2int){1, 1};
 			break;
 		default:
 			block.id = 0;
@@ -92,12 +102,116 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 	return block;
 }
 
-void ClearPlacedBlocks(Block blocks[MAX_BLOCK_AMOUNT])
+void ClearBlocks(int block_amount, Block blocks[])
 {
 	Vector2int pos = (Vector2int){0, 0};
-	for(int i = 0; i < MAX_BLOCK_AMOUNT; i++)
+	for(int i = 0; i < block_amount; i++)
 	{
 		blocks[i] = MakeBlock(0, pos, ROT_NORTH);
+	}
+}
+
+void ClearPlacedBlocks(Block blocks[MAX_BLOCK_AMOUNT])
+{
+	ClearBlocks(MAX_BLOCK_AMOUNT, blocks);
+}
+
+void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], int layers[Z_LAYERS][ASSET_AMOUNT], Vector2int placement)
+{
+	for(int j = 0; j < Z_LAYERS; j++)
+	{
+		for(int i = 0; i < ASSET_AMOUNT; i++)
+		{
+			layers[j][i] = -1;
+		}
+	}
+	int i_a[Z_LAYERS] = {0};
+	for(int i = 0; i < MAX_BLOCK_AMOUNT; i++)
+	{
+		if(blocks[i].id == 0)
+		{
+			continue;
+		}
+		int z = blocks[i].z;
+		if(z < 0 || z >= Z_LAYERS)
+		{
+			continue;
+		}
+		if(i_a[z] == ASSET_AMOUNT)
+		{
+			continue;
+		}
+		int max_dist_x = LOAD_DISTANCE.x;
+		int max_dist_y = LOAD_DISTANCE.y;
+		if(blocks[i].rot == ROT_EAST || blocks[i].rot == ROT_WEST)
+		{
+			max_dist_x += blocks[i].size.y;
+			max_dist_y += blocks[i].size.x;
+		}
+		else
+		{
+			max_dist_x += blocks[i].size.x;
+			max_dist_y += blocks[i].size.y;
+		}
+		Vector2int dist;
+		dist.x = absi(blocks[i].pos.x - placement.x);
+		if(dist.x > max_dist_x)
+		{
+			continue;
+		}
+		dist.y = absi(blocks[i].pos.y - placement.y);
+		if(dist.y > max_dist_y)
+		{
+			continue;
+		}
+		layers[z][i_a[z]] = i;
+		i_a[z]++;
+	}
+}
+
+void DrawBlock(Block block, double game_time)
+{
+	Vector2 pos = (Vector2){0, 0};
+	DrawBlockAdv(block, 1.0, pos, game_time);
+}
+
+void DrawBlockAdv(Block block, float scale, Vector2 position, double game_time)
+{
+	if(block.id == 0)
+	{
+		return;
+	}
+
+	// TODO
+	// Alloc asset
+	// *= scale
+	// += position
+	// Draw Asset
+	// Free Asset
+	// TEMP
+
+	//TraceLog(LOG_INFO, "DRAWING ASSET");
+	
+	Vector2 asset_pos = (Vector2){0};
+
+	asset_pos.x = (float)block.pos.x * BLOCK_SIZE + position.x;
+	asset_pos.y = (float)block.pos.y * BLOCK_SIZE + position.y;
+	
+	//TraceLog(LOG_INFO, "%f %f", asset_pos.x, asset_pos.y);
+	Asset* asset = AllocAsset(block.id, block.rot, game_time);
+	DrawAsset(asset, scale, asset_pos);
+	FreeAsset(asset);
+}
+
+void DrawLoadedBlocks(Block blocks[MAX_BLOCK_AMOUNT], int layer[ASSET_AMOUNT], double game_time)
+{
+	for(int i = 0; i < ASSET_AMOUNT; i++)
+	{
+		if(layer[i] < 0)
+		{
+			continue;
+		}
+		DrawBlock(blocks[layer[i]], game_time);
 	}
 }
 
@@ -176,14 +290,17 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 {
 	BlockWallArray block_walls;
 	block_walls.block_id = block_id;
+
+	// BLOCK WALL DEFINITIONS
+
 	switch(block.id)
 	{
-		case(1):
+		case(D1x1GWN):
 			block_walls.wall_amount = 1;
 			block_walls.walls[0] = (Wall){0, 0, BU * 8, 0};
 			break;
-		case(2):
-		case(3):
+		case(D2x1AIO):
+		case(D2x2DIO):
 			block_walls.wall_amount = 5;
 			block_walls.walls[0] = (Wall){BU * 10, BU * 2, BU * 14, BU * 2};
 			block_walls.walls[1] = (Wall){BU * 10, BU * 2, BU * 10, BU * 6};
@@ -191,9 +308,25 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 			block_walls.walls[3] = (Wall){BU * 14, BU * 2, BU * 14, BU * 6};
 			block_walls.walls[4] = (Wall){BU * 4, BU * 2, BU * 4, BU * 6};
 			break;
-		case(4):
+		case(D1x1GWS):
 			block_walls.wall_amount = 1;
 			block_walls.walls[0] = (Wall){0, 0, BU * 8, BU * 8};
+			break;
+		case(B1x1AR0):
+			// 2 side walls, basic road
+			block_walls.wall_amount = 12;
+			block_walls.walls[0] = (Wall){0.5*BU, 0, 0.5*BU, 8*BU};
+			block_walls.walls[1] = (Wall){1*BU, 0, 1*BU, 8*BU};
+			block_walls.walls[2] = (Wall){7*BU, 0, 7*BU, 8*BU};
+			block_walls.walls[3] = (Wall){7.5*BU, 0, 7.5*BU, 8*BU};
+			block_walls.walls[4] = (Wall){0.5*BU, 0, .75*BU, -0.25*BU};
+			block_walls.walls[5] = (Wall){1*BU, 0, .75*BU, -0.25*BU};
+			block_walls.walls[6] = (Wall){7*BU, 0, 7.25*BU, -0.25*BU};
+			block_walls.walls[7] = (Wall){7.5*BU, 0, 7.25*BU, -0.25*BU};
+			block_walls.walls[8] = (Wall){0.5*BU, 8*BU, .75*BU, 8.25*BU};
+			block_walls.walls[9] = (Wall){1*BU, 8*BU, .75*BU, 8.25*BU};
+			block_walls.walls[10] = (Wall){7*BU, 8*BU, 7.25*BU, 8.25*BU};
+			block_walls.walls[11] = (Wall){7.5*BU, 8*BU, 7.25*BU, 8.25*BU};
 			break;
 		default:
 			block_walls.wall_amount = 0;
@@ -205,10 +338,10 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 		for(int i = 0; i < block_walls.wall_amount; i++)
 		{
 			Wall wall = block_walls.walls[i];
-			wall.pos_x.x = BLOCK_SIZE - wall.pos_x.x + BLOCK_SIZE * (block.size.x - 1);
-			wall.pos_x.y = BLOCK_SIZE - wall.pos_x.y + BLOCK_SIZE * (block.size.y - 1);
-			wall.pos_y.x = BLOCK_SIZE - wall.pos_y.x + BLOCK_SIZE * (block.size.x - 1);
-			wall.pos_y.y = BLOCK_SIZE - wall.pos_y.y + BLOCK_SIZE * (block.size.y - 1);
+			wall.pos_x.x = BLOCK_SIZE * block.size.x - wall.pos_x.x;
+			wall.pos_x.y = BLOCK_SIZE * block.size.y - wall.pos_x.y;
+			wall.pos_y.x = BLOCK_SIZE * block.size.x - wall.pos_y.x;
+			wall.pos_y.y = BLOCK_SIZE * block.size.y - wall.pos_y.y;
 			block_walls.walls[i] = wall;
 		}
 	}
@@ -218,9 +351,9 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 		{
 			Wall wall = block_walls.walls[i];
 			wall.pos_x.y = block_walls.walls[i].pos_x.x;
-			wall.pos_x.x = BLOCK_SIZE - block_walls.walls[i].pos_x.y + BLOCK_SIZE * (block.size.y - 1);
+			wall.pos_x.x = BLOCK_SIZE * block.size.y - block_walls.walls[i].pos_x.y;
 			wall.pos_y.y = block_walls.walls[i].pos_y.x;
-			wall.pos_y.x = BLOCK_SIZE - block_walls.walls[i].pos_y.y + BLOCK_SIZE * (block.size.y - 1);
+			wall.pos_y.x = BLOCK_SIZE * block.size.y - block_walls.walls[i].pos_y.y;
 			block_walls.walls[i] = wall;
 		}
 	}
@@ -230,9 +363,9 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 		{
 			Wall wall = block_walls.walls[i];
 			wall.pos_x.x = block_walls.walls[i].pos_x.y;
-			wall.pos_x.y = BLOCK_SIZE - block_walls.walls[i].pos_x.x + BLOCK_SIZE * (block.size.x - 1);
+			wall.pos_x.y = BLOCK_SIZE * block.size.x - block_walls.walls[i].pos_x.x;
 			wall.pos_y.x = block_walls.walls[i].pos_y.y;
-			wall.pos_y.y = BLOCK_SIZE - block_walls.walls[i].pos_y.x + BLOCK_SIZE * (block.size.x - 1);
+			wall.pos_y.y = BLOCK_SIZE * block.size.x - block_walls.walls[i].pos_y.x;
 			block_walls.walls[i] = wall;
 		}
 	}

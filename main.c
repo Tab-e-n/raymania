@@ -8,12 +8,16 @@
 #include "track.h"
 #include "profiles.h"
 #include "demos.h"
+#include "asset.h"
 
 
 #define VALIDATE_DEMO_FILE "Demos/validation.dm\0"
+#define MAX_PARTY_PROFILES 10
+#define MAX_PARTY_TIMER 20
+#define MIN_PARTY_TIMER 1
 
 
-typedef enum GameScreen {PROFILES, MENU, EDITOR, RACE} GameScreen;
+typedef enum GameScreen {PROFILES, MENU, EDITOR, RACE, OPTIONS} GameScreen;
 typedef enum MenuOption {MENU_PLAY, MENU_EDITOR, MENU_PARTY, MENU_OPTIONS, MENU_EXIT, MENU_RACE = 10, MENU_DEMO, MENU_PLAY_EXIT} MenuOption;
 typedef enum EditorOption {EDITOR_EXIT = 9, EDITOR_LOAD, EDITOR_SAVE, EDITOR_CLEAR, EDITOR_ENVIROMENT, EDITOR_CAR, EDITOR_PAGE_JUMP, EDITOR_MEDALS, EDITOR_VALIDATE,} EditorOption;
 typedef enum PopupType {POPUP_OFF, POPUP_EDITOR_EXIT, POPUP_EDITOR_CLEAR, POPUP_VALIDATE, POPUP_NO_START, POPUP_RESET_MEDALS} PopupType;
@@ -28,11 +32,164 @@ void DrawCursor(Vector2 cursor_pos, float size, Color color)
 	DrawLine(cursor_pos.x + size, cursor_pos.y, cursor_pos.x + size, cursor_pos.y + size, color);
 }
 
+void DrawPartyMenu(int current_opt, unsigned int party_count, Profile* profiles)
+{
+	const Vector2 SIZE = (Vector2){768, 512};
+	const Vector2 POSITION = (Vector2){128, 64};
+
+	DrawRectangle(POSITION.x - 28, POSITION.y - 28, SIZE.x + 56, SIZE.y + 56, BLACK);
+	DrawRectangle(POSITION.x - 24, POSITION.y - 24, SIZE.x + 48, SIZE.y + 48, PURPLE);
+	DrawRectangle(POSITION.x, POSITION.y, SIZE.x, SIZE.y, VIOLET);
+
+	Color text_color = BLACK;
+	if(current_opt == 0) text_color = RAYWHITE;
+	DrawText(TextFormat("Number of players: %i", party_count), POSITION.x + 8, POSITION.y + 8, 32, text_color);
+
+	text_color = BLACK;
+	if(current_opt == MAX_PARTY_PROFILES + 1) text_color = RAYWHITE;
+	DrawText("> Next", POSITION.x + 8, POSITION.y + SIZE.y - 72, 32, text_color);
+
+	text_color = BLACK;
+	if(current_opt == MAX_PARTY_PROFILES + 2) text_color = RAYWHITE;
+	DrawText("< Back", POSITION.x + 8, POSITION.y + SIZE.y - 40, 32, text_color);
+
+	for(int i = 0; i < party_count; i++)
+	{
+		text_color = BLACK;
+		if(i + 1 == current_opt)
+		{
+			text_color = RAYWHITE;
+		}
+		unsigned char name[PROFILE_NAME_LENGHT] = {0};
+		for(int j = 0; j < PROFILE_NAME_LENGHT; j++)
+		{
+			name[j] = profiles[i].name[j];
+		}
+		DrawText(TextFormat("%s", name), POSITION.x + 8, POSITION.y + 64 + 32 * i, 32, text_color);
+	}
+}
+
+void DrawOptions(int current, int page, int max)
+{
+	const Vector2 SIZE = (Vector2){768, 512};
+	const Vector2 POSITION = (Vector2){128, 64};
+
+	DrawRectangle(POSITION.x - 28, POSITION.y - 28, SIZE.x + 56, SIZE.y + 56, BLACK);
+	DrawRectangle(POSITION.x - 24, POSITION.y - 24, SIZE.x + 48, SIZE.y + 48, SKYBLUE);
+	DrawRectangle(POSITION.x, POSITION.y, SIZE.x, SIZE.y, BLUE);
+
+	Color text_color = BLACK;
+
+	if(page == 0)
+	{
+		for(int i = 0; i < max; i++)
+		{
+			text_color = BLACK;
+			if(i == current)
+			{
+				text_color = RAYWHITE;
+			}
+			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
+			if(i == 0)
+			{
+				DrawText("PROFILE", pos.x, pos.y, 32, text_color);
+			}
+			else if(i == 1)
+			{
+				DrawText("GAMEPLAY", pos.x, pos.y, 32, text_color);
+			}
+			else
+			{
+				DrawText("AUDIO", pos.x, pos.y, 32, text_color);
+			}
+		}
+	}
+	if(page == 1)
+	{
+		for(int i = 0; i < max; i++)
+		{
+			text_color = BLACK;
+			if(i == current)
+			{
+				text_color = RAYWHITE;
+			}
+			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
+			if(i == 0)
+			{
+				DrawText("Name", pos.x, pos.y, 32, text_color);
+			}
+			else if(i == 1)
+			{
+				DrawText("MODELS", pos.x, pos.y, 32, text_color);
+			}
+			else
+			{
+				DrawText("PALETTES", pos.x, pos.y, 32, text_color);
+			}
+		}
+	}
+	if(page == 2)
+	{
+		for(int i = 0; i < max; i++)
+		{
+			text_color = BLACK;
+			if(i == current)
+			{
+				text_color = RAYWHITE;
+			}
+			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
+			if(i == 0)
+			{
+				DrawText("Screen Shake", pos.x, pos.y, 32, text_color);
+			}
+			else if(i == 1)
+			{
+				DrawText("Centered Camera", pos.x, pos.y, 32, text_color);
+			}
+			else
+			{
+				DrawText("Ghosts", pos.x, pos.y, 32, text_color);
+			}
+		}
+	}
+	if(page == 3)
+	{
+		for(int i = 0; i < max; i++)
+		{
+			text_color = BLACK;
+			if(i == current)
+			{
+				text_color = RAYWHITE;
+			}
+			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
+			if(i == 0)
+			{
+				DrawText("Master", pos.x, pos.y, 32, text_color);
+			}
+			else if(i == 1)
+			{
+				DrawText("SFX", pos.x, pos.y, 32, text_color);
+			}
+			else
+			{
+				DrawText("Music", pos.x, pos.y, 32, text_color);
+			}
+		}
+	}
+	text_color = BLACK;
+	if(max == current)
+	{
+		text_color = RAYWHITE;
+	}
+	Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * max};
+	DrawText("< Exit", pos.x, pos.y, 32, text_color);
+}
+
 int main(void)
 {
 	InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "RAYMANIA");
 
-	//TraceLog(LOG_INFO, "Size of Track %i.", sizeof(Track));
+	//TraceLog(LOG_INFO, "Size of %i.", sizeof(Asset));
 	//TraceLog(LOG_INFO, "Size of Blocks in Track %i.", sizeof(Block) * MAX_BLOCK_AMOUNT);
 
 	SetTargetFPS(60);
@@ -46,7 +203,7 @@ int main(void)
 	}
 
 #ifdef _IO_H_
-    if(!DirectoryExists(DEMO_DIRECTORY))
+	if(!DirectoryExists(DEMO_DIRECTORY))
 	{
 		mkdir(DEMO_DIRECTORY);
 	}
@@ -64,7 +221,7 @@ int main(void)
 
 	}
 #else
-    if(!DirectoryExists(DEMO_DIRECTORY))
+	if(!DirectoryExists(DEMO_DIRECTORY))
 	{
 		mkdir(DEMO_DIRECTORY, 0b111111111);
 	}
@@ -117,7 +274,7 @@ int main(void)
 	BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS] = {0};
 	BlockWallArray dblock_walls[MAX_LOADED_BLOCK_WALLS] = {0};
 
-	Vector2int load_placement = (Vector2int){0, 0};
+	Vector2int load_placement = PositionToPlacement(camera.data.target); //(Vector2int){0, 0};
 	Vector2int d_placement = (Vector2int){0, 0};
 
 	PopupType popup = POPUP_OFF;
@@ -184,6 +341,8 @@ int main(void)
 	int pause_option = 0;
 	unsigned char playing_demo = DEMO_OFF;
 
+	bool race_showcase = false;
+
 	// EDITOR VAR
 
 	bool reset_editor = false;
@@ -203,13 +362,27 @@ int main(void)
 	bool saving_track = false;
 	unsigned char editor_four_option_selector = 0, efos_opt = 0;
 
+	// OPTIONS VAR
+	
+	bool reset_options = false;
+
+	int options_current = 0;
+	int options_page = 0;
+	int options_max = 0;
+
 	// PARTY VAR
 
 	bool party_mode = false;
+	char party_current_menu = 0;
+	int party_current_opt = 0;
 
 	unsigned int party_count = 2;
 	Profile* party_profiles = PNULL;
+	unsigned int party_timer_base = 10;
 	double* party_timers = PNULL;
+	double* party_best_times = PNULL;
+
+	bool reset_party = false;
 
 	// TRACKS SELECTOR
 
@@ -292,13 +465,17 @@ int main(void)
 			if(popup == POPUP_VALIDATE)
 			{
 				skip_validate_check = true;
-				validating_track = true;
+				if(!party_mode)
+				{
+					validating_track = true;
+				}
 			}
 			if(popup == POPUP_NO_START)
 			{
 				current_game_screen = RACE;
 				reset_race = true;
 				validating_track = true;
+				race_showcase = true;
 			}
 			if(popup == POPUP_RESET_MEDALS)
 			{
@@ -345,7 +522,7 @@ int main(void)
 				{
 					entering_profile_name = true;
 					inputing_name = 1;
-					name_lenght = PROFILE_NAME_LENGHT;
+					name_lenght = PROFILE_NAME_LENGHT - 1;
 					for(int i = 0; i < PROFILE_NAME_LENGHT; i++)
 					{
 						profile_name[i] = 0;
@@ -353,13 +530,44 @@ int main(void)
 				}
 				else
 				{
+					current_game_screen = MENU;
 					const char* path = (const char*)fpl.paths[current_profile];
-					profile = LoadProfile(path);
+					if(party_mode)
+					{
+						party_profiles[party_current_opt - 1] = LoadProfile(path);
+					}
+					else
+					{
+						profile = LoadProfile(path);
+						reset_menu = true;
+					}
 					UnloadDirectoryFiles(fpl);
 					fpl.count = 0;
-					current_game_screen = MENU;
-					reset_menu = true;
 					//PrintProfile(&profile);
+				}
+			}
+			if(InputPressed(input, INPUT_BACK))
+			{
+				if(party_mode)
+				{
+					party_profiles[party_current_opt - 1] = DefaultProfile();
+				}
+				else
+				{
+					profile = DefaultProfile();
+					reset_menu = true;
+				}
+				current_game_screen = MENU;
+				UnloadDirectoryFiles(fpl);
+				fpl.count = 0;
+			}
+			if(party_mode)
+			{
+				if(InputPressed(input, INPUT_ESC))
+				{
+					current_game_screen = MENU;
+					UnloadDirectoryFiles(fpl);
+					fpl.count = 0;
 				}
 			}
 		}
@@ -418,10 +626,184 @@ int main(void)
 			vel_sign.y = -sign(camera_velocity.y) * AirQuotesNoise(game_time, false);
 		}
 
-		if(party_mode)
+		load_placement = PositionToPlacement(camera.data.target);
+
+		if(file_list_active || popup)
 		{
 		}
-		else if(!file_list_active && !popup)
+		else if(party_mode && party_current_menu == 0)
+		{
+			if(InputHeld(menu_input, INPUT_UP))
+			{
+				if(party_current_opt == MAX_PARTY_PROFILES + 1)
+				{
+					party_current_opt = party_count;
+				}
+				else if(party_current_opt > 0)
+				{
+					party_current_opt--;
+				}
+			}
+			if(InputHeld(menu_input, INPUT_DOWN))
+			{
+				if(party_current_opt < MAX_PARTY_PROFILES + 2)
+				{
+					party_current_opt++;
+					if(party_current_opt > party_count && party_current_opt < MAX_PARTY_PROFILES)
+					{
+						party_current_opt = MAX_PARTY_PROFILES + 1;
+					}
+				}
+			}
+			if(party_current_opt == 0)
+			{
+				if(InputHeld(menu_input, INPUT_RIGHT))
+				{
+					if(party_count < MAX_PARTY_PROFILES)
+					{
+						party_count++;
+						party_profiles = _realloc(party_profiles, sizeof(Profile) * party_count);
+						party_profiles[party_count - 1] = DefaultProfile();
+					}
+				}
+				if(InputHeld(menu_input, INPUT_LEFT))
+				{
+					if(party_count > 1)
+					{
+						party_count--;
+						party_profiles = _realloc(party_profiles, sizeof(Profile) * party_count);
+					}
+				}
+			}
+			if(InputPressed(input, INPUT_BACK))
+			{
+				if(party_current_opt == MAX_PARTY_PROFILES + 2)
+				{
+					party_mode = false;
+				}
+				else
+				{
+					party_current_opt = MAX_PARTY_PROFILES + 2;
+				}
+			}
+			else if(InputPressed(input, INPUT_ENTER))
+			{
+				if(party_current_opt == 0)
+				{
+					party_count++;
+					if(party_count > MAX_PARTY_PROFILES)
+					{
+						party_count = 1;
+					}
+					party_profiles = _realloc(party_profiles, sizeof(Profile) * party_count);
+					if(party_count != 1)
+					{
+						party_profiles[party_count - 1] = DefaultProfile();
+					}
+				}
+				else if(party_current_opt == MAX_PARTY_PROFILES + 1)
+				{
+					party_current_menu = 1;
+					party_current_opt = 0;
+				}
+				else if(party_current_opt == MAX_PARTY_PROFILES + 2)
+				{
+					party_mode = false;
+				}
+				else
+				{
+					current_game_screen = PROFILES;
+					load_profiles = true;
+				}
+			}
+			if(!party_mode)
+			{
+					_free(party_profiles);
+			}
+		}
+		else if(party_mode && party_current_menu == 1)
+		{
+			if(party_current_opt == 0)
+			{
+				if(InputHeld(menu_input, INPUT_RIGHT))
+				{
+					if(party_timer_base < MAX_PARTY_TIMER)
+					{
+						party_timer_base++;
+					}
+				}
+				if(InputHeld(menu_input, INPUT_LEFT))
+				{
+					if(party_timer_base > MIN_PARTY_TIMER)
+					{
+						party_timer_base--;
+					}
+				}
+			}
+			if(InputHeld(menu_input, INPUT_UP))
+			{
+				if(party_current_opt > 0)
+				{
+					party_current_opt--;
+				}
+			}
+			if(InputHeld(menu_input, INPUT_DOWN))
+			{
+				if(party_current_opt < 3)
+				{
+					party_current_opt++;
+				}
+			}
+			if(InputPressed(input, INPUT_BACK))
+			{
+				if(party_current_opt == 3)
+				{
+					party_current_menu = 0;
+					party_current_opt = 0;
+				}
+				else
+				{
+					party_current_opt = 3;
+				}
+			}
+			else if(InputPressed(input, INPUT_ENTER))
+			{
+				if(party_current_opt == 0)
+				{
+					party_timer_base++;
+					if(party_timer_base > MAX_PARTY_TIMER)
+					{
+						party_timer_base = MIN_PARTY_TIMER;
+					}
+				}
+				if(party_current_opt == 1)
+				{
+					file_list_active = FL_TRACK;
+					load_file_list = true;
+					reset_party = true;
+				}
+				else if(party_current_opt == 2)
+				{
+					current_game_screen = EDITOR;
+					reset_editor = true;
+					reset_party = true;
+				}
+				else if(party_current_opt == 3)
+				{
+					party_current_menu = 0;
+					party_current_opt = 0;
+				}
+			}
+		}
+		else if(party_mode && party_current_menu == 2)
+		{
+			if(InputPressed(input, INPUT_BACK) || InputPressed(input, INPUT_ENTER))
+			{
+				party_current_menu = 1;
+				party_current_opt = 0;
+			}
+		}
+		else
 		{
 			if(InputHeld(menu_input, INPUT_UP))
 			{
@@ -458,9 +840,15 @@ int main(void)
 						reset_editor = true;
 						break;
 					case(MENU_PARTY):
-						//party_mode = true;
+						party_mode = true;
+						party_count = 2;
+						party_profiles = _malloc(sizeof(Profile) * party_count);
+						party_profiles[0] = profile;
+						party_profiles[1] = DefaultProfile();
 						break;
 					case(MENU_OPTIONS):
+						current_game_screen = OPTIONS;
+						reset_options = true;
 						break;
 					case(MENU_EXIT):
 						exit = true;
@@ -709,11 +1097,11 @@ int main(void)
 						case(EDITOR_SAVE):
 							saving_track = true;
 							inputing_name = 1;
-							name_lenght = TRACK_NAME_LENGHT;
-							//for(int i = 0; i < TRACK_NAME_LENGHT; i++)
-							//{
-							//	track_name[i] = 0;
-							//}
+							name_lenght = TRACK_NAME_LENGHT - 1;
+							for(int i = 0; i < TRACK_NAME_LENGHT; i++)
+							{
+								track_name[i] = 0;
+							}
 							break;
 						case(EDITOR_CLEAR):
 							popup = POPUP_EDITOR_CLEAR;
@@ -737,7 +1125,14 @@ int main(void)
 							{
 								current_game_screen = RACE;
 								reset_race = true;
-								validating_track = true;
+								if(party_mode)
+								{
+									race_showcase = true;
+								}
+								else
+								{
+									validating_track = true;
+								}
 							}
 							break;
 					}
@@ -749,19 +1144,44 @@ int main(void)
 				pcp_dir = 1.0;
 			}
 		}
+		load_placement = cursor_info.placement;
 
 		if(pcp_dir != 0.0)
 		{
 			float target = (pcp_dir + 1.0) * 0.5;
 			float dif = absf(target - piece_catalogue_pulled);
 			piece_catalogue_pulled += 0.10 * pcp_dir * dif;
-			if(piece_catalogue_pulled < 0.0) piece_catalogue_pulled = 0.0;
+			if(piece_catalogue_pulled < 0.005) piece_catalogue_pulled = 0.0;
 			if(piece_catalogue_pulled > 1.0) piece_catalogue_pulled = 1.0;
 		}
 		break;
 	case RACE:
+		if(reset_party)
+		{
+			reset_party = false;
+			if(party_timers == PNULL)
+			{
+				party_timers = _malloc(sizeof(double) * party_count);
+			}
+			if(party_best_times == PNULL)
+			{
+				party_best_times = _malloc(sizeof(double) * party_count);
+			}
+			for(int i = 0; i < party_count; i++)
+			{
+				party_timers[i] = (double)party_timer_base * 30.0;
+				party_best_times[i] = 0.0;
+			}
+			current_profile = 0;
+		}
+		Profile* playing_profile = &profile;
+		if(party_mode)
+		{
+			playing_profile = &party_profiles[current_profile];
+		}
 		if(reset_race)
 		{
+			TraceLog(LOG_INFO, "%s", playing_profile->name);
 			reset_race = false;
 
 			ResetRacecar(&car, track.start_pos, track.start_rot, car_stats.size);
@@ -789,11 +1209,14 @@ int main(void)
 			LoadNearbyBlockWalls(blocks, block_walls, load_placement);
 			LoadNearbyBlockWalls(blocks, dblock_walls, d_placement);
 
-			if(playing_demo == DEMO_OFF)
+			if(party_mode)
+			{
+			}
+			else if(playing_demo == DEMO_OFF)
 			{
 				ClearDemo(demo);
 				demo = InitDemo();
-				CopyNameToDemo(demo, profile.name);
+				CopyNameToDemo(demo, playing_profile->name);
 			}
 			else if(playing_demo == DEMO_PLAY)
 			{
@@ -804,7 +1227,7 @@ int main(void)
 			{
 				ClearDemo(demo);
 				demo = InitDemo();
-				CopyNameToDemo(demo, profile.name);
+				CopyNameToDemo(demo, playing_profile->name);
 				StartDemo(ghost_demo);
 				playing_demo = DEMO_GHOST_INIT;
 			}
@@ -812,7 +1235,14 @@ int main(void)
 
 		bool cp_reset = false;
 
-		ZoomCameraSmooth(&camera, 1.0, CAM_ZOOM_SPEED);
+		if(race_showcase)
+		{
+			ZoomCameraSmooth(&camera, 0.75, CAM_ZOOM_SPEED);
+		}
+		else
+		{
+			ZoomCameraSmooth(&camera, 1.0, CAM_ZOOM_SPEED);
+		}
 		if(paused)
 		{
 			if(InputHeld(menu_input, INPUT_UP))
@@ -868,6 +1298,11 @@ int main(void)
 			}
 			if(pause_exit)
 			{
+				if(party_mode)
+				{
+					_free(party_timers);
+					_free(party_best_times);
+				}
 				if(validating_track)
 				{
 					current_game_screen = EDITOR;
@@ -880,6 +1315,42 @@ int main(void)
 					reset_menu = true;
 				}
 			}
+		}
+		else if(race_showcase)
+		{
+			if(InputPressed(input, INPUT_ESC))
+			{
+				paused = true;
+				pause_option = 0;
+			}
+			if(InputPressed(input, INPUT_ENTER))
+			{
+				race_showcase = false;
+				start_time = game_time;
+			}
+
+			Vector2 cam_pos = camera.data.target;
+			Vector2 offset = (Vector2){0, 0};
+
+			if(InputHeld(input, INPUT_DOWN))
+			{
+				offset.y += 16;
+			}
+			if(InputHeld(input, INPUT_UP))
+			{
+				offset.y -= 16;
+			}
+			if(InputHeld(input, INPUT_RIGHT))
+			{
+				offset.x += 16;
+			}
+			if(InputHeld(input, INPUT_LEFT))
+			{
+				offset.x -= 16;
+			}
+			cam_pos = Vector2Add(cam_pos, offset);
+
+			MoveCameraInstant(&camera, cam_pos);
 		}
 		else if(start_countdown)
 		{
@@ -898,7 +1369,7 @@ int main(void)
 				{
 					playing_demo = DEMO_PLAY;
 				}
-				if(playing_demo == DEMO_GHOST_INIT && GetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED))
+				if(playing_demo == DEMO_GHOST_INIT && GetProfileBool(playing_profile, PRF_BOOL_GHOST_ENABLED))
 				{
 					playing_demo = DEMO_GHOST_PLAY;
 					demo_input = (RMInput){0};
@@ -913,9 +1384,19 @@ int main(void)
 				pause_option = 0;
 			}
 
+			bool dnf = false;
+
 			if(!stop_inputs)
 			{
 				timer += FRAME;
+				if(party_mode)
+				{
+					party_timers[current_profile] -= FRAME;
+					if(party_timers[current_profile] <= 0.0)
+					{
+						dnf = true;
+					}
+				}
 				if(playing_demo != DEMO_PLAY)
 				{
 					demo = RecordDemoInput(demo, input.current);
@@ -941,7 +1422,7 @@ int main(void)
 
 			float speed_change = absf(previous_speed - Vector2Length(car.velocity));
 
-			if(GetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE) && speed_change > car_stats.camera_shake_threshold)
+			if(GetProfileBool(playing_profile, PRF_BOOL_SCREEN_SHAKE) && speed_change > car_stats.camera_shake_threshold)
 			{
 				shake_time += (speed_change - car_stats.camera_shake_threshold) * car_stats.speed_to_shake_ratio;
 			}
@@ -966,7 +1447,60 @@ int main(void)
 					check_rot = meta.check_rot;
 				}
 			}
-			if(meta.finish && !finished && checkpoints_gotten == track.checkpoint_amount)
+			bool did_finish = meta.finish && !finished && checkpoints_gotten == track.checkpoint_amount;
+			if(party_mode && (did_finish || dnf))
+			{
+				int profs_left = 0;
+				for(int i = 0; i < party_count; i++)
+				{
+					if(party_timers[i] > 0.0)
+					{
+						profs_left++;
+					}
+				}
+				if(profs_left <= 1)
+				{
+					current_game_screen = MENU;
+					reset_menu = true;
+					party_current_menu = 2;
+					_free(party_timers);
+					_free(party_best_times);
+				}
+				stop_inputs = true;
+				finished = true;
+				if(timer < party_best_times[current_profile] || party_best_times[current_profile] == 0.0)
+				{
+					party_best_times[current_profile] = timer;
+				}
+				double worst_time = 0.0;
+				int worst_prof = -1;
+				for(int i = party_count - 1; i >= 0; i--)
+				{
+					if(party_timers[i] > 0.0 && party_best_times[i] == 0.0)
+					{
+						worst_prof = i;
+					}
+				}
+				if(worst_prof == -1) for(int i = 0; i < party_count; i++)
+				{
+					if(party_timers[i] > 0.0 && party_best_times[i] > worst_time)
+					{
+						worst_time = party_best_times[i];
+						worst_prof = i;
+					}
+				}
+				if(worst_prof >= 0)
+				{
+					current_profile = worst_prof;
+				}
+				else
+				{
+					// Temporary, replace with showing who won and then going to track select
+					reset_race = true;
+					reset_party = true;
+				}
+			}
+			else if(did_finish)
 			{
 				stop_inputs = true;
 				finished = true;
@@ -1014,7 +1548,7 @@ int main(void)
 					}
 					else
 					{
-						filename = DemoFilename(DEMO_DIRECTORY, (const char*)demo_track_name, profile.name);
+						filename = DemoFilename(DEMO_DIRECTORY, (const char*)demo_track_name, playing_profile->name);
 					}
 					SaveDemo(demo, demo_track_name, filename);
 					ClearDemo(ghost_demo);
@@ -1048,7 +1582,7 @@ int main(void)
 				SaveDemoTime(demo, (unsigned char*)TrackFileName(track_dir, track_name));
 			}
 
-			if(GetProfileBool(&profile, PRF_BOOL_CAM_CENTERED))
+			if(GetProfileBool(playing_profile, PRF_BOOL_CAM_CENTERED))
 			{
 				MoveCameraInstant(&camera, car.position);
 			}
@@ -1109,6 +1643,87 @@ int main(void)
 		}
 
 		break;
+	case OPTIONS:
+		if(reset_options)
+		{
+			reset_options = false;
+			options_current = 0;
+			options_max = 3;
+			options_page = 0;
+		}
+
+		if(InputPressed(input, INPUT_ESC))
+		{
+			current_game_screen = MENU;
+			reset_menu = true;
+		}
+
+		switch(options_page)
+		{
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+				options_max = 3;
+				break;
+		}
+		if(InputHeld(menu_input, INPUT_DOWN))
+		{
+			if(options_current <= options_max)
+			{
+				options_current++;
+			}
+		}
+		if(InputHeld(menu_input, INPUT_UP))
+		{
+			if(options_current > 0)
+			{
+				options_current--;
+			}
+		}
+		if(InputHeld(menu_input, INPUT_RIGHT))
+		{
+			TraceLog(LOG_INFO, "Nothin");
+		}
+		if(InputHeld(menu_input, INPUT_LEFT))
+		{
+			TraceLog(LOG_INFO, "Nothin");
+		}
+		if(InputPressed(input, INPUT_ENTER))
+		{
+			if(options_current == options_max)
+			{
+				if(options_page == 0)
+				{
+					current_game_screen = MENU;
+					reset_menu = true;
+				}
+				else
+				{
+					options_page = 0;
+					options_current = 0;
+				}
+			}
+			else if(options_page == 0)
+			{
+				if(options_current == 0)
+				{
+					options_page = 1;
+					options_current = 0;
+				}
+				else if(options_current == 1)
+				{
+					options_page = 2;
+					options_current = 0;
+				}
+				else
+				{
+					options_page = 3;
+					options_current = 0;
+				}
+			}
+		}
+		break;
 	}
 	if(popup)
 	{
@@ -1154,18 +1769,23 @@ int main(void)
 		if(InputPressed(input, INPUT_BACK))
 		{
 			unsigned char* file_dir;
+			const char* top_dir;
 			if(file_list_active == FL_TRACK)
 			{
 				file_dir = track_dir;
+				top_dir = TRACK_DIRECTORY;
 			}
 			else if(file_list_active == FL_DEMO)
 			{
 				file_dir = demo_dir;
+				top_dir = DEMO_DIRECTORY;
 			}
 
-			if(!TextIsEqual(demo_dir, TRACK_DIRECTORY))
+			//TraceLog(LOG_INFO, "%s, %s", file_dir, top_dir);
+
+			if(!TextIsEqual(file_dir, top_dir))
 			{
-				ReturnToParentDirectory(demo_dir);
+				ReturnToParentDirectory(file_dir);
 				load_file_list = true;
 			}
 			else
@@ -1195,8 +1815,9 @@ int main(void)
 						file_list_active = FL_OFF;
 						current_game_screen = RACE;
 						reset_race = true;
+						race_showcase = true;
 
-						if(!validating_track)
+						if(!validating_track && !party_mode)
 						{
 							const char* filename = DemoFilename(DEMO_DIRECTORY, TrackFileName(track_dir,track_name), profile.name);
 							DemoSave* demosave = LoadDemo(filename);
@@ -1216,6 +1837,10 @@ int main(void)
 								_free(demosave);
 								playing_demo = DEMO_OFF;
 							}
+						}
+						else
+						{
+							playing_demo = DEMO_OFF;
 						}
 					}
 					else
@@ -1248,6 +1873,7 @@ int main(void)
 					file_list_active = FL_OFF;
 					current_game_screen = RACE;
 					reset_race = true;
+					race_showcase = true;
 					TraceLog(LOG_INFO, "FREE: demosave track_name");
 					_free(demosave->track_name);
 					TraceLog(LOG_INFO, "FREE: demosave");
@@ -1306,15 +1932,24 @@ int main(void)
 				const char* fname = ProfileFilename(PROFILE_DIRECTORY, profile_name);
 				if(!FileExists(fname))
 				{
+					Profile new_prof = DefaultProfile();
 					for(int i = 0; i < PROFILE_NAME_LENGHT; i++)
 					{
-						profile.name[i] = profile_name[i];
+						new_prof.name[i] = profile_name[i];
 					}
-					SaveProfile(&profile, fname);
+					SaveProfile(&new_prof, fname);
 					UnloadDirectoryFiles(fpl);
 					fpl.count = 0;
 					current_game_screen = MENU;
-					reset_menu = true;
+					if(party_mode)
+					{
+						party_profiles[party_current_opt - 1] = new_prof;
+					}
+					else
+					{
+						profile = new_prof;
+						reset_menu = true;
+					}
 				}
 				else
 				{
@@ -1386,13 +2021,13 @@ int main(void)
 				switch(efos_opt)
 				{
 					case(0):
-						track.medal_bronz = (float)in_num * 0.001;
+						track.medal_bronz = (double)in_num * 0.001;
 						break;
 					case(1):
-						track.medal_silver = (float)in_num * 0.001;
+						track.medal_silver = (double)in_num * 0.001;
 						break;
 					case(2):
-						track.medal_gold = (float)in_num * 0.001;
+						track.medal_gold = (double)in_num * 0.001;
 						break;
 				}
 				CalculateMedalTimes(&track);
@@ -1515,8 +2150,20 @@ int main(void)
 			DrawLine(0, i, BLOCK_SIZE * TRACK_GRID_SIZE, i, GRAY);
 		}
 
-		DrawPlacedBlocksDebug(blocks, 0);
-		DrawLoadedBlockWallsDebug(block_walls);
+		int layers[Z_LAYERS][ASSET_AMOUNT];
+
+		LoadNearbyBlocks(blocks, layers, load_placement);
+
+		for(int i = 0; i < PLAYER_LAYER; i ++)
+		{
+			DrawLoadedBlocks(blocks, layers[i], game_time);
+		}
+
+		//DrawPlacedBlocksDebug(blocks, 0);
+		if(DEBUG)
+		{
+			DrawLoadedBlockWallsDebug(block_walls);
+		}
 
 		switch(current_game_screen)
 		{
@@ -1530,7 +2177,7 @@ int main(void)
 			{
 				for(int i = 0; i < BLOCKS_PER_PIECE; i++)
 				{
-					DrawBlockDebug(held_piece[i]);
+					DrawBlock(held_piece[i], game_time);
 				}
 				Vector2 cursor_pos = (Vector2){BLOCK_SIZE * cursor_info.placement.x, BLOCK_SIZE * cursor_info.placement.y};
 				DrawCursor(cursor_pos, BLOCK_SIZE, BLACK);
@@ -1555,7 +2202,12 @@ int main(void)
 			} break;
 		}
 
-		DrawPlacedBlocksDebug(blocks, 1);
+		for(int i = PLAYER_LAYER; i < Z_LAYERS; i ++)
+		{
+			DrawLoadedBlocks(blocks, layers[i], game_time);
+		}
+
+		//DrawPlacedBlocksDebug(blocks, 1);
 
 		EndMode2D();
 
@@ -1573,7 +2225,50 @@ int main(void)
 			{
 				DrawText("RAYMANIA", 258, 56, 96, BLACK);
 
-				if(menu_option >= MENU_RACE) for(int i = 0; i < 3; i++)
+				if(party_mode && party_current_menu == 0)
+				{
+					DrawPartyMenu(party_current_opt, party_count, party_profiles);
+				}
+				else if(party_mode && party_current_menu == 1)
+				{
+					const Vector2 SIZE = (Vector2){480, 192};
+					const Vector2 POSITION = (Vector2){272, 64};
+
+					DrawRectangle(POSITION.x - 28, POSITION.y - 28, SIZE.x + 56, SIZE.y + 56, BLACK);
+					DrawRectangle(POSITION.x - 24, POSITION.y - 24, SIZE.x + 48, SIZE.y + 48, PURPLE);
+					DrawRectangle(POSITION.x, POSITION.y, SIZE.x, SIZE.y, VIOLET);
+
+					for(int i = 0; i < 4; i++)
+					{
+						Color text_color = BLACK;
+						if(party_current_opt == i) text_color = RAYWHITE;
+						Vector2 pos = POSITION;
+						pos.y += 8 + i * 32;
+						pos.x += 8;
+						if(i == 0)
+						{
+							DrawText(TextFormat("Timer: %.3f", (double)party_timer_base * 30.0), pos.x, pos.y, 32, text_color);
+						}
+						else if(i == 1)
+						{
+							DrawText("o Load track", pos.x, pos.y, 32, text_color);
+						}
+						else if(i == 2)
+						{
+							DrawText("+ Make new track", pos.x, pos.y, 32, text_color);
+						}
+						else if(i == 3)
+						{
+							DrawText("< Change players", pos.x, pos.y, 32, text_color);
+						}
+					}
+				}
+				else if(party_mode && party_current_menu == 2)
+				{
+					DrawText(TextFormat("%s", party_profiles[current_profile].name), 256, 192, 64, BLACK);
+					DrawText("IS THE WINNER!!!", 256, 256, 64, BLACK);
+				}
+				else if(menu_option >= MENU_RACE) for(int i = 0; i < 3; i++)
 				{
 					int y_pos = 192 + 80 * i;
 					if(i + MENU_RACE == menu_option)
@@ -1624,16 +2319,12 @@ int main(void)
 							DrawText("EDITOR", 512 - 123, y_pos, 64, ORANGE);
 						break;
 						case(MENU_PARTY):
-							DrawRectangle(320, y_pos, 384, 64, GRAY);
-							DrawText("PARTY", 512 - 111, y_pos, 64, DARKGRAY);
-							//DrawRectangle(320, y_pos, 384, 64, PURPLE);
-							//DrawText("PARTY", 512 - 111, y_pos, 64, DARKPURPLE);
+							DrawRectangle(320, y_pos, 384, 64, PURPLE);
+							DrawText("PARTY", 512 - 111, y_pos, 64, DARKPURPLE);
 						break;
 						case(MENU_OPTIONS):
-							DrawRectangle(320, y_pos, 384, 64, GRAY);
-							DrawText("OPTIONS", 512 - 146, y_pos, 64, DARKGRAY);
-							//DrawRectangle(320, y_pos, 384, 64, SKYBLUE);
-							//DrawText("OPTIONS", 512 - 146, y_pos, 64, DARKBLUE);
+							DrawRectangle(320, y_pos, 384, 64, SKYBLUE);
+							DrawText("OPTIONS", 512 - 146, y_pos, 64, DARKBLUE);
 						break;
 						case(MENU_EXIT):
 							DrawRectangle(320, y_pos, 384, 64, PINK);
@@ -1653,6 +2344,8 @@ int main(void)
 			} break;
 			case EDITOR:
 			{
+				DrawText(TextFormat("x: %i", cursor_info.placement.x), 8, 8, 16, BLACK);
+				DrawText(TextFormat("y: %i", cursor_info.placement.y), 8, 24, 16, BLACK);
 				if(piece_catalogue_pulled > 0.0)
 				{
 					int catalogue_pos_y = 640 - piece_catalogue_pulled * 224;
@@ -1694,7 +2387,11 @@ int main(void)
 								DrawText("TIME", pos.x, pos.y, TEXT_SIZE, GRAY);
 								break;
 							case(EDITOR_VALIDATE):
-								if(track.has_start)
+								if(party_mode)
+								{
+									DrawText("PLAY", pos.x, pos.y, TEXT_SIZE, GREEN);
+								}
+								else if(track.has_start)
 								{
 									DrawText("VALI", pos.x, pos.y, TEXT_SIZE, GREEN);
 								}
@@ -1778,8 +2475,12 @@ int main(void)
 						DrawText("Bronz medal.", 256, 88, 96, BLACK);
 					}
 					DrawText(TextFormat("%.3f", timer), 384, 192, 96, BLACK);
+					if(party_mode)
+					{
+						DrawText(TextFormat("Up next: %i. %s", current_profile + 1, party_profiles[current_profile].name), 384, 320, 32, BLACK);
+					}
 				}
-				else
+				else if(!race_showcase)
 				{
 					DrawText(TextFormat("%.3f", timer), 8, 572, 64, BLACK);
 					if(track.checkpoint_amount > 0)
@@ -1787,7 +2488,19 @@ int main(void)
 						DrawText(TextFormat("%i/%i", checkpoints_gotten, track.checkpoint_amount), 896, 576, 64, BLUE);
 					}
 				}
-				if(start_countdown)
+				if(race_showcase || paused)
+				{
+					DrawText(TextFormat("%s", track_name), 8, 8, 16, BLACK);
+					DrawText(TextFormat("By: %s", track.author), 8, 24, 16, BLACK);
+					DrawText(TextFormat("Bronz: %.3f", track.medal_bronz), 8, 40, 16, BLACK);
+					DrawText(TextFormat("Silver: %.3f", track.medal_silver), 8, 56, 16, BLACK);
+					DrawText(TextFormat("Gold: %.3f", track.medal_gold), 8, 72, 16, BLACK);
+					if(race_showcase)
+					{
+						DrawText("Press enter to play", 8, 88, 16, BLACK);
+					}
+				}
+				else if(start_countdown)
 				{
 					DrawText(TextFormat("%i", 3 - (int)((game_time - start_time) / COUNTDOWN_TIME * 3)), 576, 256, 128, BLACK);
 				}
@@ -1825,14 +2538,60 @@ int main(void)
 						pos_y += 64;
 					}
 				}
+				if(party_mode && !reset_party)
+				{
+					Color ctext = BLACK, btext = VIOLET;
+					bool render_timers = true;
+					if(timer == 0.0 || stop_inputs)
+					{
+						ctext.a = 255;
+						btext.a = 255;
+					}
+					else if(timer < 2.0)
+					{
+						ctext.a = (int)(128 * (2.0 - timer));
+						btext.a = (int)(128 * (2.0 - timer));
+					}
+					else
+					{
+						render_timers = false;
+					}
+					if(render_timers)
+					{
+						for(int i = 0; i < party_count; i++)
+						{
+							DrawText(TextFormat("%.3f", party_best_times[i]), 16, i * 32 + 16, 16, ctext);
+							DrawText(TextFormat("%i. %s", i + 1, party_profiles[i].name), 96, i * 32 + 16, 16, ctext);
+							DrawRectangle(16, i * 32 + 34, party_timers[i] / party_timer_base * 10, 12, btext);
+						}
+					}
+				}
 				//TraceLog(LOG_INFO, "Text size %i.", MeasureText("Resume", 32) / 2);
 			} break;
+			case OPTIONS:
+			{
+				DrawOptions(options_current, options_page, options_max);
+			} break;
 		}
+
+		/*
+		Asset* asset = AllocAsset(1, ROT_NORTH, game_time);
+		//TraceLog(LOG_INFO, "%i %i", asset->tri_amount, asset->tris[0].color);
+		DrawTriangle(asset->tris[0].a, asset->tris[0].b, asset->tris[0].c, RAYWHITE);
+		Vector2 pos = (Vector2){0.0, 0.0};
+		DrawAsset(asset, 1.0, pos);
+		FreeAsset(asset);
+		*/
 
 		if(file_list_active)
 		{
 			Color bg1 = GREEN, bg2 = LIME;
-			if(current_game_screen == EDITOR)
+			if(party_mode)
+			{
+				bg1 = PURPLE;
+				bg2 = VIOLET;
+			}
+			else if(current_game_screen == EDITOR)
 			{
 				bg1 = GOLD;
 				bg2 = ORANGE;
@@ -1862,13 +2621,13 @@ int main(void)
 			switch(in_type)
 			{
 				case(1):
-					float compare_timer = 0.0;
+					double compare_timer = 0.0;
 					if(efos_opt == 0) compare_timer = track.medal_silver;
 					if(efos_opt == 1) compare_timer = track.medal_gold;
 					if(efos_opt == 2) compare_timer = track.medal_author;
 					DrawText("Enter Time:", 384, 264, 32, BLACK);
 					DrawText(TextFormat("Medal above %.3f", compare_timer), 104, 300, 32, BLACK);
-					DrawText(TextFormat("%.3f", (float)in_num * 0.001), 104, 336, 32, BLACK);
+					DrawText(TextFormat("%.3f", (double)in_num * 0.001), 104, 336, 32, BLACK);
 					break;
 				case(2):
 					DrawText("Enter Page Number:", 352, 272, 32, BLACK);
@@ -1896,7 +2655,14 @@ int main(void)
 					break;
 				case(POPUP_VALIDATE):
 					DrawText("Track is not validated.", 328, 248, 32, BLACK);
-					DrawText("Validate?", 440, 280, 32, BLACK);
+					if(party_mode)
+					{
+						DrawText("Play anyway?", 424, 280, 32, BLACK);
+					}
+					else
+					{
+						DrawText("Validate?", 440, 280, 32, BLACK);
+					}
 					break;
 				case(POPUP_RESET_MEDALS):
 					DrawText("Clear medals?", 416, 272, 32, BLACK);

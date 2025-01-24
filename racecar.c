@@ -15,7 +15,7 @@ CarStats DefaultStats(DefaultCar car)
 	switch(car)
 	{
 		case(CAR_ROAD):
-			car_stats.size = (Vector2){20, 30};
+			car_stats.size = (Vector2){16, 26};
 			car_stats.camera_shake_threshold = 0.8;
 			car_stats.speed_to_shake_ratio = 0.125;
 			car_stats.shake_amplitude = 5.0;
