@@ -204,7 +204,7 @@ int main(void)
 	unsigned char editor_four_option_selector = 0, efos_opt = 0;
 
 	// PARTY VAR
-	
+
 	bool party_mode = false;
 
 	unsigned int party_count = 2;
