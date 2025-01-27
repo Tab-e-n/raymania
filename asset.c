@@ -240,6 +240,11 @@ Tri ScaleTri(Tri tri, float scale)
 	return tri;
 }
 
+bool TriIsPoint(Tri tri)
+{
+	return Vector2Equals(tri.a, tri.b) && Vector2Equals(tri.a, tri.c);
+}
+
 Color TriColor(Tri tri)
 {
 	return ColorFromIndex(tri.color);
@@ -443,3 +448,16 @@ void DrawAsset(Asset* asset, float scale, Vector2 position)
 	}
 }
 
+void DrawAssetPixels(Asset* asset, float scale, Vector2 position)
+{
+	//TraceLog(LOG_INFO, "Drawing");
+	for(int i = 0; i < asset->tri_amount; i++)
+	{
+		Tri tri = ScaleTri(asset->tris[i], scale);
+		tri = MoveTri(tri, position);
+		//PrintTri(tri);
+		DrawPixel(tri.a.x, tri.a.y, BLACK);
+		DrawPixel(tri.b.x, tri.b.y, BLACK);
+		DrawPixel(tri.c.x, tri.c.y, BLACK);
+	}
+}

@@ -69,7 +69,7 @@ void DrawPartyMenu(int current_opt, unsigned int party_count, Profile* profiles)
 	}
 }
 
-void DrawOptions(int current, int page, int max)
+void DrawOptions(int current, int page, int max, Profile* profile)
 {
 	const Vector2 SIZE = (Vector2){768, 512};
 	const Vector2 POSITION = (Vector2){128, 64};
@@ -116,7 +116,7 @@ void DrawOptions(int current, int page, int max)
 			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
 			if(i == 0)
 			{
-				DrawText("Name", pos.x, pos.y, 32, text_color);
+				DrawText(TextFormat("Name: %s", profile->name), pos.x, pos.y, 32, text_color);
 			}
 			else if(i == 1)
 			{
@@ -140,15 +140,36 @@ void DrawOptions(int current, int page, int max)
 			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
 			if(i == 0)
 			{
-				DrawText("Screen Shake", pos.x, pos.y, 32, text_color);
+				if(GetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE))
+				{
+					DrawText("Screen Shake: ON", pos.x, pos.y, 32, text_color);
+				}
+				else
+				{
+					DrawText("Screen Shake: OFF", pos.x, pos.y, 32, text_color);
+				}
 			}
 			else if(i == 1)
 			{
-				DrawText("Centered Camera", pos.x, pos.y, 32, text_color);
+				if(GetProfileBool(&profile, PRF_BOOL_CENTERED_CAM))
+				{
+					DrawText("Centered Camera: ON", pos.x, pos.y, 32, text_color);
+				}
+				else
+				{
+					DrawText("Screen Shake: OFF", pos.x, pos.y, 32, text_color);
+				}
 			}
 			else
 			{
-				DrawText("Ghosts", pos.x, pos.y, 32, text_color);
+				if(GetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED))
+				{
+					DrawText("Ghosts: ON", pos.x, pos.y, 32, text_color);
+				}
+				else
+				{
+					DrawText("Screen Shake: OFF", pos.x, pos.y, 32, text_color);
+				}
 			}
 		}
 	}
@@ -1681,6 +1702,7 @@ int main(void)
 				options_current--;
 			}
 		}
+		// OPTIONS SELECT
 		if(InputHeld(menu_input, INPUT_RIGHT))
 		{
 			TraceLog(LOG_INFO, "Nothin");
@@ -1720,6 +1742,41 @@ int main(void)
 				{
 					options_page = 3;
 					options_current = 0;
+				}
+			}
+			else if(options_page == 1)
+			{
+				if(options_current == 0)
+				{
+					entering_profile_name = true;
+					inputing_name = 1;
+					name_lenght = PROFILE_NAME_LENGHT - 1;
+				}
+				else if(options_current == 1)
+				{
+					// TODO: MODEL AND PALETTE SELECT
+				}
+				else
+				{
+					// TODO: MODEL AND PALETTE SELECT
+				}
+			}
+			else if(options_page == 2)
+			{
+				if(options_current == 0)
+				{
+					bool b = GetProfileBool(profile, PRF_BOOL_SCREEN_SHAKE);
+					SetProfileBool(profile, PRF_BOOL_SCREEN_SHAKE, b);
+				}
+				else if(options_current == 1)
+				{
+					bool b = GetProfileBool(profile, PRF_BOOL_CAM_CENTERED);
+					SetProfileBool(profile, PRF_BOOL_CAM_CENTERED, b);
+				}
+				else
+				{
+					bool b = GetProfileBool(profile, PRF_BOOL_GHOST_ENABLED);
+					SetProfileBool(profile, PRF_BOOL_GHOST_ENABLED, b);
 				}
 			}
 		}
@@ -1915,7 +1972,6 @@ int main(void)
 		{
 			name = profile_name;
 		}
-
 		if(InputPressed(input, INPUT_ESC))
 		{
 			inputing_name = 0;
@@ -1940,15 +1996,19 @@ int main(void)
 					SaveProfile(&new_prof, fname);
 					UnloadDirectoryFiles(fpl);
 					fpl.count = 0;
-					current_game_screen = MENU;
 					if(party_mode)
 					{
 						party_profiles[party_current_opt - 1] = new_prof;
+						current_game_screen = MENU;
 					}
 					else
 					{
 						profile = new_prof;
-						reset_menu = true;
+						if(current_game_screen != OPTIONS)
+						{
+							current_game_screen = MENU;
+							reset_menu = true;
+						}
 					}
 				}
 				else
@@ -2570,7 +2630,7 @@ int main(void)
 			} break;
 			case OPTIONS:
 			{
-				DrawOptions(options_current, options_page, options_max);
+				DrawOptions(options_current, options_page, options_max, &profile);
 			} break;
 		}
 
