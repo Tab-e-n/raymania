@@ -448,7 +448,7 @@ void DrawAsset(Asset* asset, float scale, Vector2 position)
 	}
 }
 
-void DrawAssetPixels(Asset* asset, float scale, Vector2 position)
+void DrawAssetPixels(Asset* asset, float scale, Vector2 position, Color color)
 {
 	//TraceLog(LOG_INFO, "Drawing");
 	for(int i = 0; i < asset->tri_amount; i++)
@@ -456,8 +456,8 @@ void DrawAssetPixels(Asset* asset, float scale, Vector2 position)
 		Tri tri = ScaleTri(asset->tris[i], scale);
 		tri = MoveTri(tri, position);
 		//PrintTri(tri);
-		DrawPixel(tri.a.x, tri.a.y, BLACK);
-		DrawPixel(tri.b.x, tri.b.y, BLACK);
-		DrawPixel(tri.c.x, tri.c.y, BLACK);
+		DrawPixel(tri.a.x, tri.a.y, color);
+		DrawPixel(tri.b.x, tri.b.y, color);
+		DrawPixel(tri.c.x, tri.c.y, color);
 	}
 }
