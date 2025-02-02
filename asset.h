@@ -52,6 +52,7 @@ void TabinLogo(void);
 
 Tri MoveTri(Tri tri, Vector2 position);
 Tri ScaleTri(Tri tri, float scale);
+bool TriIsPoint(Tri tri);
 Color TriColor(Tri tri);
 void PrintTri(Tri tri);
 
@@ -61,5 +62,6 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time);
 void FreeAsset(Asset* asset);
 
 void DrawAsset(Asset* asset, float scale, Vector2 position);
+void DrawAssetPixels(Asset* asset, float scale, Vector2 position, Color color);
 
 #endif
