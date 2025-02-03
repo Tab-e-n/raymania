@@ -3,6 +3,9 @@
 #include "asset.h"
 
 
+#define COLOR_SELECT_SIZE 8
+
+
 Tri SetPoint(Tri tri, Vector2 pos, int point)
 {
 	if(point == 0)
@@ -24,17 +27,101 @@ Tri MovePoint(Tri tri, Vector2 shift, int point)
 {
 	if(point == 0)
 	{
-		tri.a = Vector2Add(tri.a, pos);
+		tri.a = Vector2Add(tri.a, shift);
 	}
 	else if(point == 1)
 	{
-		tri.b = Vector2Add(tri.b, pos);
+		tri.b = Vector2Add(tri.b, shift);
 	}
 	else
 	{
-		tri.c = Vector2Add(tri.c, pos);
+		tri.c = Vector2Add(tri.c, shift);
 	}
 	return tri;
+}
+
+Asset* asset LoadAsset(const char* filename)
+{
+	int data_size;
+	unsigned char* file_data = LoadFileData(filename, &data_size);
+	Asset* asset = MallocAsset(TRI_AMOUNT);
+
+	if(file_data != (void*)0)
+	{
+		if(data_size != sizeof(Asset) + sizeof(Tri) * TRI_AMOUNT)
+		{
+			TraceLog(LOG_WARNING, "FILEIO: [%s] Asset is not the required size, won't load.", filename);
+		}
+		else
+		{
+			Asset* asset_save = (Profile*)file_data;
+			*asset = *asset_save;
+
+			TraceLog(LOG_INFO, "FILEIO: [%s] Asset loaded successfully", filename);
+		}
+
+		UnloadFileData(file_data);
+	}
+
+	return asset;
+}
+
+bool SaveAsset(Asset* asset, const char* filename)
+{
+	bool success = false;
+	int data_size;
+	int save_data_size;
+	unsigned char* file_data = LoadFileData(filename, &data_size);
+	unsigned char* save_file_data = (void*)0;
+
+	if(file_data != (void*)0)
+	{
+		if(data_size != sizeof(Asset) + sizeof(Tri) * TRI_AMOUNT)
+		{
+			save_data_size = sizeof(Asset) + sizeof(Tri) * TRI_AMOUNT;
+			TraceLog(LOG_INFO, "REALLOC: save asset");
+			save_file_data = (unsigned char*)_realloc(file_data, save_data_size);
+
+			if(save_file_data != (void*)0)
+			{
+				Asset* savefile = (Asset*)save_file_data;
+				*savefile = *asset; 
+			}
+			else
+			{
+				TraceLog(LOG_WARNING, "FILEIO: [%s] Failed to realloc data.", filename);
+
+				save_file_data = file_data;
+				save_data_size = data_size;
+			}
+		}
+		else
+		{
+			save_file_data = file_data;
+			save_data_size = data_size;
+
+			Asset* savefile = (Asset*)save_file_data;
+			*savefile = *asset; 
+		}
+
+		success = SaveFileData(filename, file_data, data_size);
+		TraceLog(LOG_INFO, "FREE: asset save data");
+		_free(save_file_data);
+	}
+	else
+	{
+		data_size = sizeof(Asset) + sizeof(Tri) * TRI_AMOUNT;
+		TraceLog(LOG_INFO, "MALLOC: asset save data");
+		file_data = (unsigned char*)_malloc(data_size);
+		Asset* savefile = (Asset*)save_file_data;
+
+		*savefile = *asset; 
+
+		success = SaveFileData(filename, file_data, data_size);
+		UnloadFileData(file_data);
+	}
+
+	return success;
 }
 
 int main(void)
@@ -44,8 +131,8 @@ int main(void)
 	Asset* asset = MallocAsset(TRI_AMOUNT);
 
 	int current_tri = 0, current_point = -1;
-	char bg = 0;
-	bool draw_pixels = true, edit_points = false;
+	char bg = 0, tricol = 0;
+	bool draw_pixels = true, edit_points = false, color_select = false;
 	Camera2D camera = (Camera2D){0};
 	camera.zoom = 4.0;
 
@@ -81,6 +168,21 @@ int main(void)
 			{
 				bg = 0;
 			}
+		}
+		if(IsKeyPressed(KEY_P))
+		{
+			for(int i = 0; i < TRI_AMOUNT; i++)
+			{
+				Tri tri = asset->tris[i];
+				if(!TriIsPoint(tri))
+				{
+					TraceLog(LOG_INFO, "%i: %f %f %f %f %f %f", i, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y);
+				}
+			}
+		}
+		if(IsKeyPressed(KEY_C))
+		{
+			color_select = !color_select;
 		}
 		if(IsKeyPressed(KEY_DELETE))
 		{
@@ -136,24 +238,38 @@ int main(void)
 
 		if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 		{
-			current_point++;
-			if(current_point >= 3)
+			if(color_select)
 			{
-				current_point = 0;
-				do
+				int i = (int)mouse.x / (COLOR_SELECT_SIZE * 4);
+				if(i >= 0 && i < 25)
 				{
-					current_tri++;
+					tricol = i;
+					asset->tris[current_tri].color = tricol;
+					color_select = false;
 				}
-				while(!TriIsPoint(asset->tris[current_tri]) && current_tri < TRI_AMOUNT);
-			}
-			if(current_tri < TRI_AMOUNT && current_tri >= 0)
-			{
-				asset->tris[current_tri] = SetPoint(asset->tris[current_tri], mouse, current_point);
 			}
 			else
 			{
-				current_tri = 0;
-				current_point = -1;
+				current_point++;
+				if(current_point >= 3)
+				{
+					current_point = 0;
+					do
+					{
+						current_tri++;
+					}
+					while(!TriIsPoint(asset->tris[current_tri]) && current_tri < TRI_AMOUNT);
+				}
+				if(current_tri < TRI_AMOUNT && current_tri >= 0)
+				{
+					asset->tris[current_tri] = SetPoint(asset->tris[current_tri], mouse, current_point);
+					asset->tris[current_tri].color = tricol;
+				}
+				else
+				{
+					current_tri = 0;
+					current_point = -1;
+				}
 			}
 		}
 		if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
@@ -205,11 +321,11 @@ int main(void)
 				Tri tri = asset->tris[current_tri];
 				if(edit_points)
 				{
-					if(point == 0)
+					if(current_point == 0)
 					{
 						DrawPixel(tri.a.x, tri.a.y, color);
 					}
-					else if(point == 1)
+					else if(current_point == 1)
 					{
 						DrawPixel(tri.b.x, tri.b.y, color);
 					}
@@ -223,6 +339,13 @@ int main(void)
 					DrawPixel(tri.a.x, tri.a.y, color);
 					DrawPixel(tri.b.x, tri.b.y, color);
 					DrawPixel(tri.c.x, tri.c.y, color);
+				}
+			}
+			if(color_select)
+			{
+				for(int i = 0; i < 25; i++)
+				{
+					DrawRectangle(i * COLOR_SELECT_SIZE, 0, COLOR_SELECT_SIZE, COLOR_SELECT_SIZE, ColorFromIndex(i));
 				}
 			}
 		EndMode2D();
