@@ -392,7 +392,7 @@ int main(void)
 	int options_max = 0;
 
 	// PARTY VAR
-	
+
 	bool party_mode = false;
 	char party_current_menu = 0;
 	int party_current_opt = 0;
