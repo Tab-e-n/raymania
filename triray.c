@@ -4,6 +4,7 @@
 
 
 #define COLOR_SELECT_SIZE 8
+#define TRI_AMOUNT 256
 
 
 Tri SetPoint(Tri tri, Vector2 pos, int point)
@@ -40,7 +41,7 @@ Tri MovePoint(Tri tri, Vector2 shift, int point)
 	return tri;
 }
 
-Asset* asset LoadAsset(const char* filename)
+Asset* LoadAsset(const char* filename)
 {
 	int data_size;
 	unsigned char* file_data = LoadFileData(filename, &data_size);
@@ -54,7 +55,7 @@ Asset* asset LoadAsset(const char* filename)
 		}
 		else
 		{
-			Asset* asset_save = (Profile*)file_data;
+			Asset* asset_save = (Asset*)file_data;
 			*asset = *asset_save;
 
 			TraceLog(LOG_INFO, "FILEIO: [%s] Asset loaded successfully", filename);
@@ -113,7 +114,7 @@ bool SaveAsset(Asset* asset, const char* filename)
 		data_size = sizeof(Asset) + sizeof(Tri) * TRI_AMOUNT;
 		TraceLog(LOG_INFO, "MALLOC: asset save data");
 		file_data = (unsigned char*)_malloc(data_size);
-		Asset* savefile = (Asset*)save_file_data;
+		Asset* savefile = (Asset*)file_data;
 
 		*savefile = *asset; 
 
@@ -126,8 +127,6 @@ bool SaveAsset(Asset* asset, const char* filename)
 
 int main(void)
 {
-	const int TRI_AMOUNT = 256;
-
 	Asset* asset = MallocAsset(TRI_AMOUNT);
 
 	int current_tri = 0, current_point = -1;
@@ -183,6 +182,15 @@ int main(void)
 		if(IsKeyPressed(KEY_C))
 		{
 			color_select = !color_select;
+		}
+		if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_L))
+		{
+			_free(asset);
+			asset = LoadAsset("tri.ass");
+		}
+		if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_S))
+		{
+			SaveAsset(asset, "tri.ass");
 		}
 		if(IsKeyPressed(KEY_DELETE))
 		{
