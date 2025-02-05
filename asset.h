@@ -56,6 +56,7 @@ bool TriIsPoint(Tri tri);
 Color TriColor(Tri tri);
 void PrintTri(Tri tri);
 
+int SizeOfAsset(int tri_count);
 Asset* RotateAsset(Asset* asset, BlockRotation rot, Vector2 size);
 Asset* MallocAsset(int tri_count);
 Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time);

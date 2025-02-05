@@ -194,7 +194,7 @@ bool SaveProfile(Profile* profile, const char* filename)
 			*savefile = *profile;
 		}
 
-		success = SaveFileData(filename, file_data, data_size);
+		success = SaveFileData(filename, save_file_data, save_data_size);
 		TraceLog(LOG_INFO, "FREE: profile save data");
 		_free(save_file_data);
 	}

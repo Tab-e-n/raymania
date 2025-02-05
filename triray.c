@@ -4,7 +4,8 @@
 
 
 #define COLOR_SELECT_SIZE 8
-#define TRI_AMOUNT 256
+#define TRI_AMOUNT 8
+// 256
 
 
 Tri SetPoint(Tri tri, Vector2 pos, int point)
@@ -41,15 +42,14 @@ Tri MovePoint(Tri tri, Vector2 shift, int point)
 	return tri;
 }
 
-Asset* LoadAsset(const char* filename)
+bool LoadAsset(Asset* asset, const char* filename)
 {
 	int data_size;
 	unsigned char* file_data = LoadFileData(filename, &data_size);
-	Asset* asset = MallocAsset(TRI_AMOUNT);
 
 	if(file_data != (void*)0)
 	{
-		if(data_size != sizeof(Asset) + sizeof(Tri) * TRI_AMOUNT)
+		if(data_size != SizeOfAsset(TRI_AMOUNT))
 		{
 			TraceLog(LOG_WARNING, "FILEIO: [%s] Asset is not the required size, won't load.", filename);
 		}
@@ -62,9 +62,9 @@ Asset* LoadAsset(const char* filename)
 		}
 
 		UnloadFileData(file_data);
+		return true;
 	}
-
-	return asset;
+	return false;
 }
 
 bool SaveAsset(Asset* asset, const char* filename)
@@ -77,9 +77,9 @@ bool SaveAsset(Asset* asset, const char* filename)
 
 	if(file_data != (void*)0)
 	{
-		if(data_size != sizeof(Asset) + sizeof(Tri) * TRI_AMOUNT)
+		if(data_size != SizeOfAsset(TRI_AMOUNT))
 		{
-			save_data_size = sizeof(Asset) + sizeof(Tri) * TRI_AMOUNT;
+			save_data_size = SizeOfAsset(TRI_AMOUNT);
 			TraceLog(LOG_INFO, "REALLOC: save asset");
 			save_file_data = (unsigned char*)_realloc(file_data, save_data_size);
 
@@ -105,13 +105,13 @@ bool SaveAsset(Asset* asset, const char* filename)
 			*savefile = *asset; 
 		}
 
-		success = SaveFileData(filename, file_data, data_size);
+		success = SaveFileData(filename, save_file_data, save_data_size);
 		TraceLog(LOG_INFO, "FREE: asset save data");
 		_free(save_file_data);
 	}
 	else
 	{
-		data_size = sizeof(Asset) + sizeof(Tri) * TRI_AMOUNT;
+		data_size = SizeOfAsset(TRI_AMOUNT);
 		TraceLog(LOG_INFO, "MALLOC: asset save data");
 		file_data = (unsigned char*)_malloc(data_size);
 		Asset* savefile = (Asset*)file_data;
@@ -123,6 +123,18 @@ bool SaveAsset(Asset* asset, const char* filename)
 	}
 
 	return success;
+}
+
+void PrintAsset(Asset* asset)
+{
+	for(int i = 0; i < TRI_AMOUNT; i++)
+	{
+		Tri tri = asset->tris[i];
+		if(!TriIsPoint(tri))
+		{
+			TraceLog(LOG_INFO, "%i: %f %f %f %f %f %f", i, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y);
+		}
+	}
 }
 
 int main(void)
@@ -170,14 +182,7 @@ int main(void)
 		}
 		if(IsKeyPressed(KEY_P))
 		{
-			for(int i = 0; i < TRI_AMOUNT; i++)
-			{
-				Tri tri = asset->tris[i];
-				if(!TriIsPoint(tri))
-				{
-					TraceLog(LOG_INFO, "%i: %f %f %f %f %f %f", i, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y);
-				}
-			}
+			PrintAsset(asset);
 		}
 		if(IsKeyPressed(KEY_C))
 		{
@@ -185,8 +190,7 @@ int main(void)
 		}
 		if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_L))
 		{
-			_free(asset);
-			asset = LoadAsset("tri.ass");
+			LoadAsset(asset, "tri.ass");
 		}
 		if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_S))
 		{
@@ -361,6 +365,8 @@ int main(void)
 	}
 
 	CloseWindow();
+
+	_free(asset);
 
 	return 0;
 }

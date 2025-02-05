@@ -260,6 +260,11 @@ void PrintTri(Tri tri)
 		);
 }
 
+int SizeOfAsset(int tri_count)
+{
+	return sizeof(Asset) + sizeof(Tri) * tri_count;
+}
+
 Asset* RotateAsset(Asset* asset, BlockRotation rot, Vector2 size)
 {
 	if(rot == ROT_NORTH)
@@ -307,7 +312,7 @@ Asset* RotateAsset(Asset* asset, BlockRotation rot, Vector2 size)
 
 Asset* MallocAsset(int tri_count)
 {
-	Asset* asset = (Asset*)_malloc(sizeof(Asset) + sizeof(Tri) * tri_count);
+	Asset* asset = (Asset*)_malloc(SizeOfAsset(tri_count));
 	asset->tri_amount = tri_count;
 	return asset;
 }
