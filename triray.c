@@ -42,6 +42,19 @@ Tri MovePoint(Tri tri, Vector2 shift, int point)
 	return tri;
 }
 
+void PrintAsset(Asset* asset)
+{
+	TraceLog(LOG_INFO, "PRINTING ASSET");
+	for(int i = 0; i < TRI_AMOUNT; i++)
+	{
+		Tri tri = asset->tris[i];
+		if(!TriIsPoint(tri))
+		{
+			TraceLog(LOG_INFO, "%i: %f %f %f %f %f %f", i, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y);
+		}
+	}
+}
+
 bool LoadAsset(Asset* asset, const char* filename)
 {
 	int data_size;
@@ -49,20 +62,27 @@ bool LoadAsset(Asset* asset, const char* filename)
 
 	if(file_data != (void*)0)
 	{
+		bool loaded = true;
 		if(data_size != SizeOfAsset(TRI_AMOUNT))
 		{
 			TraceLog(LOG_WARNING, "FILEIO: [%s] Asset is not the required size, won't load.", filename);
+			loaded = false;
 		}
 		else
 		{
 			Asset* asset_save = (Asset*)file_data;
-			*asset = *asset_save;
+			asset->tri_amount = asset_save->tri_amount;
+			for(int i = 0; i < TRI_AMOUNT; i++)
+			{
+				asset->tris[i] = asset_save->tris[i];
+			}
 
 			TraceLog(LOG_INFO, "FILEIO: [%s] Asset loaded successfully", filename);
 		}
 
 		UnloadFileData(file_data);
-		return true;
+		PrintAsset(asset);
+		return loaded;
 	}
 	return false;
 }
@@ -86,7 +106,11 @@ bool SaveAsset(Asset* asset, const char* filename)
 			if(save_file_data != (void*)0)
 			{
 				Asset* savefile = (Asset*)save_file_data;
-				*savefile = *asset; 
+				savefile->tri_amount = asset->tri_amount;
+				for(int i = 0; i < TRI_AMOUNT; i++)
+				{
+					savefile->tris[i] = asset->tris[i];
+				}
 			}
 			else
 			{
@@ -102,7 +126,11 @@ bool SaveAsset(Asset* asset, const char* filename)
 			save_data_size = data_size;
 
 			Asset* savefile = (Asset*)save_file_data;
-			*savefile = *asset; 
+			savefile->tri_amount = asset->tri_amount;
+			for(int i = 0; i < TRI_AMOUNT; i++)
+			{
+				savefile->tris[i] = asset->tris[i];
+			}
 		}
 
 		success = SaveFileData(filename, save_file_data, save_data_size);
@@ -116,25 +144,18 @@ bool SaveAsset(Asset* asset, const char* filename)
 		file_data = (unsigned char*)_malloc(data_size);
 		Asset* savefile = (Asset*)file_data;
 
-		*savefile = *asset; 
+		savefile->tri_amount = asset->tri_amount;
+		for(int i = 0; i < TRI_AMOUNT; i++)
+		{
+			savefile->tris[i] = asset->tris[i];
+		}
 
 		success = SaveFileData(filename, file_data, data_size);
 		UnloadFileData(file_data);
 	}
 
+	PrintAsset(asset);
 	return success;
-}
-
-void PrintAsset(Asset* asset)
-{
-	for(int i = 0; i < TRI_AMOUNT; i++)
-	{
-		Tri tri = asset->tris[i];
-		if(!TriIsPoint(tri))
-		{
-			TraceLog(LOG_INFO, "%i: %f %f %f %f %f %f", i, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y);
-		}
-	}
 }
 
 int main(void)
