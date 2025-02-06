@@ -183,7 +183,19 @@ int main(void)
 		}
 		if(IsKeyPressed(KEY_E))
 		{
-			edit_points = !edit_points;
+			if(edit_points)
+			{
+				current_point++;
+				if(current_point >= 3)
+				{
+					edit_points = false;
+				}
+			}
+			else
+			{
+				current_point = 0;
+				edit_points = true;
+			}
 		}
 		if(IsKeyPressed(KEY_F))
 		{
@@ -307,15 +319,27 @@ int main(void)
 		}
 		if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
 		{
+			int last_tri = 0;
+			bool found = false;
 			for(int i = 0; i < TRI_AMOUNT; i++)
 			{
 				Tri tri = asset->tris[i];
+				if(TriIsPoint(tri))
+				{
+					continue;
+				}
 				if(CheckCollisionPointTriangle(mouse, tri.a, tri.b, tri.c))
 				{
 					current_tri = i;
+					last_tri = i;
 					current_point = -1;
+					found = true;
 					break;
 				}
+			}
+			if(!found)
+			{
+				current_tri = last_tri;
 			}
 		}
 
