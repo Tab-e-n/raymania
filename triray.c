@@ -4,8 +4,7 @@
 
 
 #define COLOR_SELECT_SIZE 8
-#define TRI_AMOUNT 8
-// 256
+#define TRI_AMOUNT 256
 
 
 Tri SetPoint(Tri tri, Vector2 pos, int point)
@@ -65,7 +64,7 @@ bool LoadAsset(Asset* asset, const char* filename)
 		bool loaded = true;
 		if(data_size != SizeOfAsset(TRI_AMOUNT))
 		{
-			TraceLog(LOG_WARNING, "FILEIO: [%s] Asset is not the required size, won't load.", filename);
+			TraceLog(LOG_WARNING, "FILEIO: [%s] Asset size missmatch. (a: %i, r: %i)", filename, data_size, SizeOfAsset(TRI_AMOUNT));
 			loaded = false;
 		}
 		else
@@ -163,7 +162,7 @@ int main(void)
 	Asset* asset = MallocAsset(TRI_AMOUNT);
 
 	int current_tri = 0, current_point = -1;
-	char bg = 0, tricol = 0;
+	char bg = 0, tricol = 0, input_timer = 0;
 	bool draw_pixels = true, edit_points = false, color_select = false;
 	Camera2D camera = (Camera2D){0};
 	camera.zoom = 4.0;
@@ -175,7 +174,9 @@ int main(void)
 	while(!WindowShouldClose())
 	{
 		Vector2 mouse = GetMousePosition();
-		mouse = Vector2Scale(mouse, .25);
+		Vector2 world_pos = Vector2Scale(mouse, .25);
+		world_pos.x = (int)world_pos.x;
+		world_pos.y = (int)world_pos.y;
 
 		if(IsKeyPressed(KEY_D))
 		{
@@ -234,51 +235,59 @@ int main(void)
 			asset->tris[current_tri] = (Tri){0};
 			current_point = -1;
 		}
-		if(edit_points)
+
+		Vector2 shift = (Vector2){0, 0};
+		if(IsKeyDown(KEY_UP))
 		{
-			if(IsKeyPressed(KEY_UP))
-			{
-				Vector2 shift = (Vector2){0, -1};
-				asset->tris[current_tri] = MovePoint(asset->tris[current_tri], shift, current_point);
-			}
-			if(IsKeyPressed(KEY_DOWN))
-			{
-				Vector2 shift = (Vector2){0, 1};
-				asset->tris[current_tri] = MovePoint(asset->tris[current_tri], shift, current_point);
-			}
-			if(IsKeyPressed(KEY_LEFT))
-			{
-				Vector2 shift = (Vector2){-1, 0};
-				asset->tris[current_tri] = MovePoint(asset->tris[current_tri], shift, current_point);
-			}
-			if(IsKeyPressed(KEY_RIGHT))
-			{
-				Vector2 shift = (Vector2){1, 0};
-				asset->tris[current_tri] = MovePoint(asset->tris[current_tri], shift, current_point);
-			}
+			shift.y -= 1;
+		}
+		if(IsKeyDown(KEY_DOWN))
+		{
+			shift.y += 1;
+		}
+		if(IsKeyDown(KEY_LEFT))
+		{
+			shift.x -= 1;
+		}
+		if(IsKeyDown(KEY_RIGHT))
+		{
+			shift.x += 1;
+		}
+		if(IsKeyPressed(KEY_UP))
+		{
+			input_timer = 60;
+		}
+		if(IsKeyPressed(KEY_DOWN))
+		{
+			input_timer = 60;
+		}
+		if(IsKeyPressed(KEY_LEFT))
+		{
+			input_timer = 60;
+		}
+		if(IsKeyPressed(KEY_RIGHT))
+		{
+			input_timer = 60;
+		}
+		if(shift.x != 0 || shift.y != 0)
+		{
+			input_timer++;
 		}
 		else
 		{
-			if(IsKeyPressed(KEY_UP))
+			input_timer = 0;
+		}
+		if(input_timer >= 15)
+		{
+			if(edit_points)
 			{
-				Vector2 shift = (Vector2){0, -1};
+				asset->tris[current_tri] = MovePoint(asset->tris[current_tri], shift, current_point);
+			}
+			else
+			{
 				asset->tris[current_tri] = MoveTri(asset->tris[current_tri], shift);
 			}
-			if(IsKeyPressed(KEY_DOWN))
-			{
-				Vector2 shift = (Vector2){0, 1};
-				asset->tris[current_tri] = MoveTri(asset->tris[current_tri], shift);
-			}
-			if(IsKeyPressed(KEY_LEFT))
-			{
-				Vector2 shift = (Vector2){-1, 0};
-				asset->tris[current_tri] = MoveTri(asset->tris[current_tri], shift);
-			}
-			if(IsKeyPressed(KEY_RIGHT))
-			{
-				Vector2 shift = (Vector2){1, 0};
-				asset->tris[current_tri] = MoveTri(asset->tris[current_tri], shift);
-			}
+			input_timer = 12;
 		}
 
 		if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
@@ -307,7 +316,7 @@ int main(void)
 				}
 				if(current_tri < TRI_AMOUNT && current_tri >= 0)
 				{
-					asset->tris[current_tri] = SetPoint(asset->tris[current_tri], mouse, current_point);
+					asset->tris[current_tri] = SetPoint(asset->tris[current_tri], world_pos, current_point);
 					asset->tris[current_tri].color = tricol;
 				}
 				else
@@ -328,10 +337,10 @@ int main(void)
 				{
 					continue;
 				}
-				if(CheckCollisionPointTriangle(mouse, tri.a, tri.b, tri.c))
+				last_tri = i;
+				if(CheckCollisionPointTriangle(world_pos, tri.a, tri.b, tri.c))
 				{
 					current_tri = i;
-					last_tri = i;
 					current_point = -1;
 					found = true;
 					break;
@@ -340,7 +349,9 @@ int main(void)
 			if(!found)
 			{
 				current_tri = last_tri;
+				current_point = 3;
 			}
+			edit_points = false;
 		}
 
 		BeginDrawing();
