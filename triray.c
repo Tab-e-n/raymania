@@ -54,6 +54,46 @@ void PrintAsset(Asset* asset)
 	}
 }
 
+Vector2 borders(Vector2 border, float point)
+{
+	border.x = point < border.x ? point : border.x;
+	border.y = point > border.y ? point : border.y;
+	return border;
+}
+
+void PrintAssetCentered(Asset* asset)
+{
+	TraceLog(LOG_INFO, "PRINTING ASSET (CENTERED)");
+	Vector2 border_hori = (Vector2){128, 128};
+	Vector2 border_veri = (Vector2){80, 80};
+	for(int i = 0; i < TRI_AMOUNT; i++)
+	{
+		Tri tri = asset->tris[i];
+		if(!TriIsPoint(tri))
+		{
+			border_hori = borders(border_hori, tri.a.x);
+			border_veri = borders(border_veri, tri.a.y);
+			border_hori = borders(border_hori, tri.b.x);
+			border_veri = borders(border_veri, tri.b.y);
+			border_hori = borders(border_hori, tri.c.x);
+			border_veri = borders(border_veri, tri.c.y);
+			//TraceLog(LOG_INFO, "h: %f %f", border_hori.x, border_hori.y);
+			//TraceLog(LOG_INFO, "v: %f %f", border_veri.x, border_veri.y);
+		}
+	}
+	Vector2 center = (Vector2){(border_hori.x + border_hori.y) * -0.5, (border_veri.x + border_veri.y) * -0.5};
+	for(int i = 0; i < TRI_AMOUNT; i++)
+	{
+		Tri tri = asset->tris[i];
+		if(!TriIsPoint(tri))
+		{
+			//TraceLog(LOG_INFO, "%f %f", center.x, center.y);
+			tri = MoveTri(tri, center);
+			TraceLog(LOG_INFO, "%i: %f %f %f %f %f %f", i, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y);
+		}
+	}
+}
+
 bool LoadAsset(Asset* asset, const char* filename)
 {
 	int data_size;
@@ -163,7 +203,7 @@ int main(void)
 
 	int current_tri = 0, current_point = -1;
 	char bg = 0, tricol = 0, input_timer = 0;
-	bool draw_pixels = true, edit_points = false, color_select = false;
+	bool draw_pixels = true, edit_points = false, color_select = false, draw_hitbox = false;
 	Camera2D camera = (Camera2D){0};
 	camera.zoom = 4.0;
 
@@ -180,7 +220,14 @@ int main(void)
 
 		if(IsKeyPressed(KEY_D))
 		{
-			draw_pixels = !draw_pixels;
+			if(IsKeyDown(KEY_LEFT_CONTROL))
+			{
+				draw_hitbox = !draw_hitbox;
+			}
+			else
+			{
+				draw_pixels = !draw_pixels;
+			}
 		}
 		if(IsKeyPressed(KEY_E))
 		{
@@ -216,7 +263,14 @@ int main(void)
 		}
 		if(IsKeyPressed(KEY_P))
 		{
-			PrintAsset(asset);
+			if(IsKeyDown(KEY_LEFT_CONTROL))
+			{
+				PrintAssetCentered(asset);
+			}
+			else
+			{
+				PrintAsset(asset);
+			}
 		}
 		if(IsKeyPressed(KEY_C))
 		{
@@ -279,7 +333,18 @@ int main(void)
 		}
 		if(input_timer >= 15)
 		{
-			if(edit_points)
+			if(IsKeyDown(KEY_LEFT_CONTROL))
+			{
+				for(int i = 0; i < TRI_AMOUNT; i++)
+				{
+					Tri tri = asset->tris[i];
+					if(!TriIsPoint(tri))
+					{
+						asset->tris[i] = MoveTri(tri, shift);
+					}
+				}
+			}
+			else if(edit_points)
 			{
 				asset->tris[current_tri] = MovePoint(asset->tris[current_tri], shift, current_point);
 			}
@@ -287,7 +352,7 @@ int main(void)
 			{
 				asset->tris[current_tri] = MoveTri(asset->tris[current_tri], shift);
 			}
-			input_timer = 12;
+			input_timer = 13;
 		}
 
 		if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
@@ -367,6 +432,12 @@ int main(void)
 				case 2:
 					ClearBackground(GRAY);
 					break;
+			}
+			if(draw_hitbox)
+			{
+				Vector2 car_size = (Vector2){64, 104};
+				Vector2 pos = (Vector2){SCREEN_CENTER.x * .25 - car_size.x * .5, SCREEN_CENTER.y * .25 - car_size.y * .5};
+				DrawRectangleLines(pos.x, pos.y, car_size.x, car_size.y, DARKGRAY);
 			}
 			Vector2 pos = (Vector2){0.0, 0.0};
 			DrawAsset(asset, 1.0, pos);
