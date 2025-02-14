@@ -16,7 +16,7 @@ CarStats DefaultStats(DefaultCar car)
 	switch(car)
 	{
 		case(CAR_ROAD):
-			car_stats.size = (Vector2){16, 26};
+			car_stats.size = (Vector2){14, 23};
 			car_stats.camera_shake_threshold = 0.8;
 			car_stats.speed_to_shake_ratio = 0.125;
 			car_stats.shake_amplitude = 5.0;
@@ -385,11 +385,15 @@ Tri RotateTriCar(Tri tri, Vector2 rotation)
 
 void DrawRacecar(Racecar* car, bool ghost)
 {
-	TraceLog(LOG_INFO, "Rotation: %f, %f", car->rotation.x, car->rotation.y);
+	//TraceLog(LOG_INFO, "Rotation: %f, %f", car->rotation.x, car->rotation.y);
 	Asset* asset = AllocAsset(DRACECAR, ROT_NORTH, 0.0);
 	for(int i = 0; i < asset->tri_amount; i++)
 	{
 		asset->tris[i] = RotateTriCar(asset->tris[i], car->rotation);
+		if(ghost)
+		{
+			asset->tris[i].color = 33; 
+		}
 	}
 	DrawAsset(asset, 0.5, car->position);
 	FreeAsset(asset);

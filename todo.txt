@@ -28,15 +28,17 @@ Medals
 Party Mode like OG Trackmania
 Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
 Block Visuals (Only the ones near you render)
+Options Gameplay
 
 IN PROGRESS
 Racecar Visuals + Colorswaps
-Options
 Big blocks prevent other blocks from being placed
 Actual Blocks
 My Logo On Startup (Whatever That Is)
 
 NOT DONE
+Options Models and Palettes
+Options Audio
 Audio omg
 Enviroment Visuals
 

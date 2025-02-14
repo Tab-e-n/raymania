@@ -157,7 +157,7 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 				}
 				else
 				{
-					DrawText("Screen Shake: OFF", pos.x, pos.y, 32, text_color);
+					DrawText("Centered Camera: OFF", pos.x, pos.y, 32, text_color);
 				}
 			}
 			else
@@ -168,7 +168,7 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 				}
 				else
 				{
-					DrawText("Screen Shake: OFF", pos.x, pos.y, 32, text_color);
+					DrawText("Ghosts: OFF", pos.x, pos.y, 32, text_color);
 				}
 			}
 		}
@@ -1766,17 +1766,17 @@ int main(void)
 				if(options_current == 0)
 				{
 					bool b = GetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE);
-					SetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE, b);
+					SetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE, !b);
 				}
 				else if(options_current == 1)
 				{
 					bool b = GetProfileBool(&profile, PRF_BOOL_CAM_CENTERED);
-					SetProfileBool(&profile, PRF_BOOL_CAM_CENTERED, b);
+					SetProfileBool(&profile, PRF_BOOL_CAM_CENTERED, !b);
 				}
 				else
 				{
 					bool b = GetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED);
-					SetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED, b);
+					SetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED, !b);
 				}
 			}
 		}
@@ -2256,10 +2256,13 @@ int main(void)
 			{
 				if(playing_demo == DEMO_GHOST_PLAY)
 				{
-					DrawRacecarWalls(&dcar, true);
+					DrawRacecar(&dcar, true);
 				}
-				DrawRacecarWalls(&car, false);
 				DrawRacecar(&car, false);
+				if(DEBUG)
+				{
+					DrawRacecarWalls(&car, false);
+				}
 			} break;
 		}
 
@@ -2501,7 +2504,7 @@ int main(void)
 						DrawText("BRONZ", 336, 264, TEXT_SIZE, BLACK);
 						DrawText("SILVER", 432, 264, 16, BLACK);
 						DrawText("GOLD", 528, 264, TEXT_SIZE, BLACK);
-						DrawText("AUTHOR", 624, 264, 16, BLACK);
+						DrawText("CLEAR", 624, 264, 16, BLACK);
 						break;
 					default: break;
 					}
