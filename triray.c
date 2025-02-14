@@ -3,7 +3,7 @@
 #include "asset.h"
 
 
-#define COLOR_SELECT_SIZE 8
+#define COLOR_SELECT_SIZE 4
 #define TRI_AMOUNT 256
 
 
@@ -63,7 +63,7 @@ Vector2 borders(Vector2 border, float point)
 
 void PrintAssetCentered(Asset* asset)
 {
-	TraceLog(LOG_INFO, "PRINTING ASSET (CENTERED)");
+	TraceLog(LOG_INFO, "PRINTING ASSET (GAME)");
 	Vector2 border_hori = (Vector2){128, 128};
 	Vector2 border_veri = (Vector2){80, 80};
 	for(int i = 0; i < TRI_AMOUNT; i++)
@@ -89,7 +89,7 @@ void PrintAssetCentered(Asset* asset)
 		{
 			//TraceLog(LOG_INFO, "%f %f", center.x, center.y);
 			tri = MoveTri(tri, center);
-			TraceLog(LOG_INFO, "%i: %f %f %f %f %f %f", i, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y);
+			TraceLog(LOG_INFO, "asset->tris[%i] = (Tri){%f, %f, %f, %f, %f, %f, %i};", i, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, tri.color);
 		}
 	}
 }
@@ -374,8 +374,8 @@ int main(void)
 		{
 			if(color_select)
 			{
-				int i = (int)mouse.x / (COLOR_SELECT_SIZE * 4);
-				if(i >= 0 && i < 25)
+				int i = (int)mouse.x / (COLOR_SELECT_SIZE * 4) + ((int)mouse.y / (COLOR_SELECT_SIZE * 4)) * 59;
+				if(i >= 0 && i < 118)
 				{
 					tricol = i;
 					asset->tris[current_tri].color = tricol;
@@ -497,9 +497,15 @@ int main(void)
 			}
 			if(color_select)
 			{
-				for(int i = 0; i < 25; i++)
+				for(int i = 0; i < 118; i++)
 				{
-					DrawRectangle(i * COLOR_SELECT_SIZE, 0, COLOR_SELECT_SIZE, COLOR_SELECT_SIZE, ColorFromIndex(i));
+					Vector2 pos = (Vector2){i * COLOR_SELECT_SIZE, 0};
+					if(i > 58)
+					{
+						pos.x -= 59 * COLOR_SELECT_SIZE;
+						pos.y = COLOR_SELECT_SIZE;
+					}
+					DrawRectangle(pos.x, pos.y, COLOR_SELECT_SIZE, COLOR_SELECT_SIZE, ColorFromIndex(i));
 				}
 			}
 		EndMode2D();

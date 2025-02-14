@@ -30,17 +30,17 @@ Track Showcase before starting (From start through cp to finish, also shows meda
 Block Visuals (Only the ones near you render)
 
 IN PROGRESS
-Big blocks prevent other blocks from being placed
+Racecar Visuals + Colorswaps
 Options
+Big blocks prevent other blocks from being placed
 Actual Blocks
-Other Racecars
 My Logo On Startup (Whatever That Is)
 
 NOT DONE
-Racecar Visuals + Colorswaps
 Audio omg
 Enviroment Visuals
 
+Other Racecars
 Standartized menus
 Arrow that points to the start in editor.
 Removing Tracks, Profiles and Replays

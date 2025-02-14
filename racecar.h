@@ -5,6 +5,7 @@
 #include <raymath.h>
 #include "rmlib.h"
 #include "blocks.h"
+#include "asset.h"
 
 #define RACECAR_DEBUG false
 
@@ -96,6 +97,7 @@ void MoveRacecar(Racecar* car, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS
 
 Vector2int RacecarPlacement(Racecar* car);
 
+void DrawRacecar(Racecar* car, bool ghost);
 void DrawRacecarWalls(Racecar* car, bool ghost);
 
 MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOCK_AMOUNT], BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS], RMInput input, DefaultEnviroment env);

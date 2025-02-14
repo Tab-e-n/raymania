@@ -30,7 +30,7 @@
 typedef enum BlockID {
 	DVOID,
 	D1x1GWN, D2x1AIO, D2x2DIO, D1x1GWS, D1x1I, D1x1C, D1x1F, D1x1S,
-	D1x1A, D2, D3, D4, D5, D6, D7, D8, D9,
+	D1x1A, DRACECAR, D3, D4, D5, D6, D7, D8, D9,
 	B1x1AR0
 } BlockID;
 

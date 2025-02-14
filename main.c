@@ -140,7 +140,7 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
 			if(i == 0)
 			{
-				if(GetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE))
+				if(GetProfileBool(profile, PRF_BOOL_SCREEN_SHAKE))
 				{
 					DrawText("Screen Shake: ON", pos.x, pos.y, 32, text_color);
 				}
@@ -151,7 +151,7 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 			}
 			else if(i == 1)
 			{
-				if(GetProfileBool(&profile, PRF_BOOL_CENTERED_CAM))
+				if(GetProfileBool(profile, PRF_BOOL_CAM_CENTERED))
 				{
 					DrawText("Centered Camera: ON", pos.x, pos.y, 32, text_color);
 				}
@@ -162,7 +162,7 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 			}
 			else
 			{
-				if(GetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED))
+				if(GetProfileBool(profile, PRF_BOOL_GHOST_ENABLED))
 				{
 					DrawText("Ghosts: ON", pos.x, pos.y, 32, text_color);
 				}
@@ -564,7 +564,7 @@ int main(void)
 					}
 					UnloadDirectoryFiles(fpl);
 					fpl.count = 0;
-					//PrintProfile(&profile);
+					//PrintProfile(profile);
 				}
 			}
 			if(InputPressed(input, INPUT_BACK))
@@ -1765,18 +1765,18 @@ int main(void)
 			{
 				if(options_current == 0)
 				{
-					bool b = GetProfileBool(profile, PRF_BOOL_SCREEN_SHAKE);
-					SetProfileBool(profile, PRF_BOOL_SCREEN_SHAKE, b);
+					bool b = GetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE);
+					SetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE, b);
 				}
 				else if(options_current == 1)
 				{
-					bool b = GetProfileBool(profile, PRF_BOOL_CAM_CENTERED);
-					SetProfileBool(profile, PRF_BOOL_CAM_CENTERED, b);
+					bool b = GetProfileBool(&profile, PRF_BOOL_CAM_CENTERED);
+					SetProfileBool(&profile, PRF_BOOL_CAM_CENTERED, b);
 				}
 				else
 				{
-					bool b = GetProfileBool(profile, PRF_BOOL_GHOST_ENABLED);
-					SetProfileBool(profile, PRF_BOOL_GHOST_ENABLED, b);
+					bool b = GetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED);
+					SetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED, b);
 				}
 			}
 		}
@@ -2259,6 +2259,7 @@ int main(void)
 					DrawRacecarWalls(&dcar, true);
 				}
 				DrawRacecarWalls(&car, false);
+				DrawRacecar(&car, false);
 			} break;
 		}
 

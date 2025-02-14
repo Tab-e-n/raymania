@@ -1,8 +1,9 @@
 #include <raylib.h>
 #include <raymath.h>
 #include "rmlib.h"
-#include "racecar.h"
 #include "blocks.h"
+#include "asset.h"
+#include "racecar.h"
 
 // CAR_ROAD    - Slow Accel, Base Car
 // CAR_DRIFT   - High Accel, Drifting
@@ -370,6 +371,14 @@ void MoveRacecar(Racecar* car, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS
 Vector2int RacecarPlacement(Racecar* car)
 {
 	return PositionToPlacement(car->position);
+}
+
+void DrawRacecar(Racecar* car, bool ghost)
+{
+	TraceLog(LOG_INFO, "Rotation: %f, %f", car->rotation.x, car->rotation.y);
+	Asset* asset = AllocAsset(DRACECAR, ROT_NORTH, 0.0);
+	DrawAsset(asset, 0.5, car->position);
+	FreeAsset(asset);
 }
 
 void DrawRacecarWalls(Racecar* car, bool ghost)
