@@ -199,6 +199,21 @@ bool SaveAsset(Asset* asset, const char* filename)
 
 int main(void)
 {
+	/*
+	Image image = LoadImage("palette.png");
+	while(!IsImageReady(image))
+	{
+	}
+	int count = 0;
+	Color* palette = LoadImagePalette(image, 128, &count);
+	for(int i = 0; i < count; i++)
+	{
+		TraceLog(LOG_INFO, "case(%i): return (Color){%i, %i, %i, 255};", i, palette[i].r, palette[i].g, palette[i].b);
+	}
+	UnloadImagePalette(palette);
+	UnloadImage(image);
+	*/
+
 	Asset* asset = MallocAsset(TRI_AMOUNT);
 
 	int current_tri = 0, current_point = -1;
