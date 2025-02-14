@@ -97,6 +97,7 @@ void MoveRacecar(Racecar* car, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS
 
 Vector2int RacecarPlacement(Racecar* car);
 
+Tri RotateTriCar(Tri tri, Vector2 rotation);
 void DrawRacecar(Racecar* car, bool ghost);
 void DrawRacecarWalls(Racecar* car, bool ghost);
 

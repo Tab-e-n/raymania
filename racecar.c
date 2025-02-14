@@ -373,10 +373,24 @@ Vector2int RacecarPlacement(Racecar* car)
 	return PositionToPlacement(car->position);
 }
 
+Tri RotateTriCar(Tri tri, Vector2 rotation)
+{
+	Tri result = (Tri){0};
+	result.color = tri.color;
+	result.a = (Vector2){tri.a.x * -rotation.y - tri.a.y * rotation.x, tri.a.x * rotation.x - tri.a.y * rotation.y};
+	result.b = (Vector2){tri.b.x * -rotation.y - tri.b.y * rotation.x, tri.b.x * rotation.x - tri.b.y * rotation.y};
+	result.c = (Vector2){tri.c.x * -rotation.y - tri.c.y * rotation.x, tri.c.x * rotation.x - tri.c.y * rotation.y};
+	return result;
+}
+
 void DrawRacecar(Racecar* car, bool ghost)
 {
 	TraceLog(LOG_INFO, "Rotation: %f, %f", car->rotation.x, car->rotation.y);
 	Asset* asset = AllocAsset(DRACECAR, ROT_NORTH, 0.0);
+	for(int i = 0; i < asset->tri_amount; i++)
+	{
+		asset->tris[i] = RotateTriCar(asset->tris[i], car->rotation);
+	}
 	DrawAsset(asset, 0.5, car->position);
 	FreeAsset(asset);
 }
