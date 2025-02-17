@@ -80,6 +80,7 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 
 	Color text_color = BLACK;
 
+	// OPTIONS DRAW
 	if(page == 0)
 	{
 		for(int i = 0; i < max; i++)
@@ -160,7 +161,7 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 					DrawText("Centered Camera: OFF", pos.x, pos.y, 32, text_color);
 				}
 			}
-			else
+			else if(i == 2)
 			{
 				if(GetProfileBool(profile, PRF_BOOL_GHOST_ENABLED))
 				{
@@ -170,6 +171,10 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 				{
 					DrawText("Ghosts: OFF", pos.x, pos.y, 32, text_color);
 				}
+			}
+			else
+			{
+				DrawText(TextFormat("Camera Zoom: %f", profile->camera_zoom), pos.x, pos.y, 32, text_color);
 			}
 		}
 	}
@@ -185,15 +190,15 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
 			if(i == 0)
 			{
-				DrawText("Master", pos.x, pos.y, 32, text_color);
+				DrawText(TextFormat("Master: %i", profile->master_volume), pos.x, pos.y, 32, text_color);
 			}
 			else if(i == 1)
 			{
-				DrawText("SFX", pos.x, pos.y, 32, text_color);
+				DrawText(TextFormat("SFX: %i", profile->sfx_volume), pos.x, pos.y, 32, text_color);
 			}
 			else
 			{
-				DrawText("Music", pos.x, pos.y, 32, text_color);
+				DrawText(TextFormat("Music: %i", profile->music_volume), pos.x, pos.y, 32, text_color);
 			}
 		}
 	}
@@ -1262,7 +1267,7 @@ int main(void)
 		}
 		else
 		{
-			ZoomCameraSmooth(&camera, 1.0, CAM_ZOOM_SPEED);
+			ZoomCameraSmooth(&camera, playing_profile->camera_zoom, CAM_ZOOM_SPEED);
 		}
 		if(paused)
 		{
@@ -1683,9 +1688,11 @@ int main(void)
 		{
 			case 0:
 			case 1:
-			case 2:
 			case 3:
 				options_max = 3;
+				break;
+			case 2:
+				options_max = 4;
 				break;
 		}
 		if(InputHeld(menu_input, INPUT_DOWN))
@@ -1705,11 +1712,55 @@ int main(void)
 		// OPTIONS SELECT
 		if(InputHeld(menu_input, INPUT_RIGHT))
 		{
-			TraceLog(LOG_INFO, "Nothin");
+			if(options_page == 2)
+			{
+				if(options_current == 3)
+				{
+					profile.camera_zoom += .1;
+					if(profile.camera_zoom > 2.0) profile.camera_zoom = 2.0;
+				}
+			}
+			if(options_page == 3)
+			{
+				if(options_current == 0)
+				{
+					if(profile.master_volume < 100) profile.master_volume += 1;
+				}
+				else if(options_current == 1)
+				{
+					if(profile.sfx_volume < 100) profile.sfx_volume += 1;
+				}
+				else if(options_current == 2)
+				{
+					if(profile.music_volume < 100) profile.music_volume += 1;
+				}
+			}
 		}
 		if(InputHeld(menu_input, INPUT_LEFT))
 		{
-			TraceLog(LOG_INFO, "Nothin");
+			if(options_page == 2)
+			{
+				if(options_current == 3)
+				{
+					profile.camera_zoom -= .1;
+					if(profile.camera_zoom < 1.0) profile.camera_zoom = 1.0;
+				}
+			}
+			else if(options_page == 3)
+			{
+				if(options_current == 0)
+				{
+					if(profile.master_volume > 0) profile.master_volume -= 1;
+				}
+				else if(options_current == 1)
+				{
+					if(profile.sfx_volume > 0) profile.sfx_volume -= 1;
+				}
+				else if(options_current == 2)
+				{
+					if(profile.music_volume > 0) profile.music_volume -= 1;
+				}
+			}
 		}
 		if(InputPressed(input, INPUT_ENTER))
 		{

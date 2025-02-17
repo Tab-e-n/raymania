@@ -65,6 +65,7 @@ typedef struct TrackSave
 } TrackSave;
 
 
+bool BlockOverlap(Block block, Vector2int info_placement, Block info_block);
 void SetStart(Track* track, Vector2int placement, BlockRotation rot);
 
 unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotation rot, Block piece[BLOCKS_PER_PIECE]);

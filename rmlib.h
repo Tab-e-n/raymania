@@ -56,6 +56,7 @@ Vector2 Vector2Swap(Vector2 vector);
 Vector2 InvertAroundPoint(Vector2 position, Vector2 point);
 
 bool Vector2intEqual(Vector2int a, Vector2int b);
+Vector2int Vector2intSubtract(Vector2int a, Vector2int b);
 
 void CheckKeyboardInput(RMInput* input);
 bool InputHeld(RMInput input, int key);

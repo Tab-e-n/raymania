@@ -5,6 +5,22 @@
 #include "profiles.h"
 #include "track.h"
 
+bool BlockOverlap(Block block, Vector2int info_placement, Block info_block)
+{
+	Vector2int block_size = (Vector2int){0};
+	if(block.rot & 1)
+	{
+		block_size = (Vector2int){block_size.y, block_size.x};
+	}
+	Vector2int info_size = (Vector2int){0};
+	if(info_block.rot & 1)
+	{
+		info_size = (Vector2int){info_size.y, info_size.x};
+	}
+	Vector2int difference = Vector2intSubtract(info_placement, block.pos);
+	return difference.x > -info_block.size.x && difference.x < block.size.x && difference.y > -info_block.size.y && difference.y < block.size.y;
+}
+
 void SetStart(Track* track, Vector2int placement, BlockRotation rot)
 {
 	track->start_pos = CheckPosition(placement);
@@ -104,10 +120,13 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 	{
 		if(track->pieces[i].id != 0)
 		{
+			// MOVE THIS AND ADD FUNCTIONALITY FOR DIFFERENT SCALES.
+			/*
 			if(Vector2intEqual(track->pieces[i].placement, info->placement))
 			{
 				return false;
 			}
+			*/
 		}
 		else if(empty_piece == MAX_PIECES)
 		{
@@ -120,6 +139,7 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 
 	if(blocks_used == 0)
 	{
+		TraceLog(LOG_INFO, "BLOCK: Is placed because it is empty");
 		return true;
 	}
 	
@@ -129,6 +149,7 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 		{
 			if(piece[i].area.type == TYPE_START)
 			{
+				TraceLog(LOG_INFO, "BLOCK: NOT placed because a start already exists");
 				return false;
 			}
 		}
@@ -139,6 +160,7 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 		{
 			if(piece[i].area.type == TYPE_CHECKPOINT)
 			{
+				TraceLog(LOG_INFO, "BLOCK: NOT placed because the checkpoint limit has been reached");
 				return false;
 			}
 		}
@@ -150,17 +172,27 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 	{
 		if(blocks[i].id == 0)
 		{
-			spots[spots_found] = i;
-			spots_found++;
-			if(spots_found >= blocks_used)
+			if(spots_found < blocks_used)
 			{
-				break;
+				spots[spots_found] = i;
+				spots_found++;
+			}
+		}
+		else
+		{
+			// BLOCK OVERLAP CHECK HERE
+			if(BlockOverlap(blocks[i], info->placement, piece[0]))
+			{
+				TraceLog(LOG_INFO, "BLOCK: NOT placed because it overlaps with another block");
+				//TraceLog(LOG_INFO, "%i: %i, pos %i %i, size %i %i", i, blocks[i].id, blocks[i].pos.x, blocks[i].pos.y, blocks[i].size.x, blocks[i].size.y);
+				return false;
 			}
 		}
 	}
 
 	if(spots_found < blocks_used)
 	{
+		TraceLog(LOG_INFO, "BLOCK: NOT placed because the block limit has been reached");
 		return false;
 	}
 
@@ -179,6 +211,7 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 	}
 	track->pieces[empty_piece] = *info;
 
+	TraceLog(LOG_INFO, "BLOCK: Is placed successfully");
 	return true;
 }
 

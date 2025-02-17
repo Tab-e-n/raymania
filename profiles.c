@@ -37,6 +37,12 @@ void FillProfile(Profile* out_profile, int done)
 
 	profile.booleans_0 = 0b101;
 
+	profile.master_volume = 60;
+	profile.sfx_volume = 60;
+	profile.music_volume = 60;
+
+	profile.camera_zoom = 1.4;
+
 	if(done == 0)
 	{
 		*out_profile = profile;

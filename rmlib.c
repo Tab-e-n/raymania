@@ -95,6 +95,11 @@ bool Vector2intEqual(Vector2int a, Vector2int b)
 	return a.x == b.x && a.y == b.y;
 }
 
+Vector2int Vector2intSubtract(Vector2int a, Vector2int b)
+{
+	return (Vector2int){a.x - b.x, a.y - b.y};
+}
+
 void CheckKeyboardInput(RMInput* input)
 {
 	input->past = input->current;

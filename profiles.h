@@ -24,6 +24,8 @@ typedef struct Profile {
 	unsigned char car_road_palette, car_drift_palette, car_grip_palette, car_terrain_palette, 
 		       car_road_model, car_drift_model, car_grip_model, car_terrain_model;
 	long long int booleans_0;
+	unsigned char master_volume, sfx_volume, music_volume;
+	float camera_zoom;
 } Profile;
 
 
