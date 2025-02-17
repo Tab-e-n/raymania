@@ -35,8 +35,8 @@ Big blocks prevent other blocks from being placed
 
 IN PROGRESS
 Block mixing
-Options Models and Palettes
 Racecar Visuals + Colorswaps
+Options Models and Palettes
 Actual Blocks
 
 NOT DONE

@@ -440,7 +440,7 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 	{
 		switch(env)
 		{
-			case(ENV_STADIUM):
+			case(ENV_MEADOW):
 				type = TYPE_GRASS;
 				break;
 			case(ENV_QUARRY):

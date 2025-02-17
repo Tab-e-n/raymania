@@ -11,7 +11,7 @@
 
 
 typedef enum DefaultCar {CAR_ROAD = 0, CAR_DRIFT, CAR_GRIP, CAR_TERRAIN} DefaultCar;
-typedef enum DefaultEnviroment {ENV_VOID, ENV_STADIUM, ENV_QUARRY, ENV_ISLAND} DefaultEnviroment;
+typedef enum DefaultEnviroment {ENV_VOID, ENV_MEADOW, ENV_QUARRY, ENV_ISLAND} DefaultEnviroment;
 
 typedef struct SurfaceStats
 {

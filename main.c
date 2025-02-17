@@ -2238,7 +2238,7 @@ int main(void)
 	BeginDrawing();
 
 		ClearBackground(RAYWHITE);
-		if(track.env == ENV_STADIUM)
+		if(track.env == ENV_MEADOW)
 		{
 			ClearBackground(LIME);
 		}

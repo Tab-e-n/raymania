@@ -247,7 +247,7 @@ bool TriIsPoint(Tri tri)
 
 Color TriColor(Tri tri)
 {
-	return ColorFromIndex(tri.color);
+	return rmc(tri.color);
 }
 
 void PrintTri(Tri tri)

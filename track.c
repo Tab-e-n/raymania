@@ -118,19 +118,10 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 	unsigned int empty_piece = MAX_PIECES;
 	for(int i = 0; i < MAX_PIECES; i++)
 	{
-		if(track->pieces[i].id != 0)
-		{
-			// MOVE THIS AND ADD FUNCTIONALITY FOR DIFFERENT SCALES.
-			/*
-			if(Vector2intEqual(track->pieces[i].placement, info->placement))
-			{
-				return false;
-			}
-			*/
-		}
-		else if(empty_piece == MAX_PIECES)
+		if(track->pieces[i].id == 0)
 		{
 			empty_piece = i;
+			break;
 		}
 	}
 
@@ -139,7 +130,7 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 
 	if(blocks_used == 0)
 	{
-		TraceLog(LOG_INFO, "BLOCK: Is placed because it is empty");
+		if(DEBUG) TraceLog(LOG_INFO, "BLOCK: Is placed because it is empty");
 		return true;
 	}
 	
@@ -149,7 +140,7 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 		{
 			if(piece[i].area.type == TYPE_START)
 			{
-				TraceLog(LOG_INFO, "BLOCK: NOT placed because a start already exists");
+				if(DEBUG) TraceLog(LOG_INFO, "BLOCK: NOT placed because a start already exists");
 				return false;
 			}
 		}
@@ -160,7 +151,7 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 		{
 			if(piece[i].area.type == TYPE_CHECKPOINT)
 			{
-				TraceLog(LOG_INFO, "BLOCK: NOT placed because the checkpoint limit has been reached");
+				if(DEBUG) TraceLog(LOG_INFO, "BLOCK: NOT placed because the checkpoint limit has been reached");
 				return false;
 			}
 		}
@@ -180,11 +171,10 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 		}
 		else
 		{
-			// BLOCK OVERLAP CHECK HERE
 			if(BlockOverlap(blocks[i], info->placement, piece[0]))
 			{
-				TraceLog(LOG_INFO, "BLOCK: NOT placed because it overlaps with another block");
-				//TraceLog(LOG_INFO, "%i: %i, pos %i %i, size %i %i", i, blocks[i].id, blocks[i].pos.x, blocks[i].pos.y, blocks[i].size.x, blocks[i].size.y);
+				if(DEBUG) TraceLog(LOG_INFO, "BLOCK: NOT placed because it overlaps with another block");
+				//if(DEBUG) TraceLog(LOG_INFO, "%i: %i, pos %i %i, size %i %i", i, blocks[i].id, blocks[i].pos.x, blocks[i].pos.y, blocks[i].size.x, blocks[i].size.y);
 				return false;
 			}
 		}
@@ -192,7 +182,7 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 
 	if(spots_found < blocks_used)
 	{
-		TraceLog(LOG_INFO, "BLOCK: NOT placed because the block limit has been reached");
+		if(DEBUG) TraceLog(LOG_INFO, "BLOCK: NOT placed because the block limit has been reached");
 		return false;
 	}
 
@@ -211,7 +201,7 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 	}
 	track->pieces[empty_piece] = *info;
 
-	TraceLog(LOG_INFO, "BLOCK: Is placed successfully");
+	if(DEBUG) TraceLog(LOG_INFO, "BLOCK: Is placed successfully");
 	return true;
 }
 
@@ -251,7 +241,7 @@ void ClearTrack(Track* track)
 	track->medal_author = 0.0;
 	track->checkpoint_amount = 0;
 	track->car = CAR_ROAD;
-	track->env = ENV_STADIUM;
+	track->env = ENV_VOID;
 	Vector2int pos = (Vector2int){0};
 	SetStart(track, pos, ROT_NORTH);
 	for(int i = 0; i < MAX_PIECES; i++)
