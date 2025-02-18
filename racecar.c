@@ -5,6 +5,16 @@
 #include "asset.h"
 #include "racecar.h"
 
+int GetModelID(unsigned char model)
+{
+	switch(model)
+	{
+		case 0:
+			return DRACECAR;
+	}
+	return DRACECAR;
+}
+
 // CAR_ROAD    - Slow Accel, Base Car
 // CAR_DRIFT   - High Accel, Drifting
 // CAR_GRIP    - Medium Accel, High Turn Speed
@@ -386,7 +396,7 @@ Tri RotateTriCar(Tri tri, Vector2 rotation)
 void DrawRacecar(Racecar* car, bool ghost)
 {
 	//TraceLog(LOG_INFO, "Rotation: %f, %f", car->rotation.x, car->rotation.y);
-	Asset* asset = AllocAsset(DRACECAR, ROT_NORTH, 0.0);
+	Asset* asset = AllocAsset(GetModelID(car->model), ROT_NORTH, 0.0);
 	for(int i = 0; i < asset->tri_amount; i++)
 	{
 		asset->tris[i] = RotateTriCar(asset->tris[i], car->rotation);
@@ -394,6 +404,10 @@ void DrawRacecar(Racecar* car, bool ghost)
 		{
 			asset->tris[i].color = 33; 
 		}
+	}
+	if(!ghost)
+	{
+		PaintAsset(asset, GetPalette(car->palette));
 	}
 	DrawAsset(asset, 0.5, car->position);
 	FreeAsset(asset);

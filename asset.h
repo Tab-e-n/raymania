@@ -8,6 +8,13 @@
 #define ASSET_AMOUNT 64
 
 
+typedef enum RacecarColors {
+	CAR_WHEEL0, CAR_WHEEL1, CAR_WHEEL2, CAR_BASE0, CAR_BASE1, CAR_BASE2, CAR_ACCENT0, CAR_ACCENT1, CAR_ACCENT2,
+	CAR_DRIVER, CAR_SEAT, CAR_HULL, CAR_WINDOW0, CAR_WINDOW1, CAR_WINDOW2, CAR_LIGHT_FRONT, CAR_LIGHT_BACK, CAR_LIGHT_OTHER,
+	CAR_NUMPLATE_BASE, CAR_NUMPLATE_TEXT0, CAR_NUMPLATE_TEXT1, CAR_EXTRA0, CAR_EXTRA1, CAR_EXTRA2, CAR_EXTRA3,
+	CAR_COLOR_AMOUNT
+} RacecarColors;
+
 /*
  * [Set][Size XxY][Surface][Other info]
  * Set
@@ -34,6 +41,11 @@ typedef enum BlockID {
 	B1x1AR0
 } BlockID;
 
+typedef struct Palette
+{
+	char colors[CAR_COLOR_AMOUNT];
+} Palette;
+
 typedef struct Tri
 {
 	Vector2 a, b, c;
@@ -50,6 +62,8 @@ typedef struct Asset
 void RaylibLogo(void);
 void TabinLogo(void);
 
+Palette GetPalette(unsigned char id);
+
 Tri MoveTri(Tri tri, Vector2 position);
 Tri ScaleTri(Tri tri, float scale);
 bool TriIsPoint(Tri tri);
@@ -61,6 +75,7 @@ Asset* RotateAsset(Asset* asset, BlockRotation rot, Vector2 size);
 Asset* MallocAsset(int tri_count);
 Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time);
 void FreeAsset(Asset* asset);
+void PaintAsset(Asset* asset, Palette palette);
 
 void DrawAsset(Asset* asset, float scale, Vector2 position);
 void DrawAssetPixels(Asset* asset, float scale, Vector2 position, Color color);

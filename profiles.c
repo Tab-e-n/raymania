@@ -26,7 +26,7 @@ void FillProfile(Profile* out_profile, int done)
 	profile.name[3] = 'r';
 
 	profile.car_road_palette = 0;
-	profile.car_drift_palette = 0;
+	profile.car_drift_palette = 1;
 	profile.car_grip_palette = 0;
 	profile.car_terrain_palette = 0;
 
@@ -37,9 +37,9 @@ void FillProfile(Profile* out_profile, int done)
 
 	profile.booleans_0 = 0b101;
 
-	profile.master_volume = 60;
-	profile.sfx_volume = 60;
-	profile.music_volume = 60;
+	profile.master_volume = 0;
+	profile.sfx_volume = 0;
+	profile.music_volume = 0;
 
 	profile.camera_zoom = 1.4;
 

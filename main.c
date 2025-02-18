@@ -117,9 +117,13 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
 			if(i == 0)
 			{
-				DrawText(TextFormat("Name: %s", profile->name), pos.x, pos.y, 32, text_color);
+				DrawText("Change Profile", pos.x, pos.y, 32, text_color);
 			}
 			else if(i == 1)
+			{
+				DrawText(TextFormat("Name: %s", profile->name), pos.x, pos.y, 32, text_color);
+			}
+			else if(i == 2)
 			{
 				DrawText("MODELS", pos.x, pos.y, 32, text_color);
 			}
@@ -209,6 +213,29 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 	}
 	Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * max};
 	DrawText("< Exit", pos.x, pos.y, 32, text_color);
+}
+
+void CarSetVis(Racecar* car, Profile profile, DefaultCar type)
+{
+	switch(type)
+	{
+		case CAR_ROAD:
+			car->palette = profile.car_road_palette;
+			car->model = profile.car_road_model;
+			break;
+		case CAR_DRIFT:
+			car->palette = profile.car_drift_palette;
+			car->model = profile.car_drift_model;
+			break;
+		case CAR_GRIP:
+			car->palette = profile.car_drift_palette;
+			car->model = profile.car_drift_model;
+			break;
+		case CAR_TERRAIN:
+			car->palette = profile.car_terrain_palette;
+			car->model = profile.car_terrain_model;
+			break;
+	}
 }
 
 int main(void)
@@ -1210,8 +1237,11 @@ int main(void)
 			TraceLog(LOG_INFO, "%s", playing_profile->name);
 			reset_race = false;
 
+			car_stats = DefaultStats(track.car);
 			ResetRacecar(&car, track.start_pos, track.start_rot, car_stats.size);
 			ResetRacecar(&dcar, track.start_pos, track.start_rot, car_stats.size);
+			CarSetVis(&car, profile, track.car);
+			CarSetVis(&dcar, profile, track.car);
 			MoveCameraInstant(&camera, car.position);
 
 			dcheck_got = 0;
@@ -1687,10 +1717,10 @@ int main(void)
 		switch(options_page)
 		{
 			case 0:
-			case 1:
 			case 3:
 				options_max = 3;
 				break;
+			case 1:
 			case 2:
 				options_max = 4;
 				break;
@@ -1724,15 +1754,15 @@ int main(void)
 			{
 				if(options_current == 0)
 				{
-					if(profile.master_volume < 100) profile.master_volume += 1;
+					if(profile.master_volume < 10) profile.master_volume += 1;
 				}
 				else if(options_current == 1)
 				{
-					if(profile.sfx_volume < 100) profile.sfx_volume += 1;
+					if(profile.sfx_volume < 10) profile.sfx_volume += 1;
 				}
 				else if(options_current == 2)
 				{
-					if(profile.music_volume < 100) profile.music_volume += 1;
+					if(profile.music_volume < 10) profile.music_volume += 1;
 				}
 			}
 		}
@@ -1750,15 +1780,15 @@ int main(void)
 			{
 				if(options_current == 0)
 				{
-					if(profile.master_volume > 0) profile.master_volume -= 1;
+					if(profile.master_volume > -10) profile.master_volume -= 1;
 				}
 				else if(options_current == 1)
 				{
-					if(profile.sfx_volume > 0) profile.sfx_volume -= 1;
+					if(profile.sfx_volume > -10) profile.sfx_volume -= 1;
 				}
 				else if(options_current == 2)
 				{
-					if(profile.music_volume > 0) profile.music_volume -= 1;
+					if(profile.music_volume > -10) profile.music_volume -= 1;
 				}
 			}
 		}
@@ -1799,11 +1829,15 @@ int main(void)
 			{
 				if(options_current == 0)
 				{
+					// TODO: CHANGING PROFILES
+				}
+				else if(options_current == 1)
+				{
 					entering_profile_name = true;
 					inputing_name = 1;
 					name_lenght = PROFILE_NAME_LENGHT - 1;
 				}
-				else if(options_current == 1)
+				else if(options_current == 2)
 				{
 					// TODO: MODEL AND PALETTE SELECT
 				}

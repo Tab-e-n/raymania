@@ -224,6 +224,70 @@ void TabinLogo(void)
 	}
 }
 
+Palette GetPalette(unsigned char id)
+{
+	Palette palette = (Palette){0};
+	// PALETTE DEFINITIONS
+	switch(id)
+	{
+		case 0:
+			palette.colors[CAR_WHEEL0] = RM_WHITE8;
+			palette.colors[CAR_WHEEL1] = RM_WHITE8;
+			palette.colors[CAR_WHEEL2] = RM_WHITE8;
+			palette.colors[CAR_BASE0] = RM_WHITE4;
+			palette.colors[CAR_BASE1] = RM_WHITE4;
+			palette.colors[CAR_BASE2] = RM_WHITE4;
+			palette.colors[CAR_ACCENT0] = RM_WHITE2;
+			palette.colors[CAR_ACCENT1] = RM_WHITE2;
+			palette.colors[CAR_ACCENT2] = RM_WHITE2;
+			palette.colors[CAR_DRIVER] = RM_WHITE3;
+			palette.colors[CAR_SEAT] = RM_WHITE7;
+			palette.colors[CAR_HULL] = RM_WHITE8;
+			palette.colors[CAR_WINDOW0] = RM_WHITE8;
+			palette.colors[CAR_WINDOW1] = RM_WHITE8;
+			palette.colors[CAR_WINDOW2] = RM_WHITE8;
+			palette.colors[CAR_LIGHT_FRONT] = RM_WHITE0;
+			palette.colors[CAR_LIGHT_BACK] = RM_WHITE1;
+			palette.colors[CAR_LIGHT_OTHER] = RM_WHITE0;
+			palette.colors[CAR_NUMPLATE_BASE] = RM_WHITE1;
+			palette.colors[CAR_NUMPLATE_TEXT0] = RM_WHITE8;
+			palette.colors[CAR_NUMPLATE_TEXT1] = RM_WHITE8;
+			palette.colors[CAR_EXTRA0] = RM_WHITE5;
+			palette.colors[CAR_EXTRA1] = RM_WHITE5;
+			palette.colors[CAR_EXTRA2] = RM_WHITE6;
+			palette.colors[CAR_EXTRA3] = RM_WHITE6;
+			break;
+		case 1:
+			palette.colors[CAR_WHEEL0] = RL_BLACK;
+			palette.colors[CAR_WHEEL1] = RL_GRAY2;
+			palette.colors[CAR_WHEEL2] = RL_BLACK;
+			palette.colors[CAR_BASE0] = RL_YELLOW0;
+			palette.colors[CAR_BASE1] = RL_YELLOW1;
+			palette.colors[CAR_BASE2] = RL_YELLOW2;
+			palette.colors[CAR_ACCENT0] = RL_RED0;
+			palette.colors[CAR_ACCENT1] = RL_RED1;
+			palette.colors[CAR_ACCENT2] = RL_RED2;
+			palette.colors[CAR_DRIVER] = RL_MAGENTA;
+			palette.colors[CAR_SEAT] = RL_GRAY2;
+			palette.colors[CAR_HULL] = RL_BLACK;
+			palette.colors[CAR_WINDOW0] = RL_GRAY2;
+			palette.colors[CAR_WINDOW1] = RL_GRAY1;
+			palette.colors[CAR_WINDOW2] = RL_GRAY0;
+			palette.colors[CAR_LIGHT_FRONT] = RL_WHITE;
+			palette.colors[CAR_LIGHT_BACK] = RL_WHITE;
+			palette.colors[CAR_LIGHT_OTHER] = RL_WHITE;
+			palette.colors[CAR_NUMPLATE_BASE] = RL_RAYWHITE;
+			palette.colors[CAR_NUMPLATE_TEXT0] = RL_BLACK;
+			palette.colors[CAR_NUMPLATE_TEXT1] = RL_BLUE2;
+			palette.colors[CAR_EXTRA0] = RL_GRAY0;
+			palette.colors[CAR_EXTRA1] = RL_GRAY1;
+			palette.colors[CAR_EXTRA2] = RL_GRAY2;
+			palette.colors[CAR_EXTRA3] = RL_MAGENTA;
+			break;
+	}
+	return palette;
+}
+
 Tri MoveTri(Tri tri, Vector2 position)
 {
 	tri.a = Vector2Add(tri.a, position);
@@ -422,30 +486,30 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			break;
 		case(DRACECAR):
 			asset = MallocAsset(24);
-			asset->tris[0] = (Tri){-20.500000, -21.000000, -27.500000, 23.000000, 20.500000, -21.000000, 105};
-			asset->tris[1] = (Tri){20.500000, -21.000000, -27.500000, 23.000000, 27.500000, 23.000000, 107};
-			asset->tris[2] = (Tri){-8.500000, -21.000000, 8.500000, -21.000000, 5.500000, -45.000000, 105};
-			asset->tris[3] = (Tri){-5.500000, -45.000000, -8.500000, -21.000000, 5.500000, -45.000000, 107};
-			asset->tris[4] = (Tri){-27.500000, -45.000000, 20.500000, -53.000000, -20.500000, -53.000000, 108};
-			asset->tris[5] = (Tri){20.500000, -53.000000, -27.500000, -45.000000, 27.500000, -45.000000, 108};
-			asset->tris[6] = (Tri){12.500000, 23.000000, -12.500000, 23.000000, -12.500000, 44.000000, 107};
-			asset->tris[7] = (Tri){12.500000, 23.000000, -12.500000, 44.000000, 12.500000, 44.000000, 107};
-			asset->tris[8] = (Tri){-18.500000, 44.000000, -18.500000, 56.000000, 18.500000, 44.000000, 108};
-			asset->tris[9] = (Tri){-18.500000, 56.000000, 18.500000, 56.000000, 18.500000, 44.000000, 108};
-			asset->tris[10] = (Tri){-4.500000, -53.000000, 4.500000, -53.000000, 0.500000, -56.000000, 108};
-			asset->tris[11] = (Tri){-27.500000, -43.000000, -27.500000, -26.000000, -14.500000, -43.000000, 110};
-			asset->tris[12] = (Tri){-27.500000, -26.000000, -14.500000, -26.000000, -14.500000, -43.000000, 110};
-			asset->tris[13] = (Tri){14.500000, -43.000000, 14.500000, -26.000000, 27.500000, -43.000000, 110};
-			asset->tris[14] = (Tri){27.500000, -43.000000, 14.500000, -26.000000, 27.500000, -26.000000, 110};
-			asset->tris[15] = (Tri){14.500000, 42.000000, 27.500000, 42.000000, 27.500000, 25.000000, 110};
-			asset->tris[16] = (Tri){-27.500000, 42.000000, -14.500000, 42.000000, -14.500000, 25.000000, 110};
-			asset->tris[17] = (Tri){-27.500000, 42.000000, -14.500000, 25.000000, -27.500000, 25.000000, 110};
-			asset->tris[18] = (Tri){14.500000, 42.000000, 27.500000, 25.000000, 14.500000, 25.000000, 110};
-			asset->tris[19] = (Tri){-6.500000, 7.000000, 0.500000, 17.000000, 6.500000, 7.000000, 110};
-			asset->tris[20] = (Tri){6.500000, -6.000000, -6.500000, 7.000000, 6.500000, 7.000000, 110};
-			asset->tris[21] = (Tri){-6.500000, -6.000000, -6.500000, 7.000000, 6.500000, -6.000000, 110};
-			asset->tris[22] = (Tri){0.500000, -16.000000, -6.500000, -6.000000, 6.500000, -6.000000, 110};
-			asset->tris[23] = (Tri){0.500000, -5.000000, -5.500000, 6.000000, 5.500000, 6.000000, 106};
+			asset->tris[0] = (Tri){-20.500000, -21.000000, -27.500000, 23.000000, 20.500000, -21.000000, CAR_ACCENT0};
+			asset->tris[1] = (Tri){20.500000, -21.000000, -27.500000, 23.000000, 27.500000, 23.000000, CAR_BASE0};
+			asset->tris[2] = (Tri){-8.500000, -21.000000, 8.500000, -21.000000, 5.500000, -45.000000, CAR_ACCENT0};
+			asset->tris[3] = (Tri){-5.500000, -45.000000, -8.500000, -21.000000, 5.500000, -45.000000, CAR_BASE0};
+			asset->tris[4] = (Tri){-27.500000, -45.000000, 20.500000, -53.000000, -20.500000, -53.000000, CAR_BASE1};
+			asset->tris[5] = (Tri){20.500000, -53.000000, -27.500000, -45.000000, 27.500000, -45.000000, CAR_BASE1};
+			asset->tris[6] = (Tri){12.500000, 23.000000, -12.500000, 23.000000, -12.500000, 44.000000, CAR_BASE0};
+			asset->tris[7] = (Tri){12.500000, 23.000000, -12.500000, 44.000000, 12.500000, 44.000000, CAR_BASE0};
+			asset->tris[8] = (Tri){-18.500000, 44.000000, -18.500000, 56.000000, 18.500000, 44.000000, CAR_BASE1};
+			asset->tris[9] = (Tri){-18.500000, 56.000000, 18.500000, 56.000000, 18.500000, 44.000000, CAR_BASE1};
+			asset->tris[10] = (Tri){-4.500000, -53.000000, 4.500000, -53.000000, 0.500000, -56.000000, CAR_BASE1};
+			asset->tris[11] = (Tri){-27.500000, -43.000000, -27.500000, -26.000000, -14.500000, -43.000000, CAR_WHEEL2};
+			asset->tris[12] = (Tri){-27.500000, -26.000000, -14.500000, -26.000000, -14.500000, -43.000000, CAR_WHEEL2};
+			asset->tris[13] = (Tri){14.500000, -43.000000, 14.500000, -26.000000, 27.500000, -43.000000, CAR_WHEEL2};
+			asset->tris[14] = (Tri){27.500000, -43.000000, 14.500000, -26.000000, 27.500000, -26.000000, CAR_WHEEL2};
+			asset->tris[15] = (Tri){14.500000, 42.000000, 27.500000, 42.000000, 27.500000, 25.000000, CAR_WHEEL2};
+			asset->tris[16] = (Tri){-27.500000, 42.000000, -14.500000, 42.000000, -14.500000, 25.000000, CAR_WHEEL2};
+			asset->tris[17] = (Tri){-27.500000, 42.000000, -14.500000, 25.000000, -27.500000, 25.000000, CAR_WHEEL2};
+			asset->tris[18] = (Tri){14.500000, 42.000000, 27.500000, 25.000000, 14.500000, 25.000000, CAR_WHEEL2};
+			asset->tris[19] = (Tri){-6.500000, 7.000000, 0.500000, 17.000000, 6.500000, 7.000000, CAR_HULL};
+			asset->tris[20] = (Tri){6.500000, -6.000000, -6.500000, 7.000000, 6.500000, 7.000000, CAR_HULL};
+			asset->tris[21] = (Tri){-6.500000, -6.000000, -6.500000, 7.000000, 6.500000, -6.000000, CAR_HULL};
+			asset->tris[22] = (Tri){0.500000, -16.000000, -6.500000, -6.000000, 6.500000, -6.000000, CAR_HULL};
+			asset->tris[23] = (Tri){0.500000, -5.000000, -5.500000, 6.000000, 5.500000, 6.000000, CAR_DRIVER};
 			break;
 		default:
 			asset = MallocAsset(4);
@@ -464,6 +528,19 @@ void FreeAsset(Asset* asset)
 	{
 		//TraceLog(LOG_INFO, "FREE: Free asset.");
 		_free(asset);
+	}
+}
+
+void PaintAsset(Asset* asset, Palette palette)
+{
+	for(int i = 0; i < asset->tri_amount; i++)
+	{
+		Tri tri = asset->tris[i];
+		if(tri.color < CAR_COLOR_AMOUNT)
+		{
+			tri.color = palette.colors[tri.color];
+		}
+		asset->tris[i] = tri;
 	}
 }
 

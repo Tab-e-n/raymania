@@ -53,6 +53,7 @@ typedef struct Racecar
 		rotation, 
 		velocity;
 	float turn_dir;
+	unsigned char palette, model;
 } Racecar;
 
 typedef struct WallCollision
@@ -69,6 +70,8 @@ typedef struct MetaInfo
 		check_rot;
 } MetaInfo;
 
+
+int GetModelID(unsigned char model);
 
 CarStats DefaultStats(DefaultCar car);
 Racecar InitRacecar(CarStats* stats);
