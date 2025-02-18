@@ -276,6 +276,7 @@ DemoSave* LoadDemo(const char* filename)
 
 	demosave->result = true;
 
+	TraceLog(LOG_INFO, "Loading demo ended.");
 	return demosave;
 }
 
@@ -391,6 +392,7 @@ bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename)
 		UnloadFileData(file_data);
 	}
 
+	TraceLog(LOG_INFO, "Saving demo ended.");
 	if(DEMO_DEBUG) TraceLog(LOG_INFO, " -- -- -- -- -- -- -- -- ");
 
 	return success;

@@ -159,6 +159,7 @@ Profile LoadProfile(const char* filename)
 		UnloadFileData(file_data);
 	}
 
+	TraceLog(LOG_INFO, "Loading profile ended.");
 	return profile;
 }
 
@@ -217,6 +218,7 @@ bool SaveProfile(Profile* profile, const char* filename)
 		UnloadFileData(file_data);
 	}
 
+	TraceLog(LOG_INFO, "Saving profile ended.");
 	return success;
 }
 

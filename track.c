@@ -310,6 +310,7 @@ Track LoadTrack(const char* filename)
 		UnloadFileData(file_data);
 	}
 
+	TraceLog(LOG_INFO, "Loading track ended.");
 	return track;
 }
 
@@ -382,6 +383,7 @@ bool SaveTrack(Track* track, const char* filename, unsigned char author[PROFILE_
 		UnloadFileData(file_data);
 	}
 
+	TraceLog(LOG_INFO, "Saving track ended.");
 	return success;
 }
 

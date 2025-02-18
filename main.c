@@ -1708,161 +1708,172 @@ int main(void)
 			options_page = 0;
 		}
 
-		if(InputPressed(input, INPUT_ESC))
+		if(!entering_profile_name)
 		{
-			current_game_screen = MENU;
-			reset_menu = true;
-		}
+			bool exit_options = false;
 
-		switch(options_page)
-		{
-			case 0:
-			case 3:
-				options_max = 3;
-				break;
-			case 1:
-			case 2:
-				options_max = 4;
-				break;
-		}
-		if(InputHeld(menu_input, INPUT_DOWN))
-		{
-			if(options_current <= options_max)
+			if(InputPressed(input, INPUT_ESC))
 			{
-				options_current++;
+				exit_options = true;
 			}
-		}
-		if(InputHeld(menu_input, INPUT_UP))
-		{
-			if(options_current > 0)
+
+			switch(options_page)
 			{
-				options_current--;
+				case 0:
+				case 3:
+					options_max = 3;
+					break;
+				case 1:
+				case 2:
+					options_max = 4;
+					break;
 			}
-		}
-		// OPTIONS SELECT
-		if(InputHeld(menu_input, INPUT_RIGHT))
-		{
-			if(options_page == 2)
+			if(InputHeld(menu_input, INPUT_DOWN))
 			{
-				if(options_current == 3)
+				if(options_current <= options_max)
 				{
-					profile.camera_zoom += .1;
-					if(profile.camera_zoom > 2.0) profile.camera_zoom = 2.0;
+					options_current++;
 				}
 			}
-			if(options_page == 3)
+			if(InputHeld(menu_input, INPUT_UP))
 			{
-				if(options_current == 0)
+				if(options_current > 0)
 				{
-					if(profile.master_volume < 10) profile.master_volume += 1;
-				}
-				else if(options_current == 1)
-				{
-					if(profile.sfx_volume < 10) profile.sfx_volume += 1;
-				}
-				else if(options_current == 2)
-				{
-					if(profile.music_volume < 10) profile.music_volume += 1;
+					options_current--;
 				}
 			}
-		}
-		if(InputHeld(menu_input, INPUT_LEFT))
-		{
-			if(options_page == 2)
+			// OPTIONS SELECT
+			if(InputHeld(menu_input, INPUT_RIGHT))
 			{
-				if(options_current == 3)
+				if(options_page == 2)
 				{
-					profile.camera_zoom -= .1;
-					if(profile.camera_zoom < 1.0) profile.camera_zoom = 1.0;
+					if(options_current == 3)
+					{
+						profile.camera_zoom += .1;
+						if(profile.camera_zoom > 2.0) profile.camera_zoom = 2.0;
+					}
+				}
+				if(options_page == 3)
+				{
+					if(options_current == 0)
+					{
+						if(profile.master_volume < 10) profile.master_volume += 1;
+					}
+					else if(options_current == 1)
+					{
+						if(profile.sfx_volume < 10) profile.sfx_volume += 1;
+					}
+					else if(options_current == 2)
+					{
+						if(profile.music_volume < 10) profile.music_volume += 1;
+					}
 				}
 			}
-			else if(options_page == 3)
+			if(InputHeld(menu_input, INPUT_LEFT))
 			{
-				if(options_current == 0)
+				if(options_page == 2)
 				{
-					if(profile.master_volume > -10) profile.master_volume -= 1;
+					if(options_current == 3)
+					{
+						profile.camera_zoom -= .1;
+						if(profile.camera_zoom < 1.0) profile.camera_zoom = 1.0;
+					}
 				}
-				else if(options_current == 1)
+				else if(options_page == 3)
 				{
-					if(profile.sfx_volume > -10) profile.sfx_volume -= 1;
-				}
-				else if(options_current == 2)
-				{
-					if(profile.music_volume > -10) profile.music_volume -= 1;
+					if(options_current == 0)
+					{
+						if(profile.master_volume > -10) profile.master_volume -= 1;
+					}
+					else if(options_current == 1)
+					{
+						if(profile.sfx_volume > -10) profile.sfx_volume -= 1;
+					}
+					else if(options_current == 2)
+					{
+						if(profile.music_volume > -10) profile.music_volume -= 1;
+					}
 				}
 			}
-		}
-		if(InputPressed(input, INPUT_ENTER))
-		{
-			if(options_current == options_max)
+			if(InputPressed(input, INPUT_ENTER))
 			{
-				if(options_page == 0)
+				if(options_current == options_max)
 				{
-					current_game_screen = MENU;
-					reset_menu = true;
+					if(options_page == 0)
+					{
+						exit_options = true;
+					}
+					else
+					{
+						options_page = 0;
+						options_current = 0;
+					}
 				}
-				else
+				else if(options_page == 0)
 				{
-					options_page = 0;
-					options_current = 0;
+					if(options_current == 0)
+					{
+						options_page = 1;
+						options_current = 0;
+					}
+					else if(options_current == 1)
+					{
+						options_page = 2;
+						options_current = 0;
+					}
+					else
+					{
+						options_page = 3;
+						options_current = 0;
+					}
+				}
+				else if(options_page == 1)
+				{
+					if(options_current == 0)
+					{
+						// TODO: CHANGING PROFILES
+					}
+					else if(options_current == 1)
+					{
+						entering_profile_name = true;
+						inputing_name = 1;
+						name_lenght = PROFILE_NAME_LENGHT - 1;
+					}
+					else if(options_current == 2)
+					{
+						// TODO: MODEL AND PALETTE SELECT
+					}
+					else
+					{
+						// TODO: MODEL AND PALETTE SELECT
+					}
+				}
+				else if(options_page == 2)
+				{
+					if(options_current == 0)
+					{
+						bool b = GetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE);
+						SetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE, !b);
+					}
+					else if(options_current == 1)
+					{
+						bool b = GetProfileBool(&profile, PRF_BOOL_CAM_CENTERED);
+						SetProfileBool(&profile, PRF_BOOL_CAM_CENTERED, !b);
+					}
+					else
+					{
+						bool b = GetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED);
+						SetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED, !b);
+					}
 				}
 			}
-			else if(options_page == 0)
+
+			if(exit_options)
 			{
-				if(options_current == 0)
-				{
-					options_page = 1;
-					options_current = 0;
-				}
-				else if(options_current == 1)
-				{
-					options_page = 2;
-					options_current = 0;
-				}
-				else
-				{
-					options_page = 3;
-					options_current = 0;
-				}
-			}
-			else if(options_page == 1)
-			{
-				if(options_current == 0)
-				{
-					// TODO: CHANGING PROFILES
-				}
-				else if(options_current == 1)
-				{
-					entering_profile_name = true;
-					inputing_name = 1;
-					name_lenght = PROFILE_NAME_LENGHT - 1;
-				}
-				else if(options_current == 2)
-				{
-					// TODO: MODEL AND PALETTE SELECT
-				}
-				else
-				{
-					// TODO: MODEL AND PALETTE SELECT
-				}
-			}
-			else if(options_page == 2)
-			{
-				if(options_current == 0)
-				{
-					bool b = GetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE);
-					SetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE, !b);
-				}
-				else if(options_current == 1)
-				{
-					bool b = GetProfileBool(&profile, PRF_BOOL_CAM_CENTERED);
-					SetProfileBool(&profile, PRF_BOOL_CAM_CENTERED, !b);
-				}
-				else
-				{
-					bool b = GetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED);
-					SetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED, !b);
-				}
+				current_game_screen = MENU;
+				reset_menu = true;
+				const char* fname = ProfileFilename(PROFILE_DIRECTORY, profile.name);
+				SaveProfile(&profile, fname);
 			}
 		}
 		break;
@@ -2079,8 +2090,11 @@ int main(void)
 						new_prof.name[i] = profile_name[i];
 					}
 					SaveProfile(&new_prof, fname);
-					UnloadDirectoryFiles(fpl);
-					fpl.count = 0;
+					if(fpl.count > 0)
+					{
+						UnloadDirectoryFiles(fpl);
+						fpl.count = 0;
+					}
 					if(party_mode)
 					{
 						party_profiles[party_current_opt - 1] = new_prof;
@@ -2289,10 +2303,13 @@ int main(void)
 
 		BeginMode2D(camera.data);
 
-		for(int i = 0; i <= BLOCK_SIZE * TRACK_GRID_SIZE; i += BLOCK_SIZE)
+		if(current_game_screen == EDITOR)
 		{
-			DrawLine(i, 0, i, BLOCK_SIZE * TRACK_GRID_SIZE, GRAY);
-			DrawLine(0, i, BLOCK_SIZE * TRACK_GRID_SIZE, i, GRAY);
+			for(int i = 0; i <= BLOCK_SIZE * TRACK_GRID_SIZE; i += BLOCK_SIZE)
+			{
+				DrawLine(i, 0, i, BLOCK_SIZE * TRACK_GRID_SIZE, GRAY);
+				DrawLine(0, i, BLOCK_SIZE * TRACK_GRID_SIZE, i, GRAY);
+			}
 		}
 
 		int layers[Z_LAYERS][ASSET_AMOUNT];
