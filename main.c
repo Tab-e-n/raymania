@@ -99,9 +99,13 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 			{
 				DrawText("GAMEPLAY", pos.x, pos.y, 32, text_color);
 			}
-			else
+			else if(i == 2)
 			{
 				DrawText("AUDIO", pos.x, pos.y, 32, text_color);
+			}
+			else
+			{
+				DrawText("EDITOR", pos.x, pos.y, 32, text_color);
 			}
 		}
 	}
@@ -203,6 +207,29 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 			else
 			{
 				DrawText(TextFormat("Music: %i", profile->music_volume), pos.x, pos.y, 32, text_color);
+			}
+		}
+	}
+	if(page == 4)
+	{
+		for(int i = 0; i < max; i++)
+		{
+			text_color = BLACK;
+			if(i == current)
+			{
+				text_color = RAYWHITE;
+			}
+			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
+			if(i == 0)
+			{
+				if(GetProfileBool(profile, PRF_BOOL_BLOCKMIXING))
+				{
+					DrawText("Blockmixing: ON (WARNING: Buggy)", pos.x, pos.y, 32, text_color);
+				}
+				else
+				{
+					DrawText("Blockmixing: OFF", pos.x, pos.y, 32, text_color);
+				}
 			}
 		}
 	}
@@ -418,6 +445,7 @@ int main(void)
 	// OPTIONS VAR
 	
 	bool reset_options = false;
+	bool save_options = true;
 
 	int options_current = 0;
 	int options_page = 0;
@@ -456,6 +484,7 @@ int main(void)
 	track_name[3] = 'U';
 
 	track = LoadTrack(TrackFileName(track_dir, track_name));
+	TrackBlockmixed(&track, GetProfileBool(&profile, PRF_BOOL_BLOCKMIXING));
 	MakeTrackBlocks(&track, blocks);
 
 
@@ -513,6 +542,7 @@ int main(void)
 			if(popup == POPUP_EDITOR_CLEAR)
 			{
 				ClearTrack(&track);
+				TrackBlockmixed(&track, GetProfileBool(&profile, PRF_BOOL_BLOCKMIXING));
 				ClearPlacedBlocks(blocks);
 			}
 			if(popup == POPUP_VALIDATE)
@@ -546,6 +576,8 @@ int main(void)
 			LoadProfileDirectory(&fpl, PROFILE_DIRECTORY);
 
 			load_profiles = false;
+
+			save_options = true;
 		}
 		FadeIn(&camera, 0.05);
 		if(entering_profile_name)
@@ -609,6 +641,7 @@ int main(void)
 				{
 					profile = DefaultProfile();
 					reset_menu = true;
+					save_options = false;
 				}
 				current_game_screen = MENU;
 				UnloadDirectoryFiles(fpl);
@@ -1719,10 +1752,13 @@ int main(void)
 
 			switch(options_page)
 			{
-				case 0:
+				case 4:
+					options_max = 1;
+					break;
 				case 3:
 					options_max = 3;
 					break;
+				case 0:
 				case 1:
 				case 2:
 					options_max = 4;
@@ -1821,9 +1857,14 @@ int main(void)
 						options_page = 2;
 						options_current = 0;
 					}
-					else
+					else if(options_current == 2)
 					{
 						options_page = 3;
+						options_current = 0;
+					}
+					else
+					{
+						options_page = 4;
 						options_current = 0;
 					}
 				}
@@ -1866,14 +1907,25 @@ int main(void)
 						SetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED, !b);
 					}
 				}
+				else if(options_page == 4)
+				{
+					if(options_current == 0)
+					{
+						bool b = GetProfileBool(&profile, PRF_BOOL_BLOCKMIXING);
+						SetProfileBool(&profile, PRF_BOOL_BLOCKMIXING, !b);
+					}
+				}
 			}
 
 			if(exit_options)
 			{
 				current_game_screen = MENU;
 				reset_menu = true;
-				const char* fname = ProfileFilename(PROFILE_DIRECTORY, profile.name);
-				SaveProfile(&profile, fname);
+				if(save_options)
+				{
+					const char* fname = ProfileFilename(PROFILE_DIRECTORY, profile.name);
+					SaveProfile(&profile, fname);
+				}
 			}
 		}
 		break;
@@ -1960,6 +2012,7 @@ int main(void)
 				if(current_game_screen == MENU)
 				{
 					Track temp = LoadTrack(path);
+					TrackBlockmixed(&track, GetProfileBool(&profile, PRF_BOOL_BLOCKMIXING));
 					TrackNameFromFilename(path, track_name);
 					if(temp.validated || skip_validate_check)
 					{
@@ -2004,6 +2057,7 @@ int main(void)
 				else if(current_game_screen == EDITOR)
 				{
 					track = LoadTrack(path);
+					TrackBlockmixed(&track, GetProfileBool(&profile, PRF_BOOL_BLOCKMIXING));
 					TrackNameFromFilename(path, track_name);
 					MakeTrackBlocks(&track, blocks);
 					file_list_active = FL_OFF;
@@ -2020,6 +2074,7 @@ int main(void)
 					playing_demo = DEMO_INIT;
 
 					track = LoadTrack((const char*)demosave->track_name);
+					TrackBlockmixed(&track, GetProfileBool(&profile, PRF_BOOL_BLOCKMIXING));
 					TrackNameFromFilename((const char*)demosave->track_name, track_name);
 					MakeTrackBlocks(&track, blocks);
 
@@ -2089,7 +2144,10 @@ int main(void)
 					{
 						new_prof.name[i] = profile_name[i];
 					}
-					SaveProfile(&new_prof, fname);
+					if(current_game_screen != OPTIONS || save_options)
+					{
+						SaveProfile(&new_prof, fname);
+					}
 					if(fpl.count > 0)
 					{
 						UnloadDirectoryFiles(fpl);
@@ -2512,6 +2570,11 @@ int main(void)
 			{
 				DrawText(TextFormat("x: %i", cursor_info.placement.x), 8, 8, 16, BLACK);
 				DrawText(TextFormat("y: %i", cursor_info.placement.y), 8, 24, 16, BLACK);
+				if(track.blockmixed)
+				{
+					DrawText("BLOCKMIXING ENABLED", 8, 40, 16, BLACK);
+					// TODO: Overlaping block count
+				}
 				if(piece_catalogue_pulled > 0.0)
 				{
 					int catalogue_pos_y = 640 - piece_catalogue_pulled * 224;

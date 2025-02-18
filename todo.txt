@@ -33,9 +33,10 @@ Options Audio
 My Logo On Startup (Whatever That Is)
 Big blocks prevent other blocks from being placed
 Racecar Visuals + Colorswaps
+Block mixing
 
 IN PROGRESS
-Block mixing
+Blockmixing Overlaping blocks count on current tile
 Options Changing Profiles
 Options Models and Palettes
 Actual Blocks

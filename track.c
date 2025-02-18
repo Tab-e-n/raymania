@@ -27,6 +27,14 @@ void SetStart(Track* track, Vector2int placement, BlockRotation rot)
 	track->start_rot = CheckRotation(rot);
 }
 
+void TrackBlockmixed(Track* track, bool blockmixed)
+{
+	if(blockmixed)
+	{
+		track->blockmixed = true;
+	}
+}
+
 unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotation rot, Block piece[BLOCKS_PER_PIECE])
 {
 	unsigned int id[BLOCKS_PER_PIECE], blocks_used;
@@ -169,7 +177,7 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 				spots_found++;
 			}
 		}
-		else
+		else if(!track->blockmixed)
 		{
 			if(BlockOverlap(blocks[i], info->placement, piece[0]))
 			{
@@ -234,6 +242,7 @@ bool DeletePiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], Vector2int placem
 void ClearTrack(Track* track)
 {
 	//ClearPlacedBlocks(track->blocks);
+	track->blockmixed = false;
 	track->has_start = false;
 	track->medal_bronz = 0.0;
 	track->medal_silver = 0.0;

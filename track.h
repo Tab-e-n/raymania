@@ -43,7 +43,8 @@ typedef struct Track
 {
 	unsigned char author[PROFILE_NAME_LENGHT];
 	bool validated,
-	     has_start;
+	     has_start,
+	     blockmixed;
 	Vector2 start_pos,
 		start_rot;
 	unsigned int checkpoint_amount;
@@ -67,6 +68,7 @@ typedef struct TrackSave
 
 bool BlockOverlap(Block block, Vector2int info_placement, Block info_block);
 void SetStart(Track* track, Vector2int placement, BlockRotation rot);
+void TrackBlockmixed(Track* track, bool blockmixing);
 
 unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotation rot, Block piece[BLOCKS_PER_PIECE]);
 unsigned int GetPiece(PieceInfo* info, Block piece[BLOCKS_PER_PIECE]);

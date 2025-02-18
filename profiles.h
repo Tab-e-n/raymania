@@ -17,6 +17,7 @@ typedef enum ProfileBoolean {
 	PRF_BOOL_SCREEN_SHAKE = 0,
 	PRF_BOOL_CAM_CENTERED,
 	PRF_BOOL_GHOST_ENABLED,
+	PRF_BOOL_BLOCKMIXING,
 } ProfileBoolean;
 
 typedef struct Profile {
