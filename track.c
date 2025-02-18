@@ -7,18 +7,18 @@
 
 bool BlockOverlap(Block block, Vector2int info_placement, Block info_block)
 {
-	Vector2int block_size = (Vector2int){0};
-	if(block.rot & 1)
+	Vector2int block_size = block.size;
+	if(block.rot & 1 > 0)
 	{
 		block_size = (Vector2int){block_size.y, block_size.x};
 	}
-	Vector2int info_size = (Vector2int){0};
-	if(info_block.rot & 1)
+	Vector2int info_size = info_block.size;
+	if(info_block.rot & 1 > 0)
 	{
 		info_size = (Vector2int){info_size.y, info_size.x};
 	}
 	Vector2int difference = Vector2intSubtract(info_placement, block.pos);
-	return difference.x > -info_block.size.x && difference.x < block.size.x && difference.y > -info_block.size.y && difference.y < block.size.y;
+	return difference.x > -info_size.x && difference.x < block_size.x && difference.y > -info_size.y && difference.y < block_size.y;
 }
 
 void SetStart(Track* track, Vector2int placement, BlockRotation rot)
