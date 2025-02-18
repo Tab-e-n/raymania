@@ -15,21 +15,22 @@ typedef enum DefaultEnviroment {ENV_VOID, ENV_MEADOW, ENV_QUARRY, ENV_ISLAND} De
 
 typedef struct SurfaceStats
 {
-	float acceleration,
-	      decceleration,
-	      friction,
-	      top_speed,
-	      min_speed,
+	float acceleration, // Increase to velocity when holding up.
+	      decceleration, // Decrease to velocity when holding down.
+	      friction, // Decrease to velocity, scales based on current speed.
+	      top_speed, // Max allowed speed when accelerating (Car can go faster than speed specified).
+	      min_speed, // top speed but backwards.
 
-	      turn_speed,
-	      turn_speed_fix_threshold,
-	      turn_dir_gain,
-	      turn_dir_loss,
+	      turn_speed, // Angle change when turning.
+	      turn_speed_fix_threshold, // Will scale turning based on speed, making the turn radius the same until the specified speed.
+	      turn_dir_gain, // When turning, turning speed will build up from zero by amount specified. A value of 1 is instant.
+	      turn_dir_loss, // After turning, turning speed will lower by amount specified. A value of 1 is instant.
 
-	      redirect_angle;
-	bool flip_turning_when_backwards,
-	     flip_turning_when_going_backwards,
-	     do_vel_redirection;
+	      redirect_angle, // Will snap velocity's angle to car's rotation if the angle difference between them is under the value specified.
+	      redirect_strength; // 0 - 1, How much the angle redirects.
+	bool flip_turning_when_backwards, // When car is going backwards, turn speed is flipped. Feels more natural this way.
+	     flip_turning_when_going_backwards, // Same as previous, but only when the player is holding down.
+	     do_vel_redirection; // Activates vel redirection. see redirect_angle for explanation.
 } SurfaceStats;
 
 typedef struct CarStats
@@ -90,7 +91,7 @@ void AccelerateRacecar(Racecar* car, float amount);
 void ApplyFrictionRacecar(Racecar* car, float amount);
 void CapRacecarVelocity(Racecar* car, float max);
 void CapRacecarVelocityBiDir(Racecar* car, float max, float min);
-void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float max_angle);
+void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float max_angle, float strength);
 
 bool RacecarMaxVelocity(Racecar* car, float max);
 bool CheckRacecarWallColliding(Wall racecar_wall, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS], WallCollision* collision);

@@ -15,10 +15,11 @@ int GetModelID(unsigned char model)
 	return DRACECAR;
 }
 
+// CAR DEFINITIONS
 // CAR_ROAD    - Slow Accel, Base Car
 // CAR_DRIFT   - High Accel, Drifting
 // CAR_GRIP    - Medium Accel, High Turn Speed
-// CAR_TERRAIN - Slowest Accel, More Precision Based
+// CAR_TERRAIN - Slowest Accel, More Precision (Coast)
 
 CarStats DefaultStats(DefaultCar car)
 {
@@ -48,25 +49,27 @@ CarStats DefaultStats(DefaultCar car)
 			stats.flip_turning_when_going_backwards = false;
 			
 			stats.redirect_angle = PI*0.012;
+			stats.redirect_strength = 1.0;
 			stats.do_vel_redirection = true;
 			car_stats.surface[SURFACE_ASPHALT] = stats;
 			
 			stats.top_speed = 5;
 			stats.min_speed = 2;
+			stats.friction = 0.2;
 			car_stats.surface[SURFACE_GRASS] = stats;
 			
 			stats.top_speed = 10;
 			stats.min_speed = 8;
-			stats.turn_speed = PI*0.0225;
+			stats.turn_speed = PI*0.022;
 			stats.turn_speed_fix_threshold = 10;
-			stats.redirect_angle = PI*0.032;
+			stats.redirect_angle = PI*0.048;
+			stats.redirect_strength = 0.1;
 			car_stats.surface[SURFACE_DIRT] = stats;
 			
 			stats.top_speed = 20;
 			stats.min_speed = 8;
 			stats.turn_speed = PI*0.0075;
 			stats.turn_speed_fix_threshold = 3;
-			stats.redirect_angle = PI*0.012;
 			stats.flip_turning_when_backwards = false;
 			stats.flip_turning_when_going_backwards = true;
 			stats.do_vel_redirection = false;
@@ -227,7 +230,7 @@ void CapRacecarVelocityBiDir(Racecar* car, float max, float min)
 	car->velocity = Vector2Multiply(unit_vector, magnitude);
 }
 
-void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float max_angle)
+void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float max_angle, float strength)
 {
 	float angle = Vector2Angle(*velocity, direction);
 	float abs_angle = absf(angle);
@@ -243,7 +246,7 @@ void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float max_ang
 	}
 	if(abs_angle > max_angle)
 	{
-		float turn_angle = max_angle * sign(angle);
+		float turn_angle = max_angle * sign(angle) * strength;
 		direction = Vector2Normalize(*velocity);
 		direction = Vector2Rotate(direction, turn_angle);
 	} 
@@ -353,7 +356,7 @@ void MoveRacecar(Racecar* car, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS
 						angle = PI - angle;
 					}
 					fraction *= 1.0 - angle * INV_PI;
-					RedirectRacecarVelocity(&quarter_step, Vector2Normalize(wall_rot), PI * 0.05);
+					RedirectRacecarVelocity(&quarter_step, Vector2Normalize(wall_rot), PI * 0.05, 1.0);
 
 					//if(RACECAR_DEBUG) DrawUnitVector(SCREEN_CENTER, wall_rot, ORANGE);
 				}
@@ -372,7 +375,7 @@ void MoveRacecar(Racecar* car, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS
 	}
 	if(collided)
 	{
-		RedirectRacecarVelocity(&car->velocity, Vector2Normalize(quarter_step), PI);
+		RedirectRacecarVelocity(&car->velocity, Vector2Normalize(quarter_step), PI, 1.0);
 	}
 
 	if(RACECAR_DEBUG) DrawUnitVector(SCREEN_CENTER, car->velocity, BLUE);
@@ -584,7 +587,7 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 
 	if(stats->do_vel_redirection)
 	{
-		RedirectRacecarVelocity(&car->velocity, car->rotation, stats->redirect_angle);
+		RedirectRacecarVelocity(&car->velocity, car->rotation, stats->redirect_angle, stats->redirect_strength);
 	}
 
 	MoveRacecar(car, block_walls);
