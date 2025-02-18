@@ -47,25 +47,25 @@ CarStats DefaultStats(DefaultCar car)
 			stats.turn_dir_loss = 1.0;
 			stats.flip_turning_when_backwards = true;
 			stats.flip_turning_when_going_backwards = false;
-			
+
 			stats.redirect_angle = PI*0.012;
-			stats.redirect_strength = 1.0;
+			stats.redirect_angle_loss = 1.0;
 			stats.do_vel_redirection = true;
 			car_stats.surface[SURFACE_ASPHALT] = stats;
-			
+
 			stats.top_speed = 5;
 			stats.min_speed = 2;
 			stats.friction = 0.2;
 			car_stats.surface[SURFACE_GRASS] = stats;
-			
+
 			stats.top_speed = 10;
 			stats.min_speed = 8;
 			stats.turn_speed = PI*0.022;
 			stats.turn_speed_fix_threshold = 10;
-			stats.redirect_angle = PI*0.048;
-			stats.redirect_strength = 0.1;
+			stats.redirect_angle = PI*0.009;
+			stats.redirect_angle_loss = 0.5;
 			car_stats.surface[SURFACE_DIRT] = stats;
-			
+
 			stats.top_speed = 20;
 			stats.min_speed = 8;
 			stats.turn_speed = PI*0.0075;
@@ -190,7 +190,7 @@ void DecreaseRacecarVelocity(Racecar* car, float amount, Vector2 direction)
 	{
 		car->velocity.y = 0.0;
 	}
-	
+
 	if(RACECAR_DEBUG) DrawUnitVector(SCREEN_CENTER, Vector2Negate(direction), GREEN);
 }
 
@@ -230,7 +230,7 @@ void CapRacecarVelocityBiDir(Racecar* car, float max, float min)
 	car->velocity = Vector2Multiply(unit_vector, magnitude);
 }
 
-void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float max_angle, float strength)
+void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float angle_change, float angle_loss)
 {
 	float angle = Vector2Angle(*velocity, direction);
 	float abs_angle = absf(angle);
@@ -244,16 +244,18 @@ void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float max_ang
 		abs_angle = PI - abs_angle;
 		direction = (Vector2){-direction.x, -direction.y};
 	}
-	if(abs_angle > max_angle)
-	{
-		float turn_angle = max_angle * sign(angle) * strength;
-		direction = Vector2Normalize(*velocity);
-		direction = Vector2Rotate(direction, turn_angle);
-	} 
+    float turn_angle = max(angle_change - abs_angle * INV_PI * angle_loss, 0) * sign(angle);
+    if(turn_angle < angle)
+    {
+        direction = Vector2Normalize(*velocity);
+        if(turn_angle != 0.0)
+        {
+            direction = Vector2Rotate(direction, turn_angle);
+        }
+    }
 
-	float mag = Vector2Length(*velocity);
-	Vector2 magnitude = (Vector2){mag, mag};
-	*velocity = Vector2Multiply(direction, magnitude);
+	float magnitude = Vector2Length(*velocity);
+	*velocity = Vector2Scale(direction, magnitude);
 
 	if(RACECAR_DEBUG) DrawUnitVector(SCREEN_CENTER, direction, PURPLE);
 }
@@ -323,7 +325,7 @@ void MoveRacecar(Racecar* car, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS
 	{
 		Vector2 prev_pos = car->position;
 		car->position = Vector2Add(car->position, quarter_step);
-		
+
 		Wall wall[4];
 	       	wall[0] = ShiftWall(car->w_front, car->position);
 		wall[1] = ShiftWall(car->w_back, car->position);
@@ -356,7 +358,7 @@ void MoveRacecar(Racecar* car, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS
 						angle = PI - angle;
 					}
 					fraction *= 1.0 - angle * INV_PI;
-					RedirectRacecarVelocity(&quarter_step, Vector2Normalize(wall_rot), PI * 0.05, 1.0);
+					RedirectRacecarVelocity(&quarter_step, Vector2Normalize(wall_rot), PI * 0.05, 0.0);
 
 					//if(RACECAR_DEBUG) DrawUnitVector(SCREEN_CENTER, wall_rot, ORANGE);
 				}
@@ -375,7 +377,7 @@ void MoveRacecar(Racecar* car, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS
 	}
 	if(collided)
 	{
-		RedirectRacecarVelocity(&car->velocity, Vector2Normalize(quarter_step), PI, 1.0);
+		RedirectRacecarVelocity(&car->velocity, Vector2Normalize(quarter_step), PI, 0.0);
 	}
 
 	if(RACECAR_DEBUG) DrawUnitVector(SCREEN_CENTER, car->velocity, BLUE);
@@ -405,7 +407,7 @@ void DrawRacecar(Racecar* car, bool ghost)
 		asset->tris[i] = RotateTriCar(asset->tris[i], car->rotation);
 		if(ghost)
 		{
-			asset->tris[i].color = 33; 
+			asset->tris[i].color = 33;
 		}
 	}
 	if(!ghost)
@@ -451,7 +453,7 @@ void DrawRacecarWalls(Racecar* car, bool ghost)
 MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOCK_AMOUNT], BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS], RMInput input, DefaultEnviroment env)
 {
 	MetaInfo meta = (MetaInfo){false, false};
-	Block current_block = CheckRacecarAreaColliding(car, block_walls, blocks);	
+	Block current_block = CheckRacecarAreaColliding(car, block_walls, blocks);
 	int type = current_block.area.type;
 	if(type == TYPE_VOID)
 	{
@@ -587,7 +589,7 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 
 	if(stats->do_vel_redirection)
 	{
-		RedirectRacecarVelocity(&car->velocity, car->rotation, stats->redirect_angle, stats->redirect_strength);
+		RedirectRacecarVelocity(&car->velocity, car->rotation, stats->redirect_angle, stats->redirect_angle_loss);
 	}
 
 	MoveRacecar(car, block_walls);

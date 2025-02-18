@@ -27,7 +27,7 @@ typedef struct SurfaceStats
 	      turn_dir_loss, // After turning, turning speed will lower by amount specified. A value of 1 is instant.
 
 	      redirect_angle, // Will snap velocity's angle to car's rotation if the angle difference between them is under the value specified.
-	      redirect_strength; // 0 - 1, How much the angle redirects.
+	      redirect_angle_loss;
 	bool flip_turning_when_backwards, // When car is going backwards, turn speed is flipped. Feels more natural this way.
 	     flip_turning_when_going_backwards, // Same as previous, but only when the player is holding down.
 	     do_vel_redirection; // Activates vel redirection. see redirect_angle for explanation.
@@ -46,12 +46,12 @@ typedef struct CarStats
 
 typedef struct Racecar
 {
-	Wall w_front, 
-	     w_back, 
-	     w_left, 
+	Wall w_front,
+	     w_back,
+	     w_left,
 	     w_right;
-	Vector2 position, 
-		rotation, 
+	Vector2 position,
+		rotation,
 		velocity;
 	float turn_dir;
 	unsigned char palette, model;
@@ -91,7 +91,7 @@ void AccelerateRacecar(Racecar* car, float amount);
 void ApplyFrictionRacecar(Racecar* car, float amount);
 void CapRacecarVelocity(Racecar* car, float max);
 void CapRacecarVelocityBiDir(Racecar* car, float max, float min);
-void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float max_angle, float strength);
+void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float angle_change, float angle_loss);
 
 bool RacecarMaxVelocity(Racecar* car, float max);
 bool CheckRacecarWallColliding(Wall racecar_wall, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS], WallCollision* collision);
