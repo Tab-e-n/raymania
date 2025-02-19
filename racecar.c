@@ -49,7 +49,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.flip_turning_when_going_backwards = false;
 
 			stats.redirect_angle = PI*0.012;
-			stats.redirect_angle_loss = 1.0;
+			stats.redirect_angle_loss = 0.004;
 			stats.do_vel_redirection = true;
 			car_stats.surface[SURFACE_ASPHALT] = stats;
 
@@ -63,7 +63,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.turn_speed = PI*0.022;
 			stats.turn_speed_fix_threshold = 10;
 			stats.redirect_angle = PI*0.009;
-			stats.redirect_angle_loss = 0.5;
+			stats.redirect_angle_loss = 0.012;
 			car_stats.surface[SURFACE_DIRT] = stats;
 
 			stats.top_speed = 20;
@@ -244,15 +244,15 @@ void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float angle_c
 		abs_angle = PI - abs_angle;
 		direction = (Vector2){-direction.x, -direction.y};
 	}
-    float turn_angle = max(angle_change - abs_angle * INV_PI * angle_loss, 0) * sign(angle);
-    if(turn_angle < angle)
-    {
-        direction = Vector2Normalize(*velocity);
-        if(turn_angle != 0.0)
-        {
-            direction = Vector2Rotate(direction, turn_angle);
-        }
-    }
+	float turn_angle = max(angle_change - abs_angle * INV_PI * angle_loss, 0.0) * sign(angle);
+	if(absf(turn_angle) < abs_angle)
+	{
+		direction = Vector2Normalize(*velocity);
+		if(turn_angle != 0.0)
+		{
+			direction = Vector2Rotate(direction, turn_angle);
+		}
+	}
 
 	float magnitude = Vector2Length(*velocity);
 	*velocity = Vector2Scale(direction, magnitude);
