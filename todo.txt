@@ -34,6 +34,7 @@ My Logo On Startup (Whatever That Is)
 Big blocks prevent other blocks from being placed
 Racecar Visuals + Colorswaps
 Block mixing
+Gears
 
 IN PROGRESS
 Blockmixing Overlaping blocks count on current tile

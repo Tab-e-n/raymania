@@ -255,8 +255,8 @@ void CarSetVis(Racecar* car, Profile profile, DefaultCar type)
 			car->model = profile.car_drift_model;
 			break;
 		case CAR_GRIP:
-			car->palette = profile.car_drift_palette;
-			car->model = profile.car_drift_model;
+			car->palette = profile.car_grip_palette;
+			car->model = profile.car_grip_model;
 			break;
 		case CAR_TERRAIN:
 			car->palette = profile.car_terrain_palette;
@@ -2680,7 +2680,8 @@ int main(void)
 				if(DEBUG)
 				{
 					DrawText(TextFormat("pos %i %i", load_placement.x, load_placement.y), 8, 16, 32, BLACK);
-					DrawText(TextFormat("shake_time %.3f", shake_time), 8, 48, 32, BLACK);
+					DrawText(TextFormat("velocity %.3f %.3f", car.velocity.x, car.velocity.y), 8, 48, 32, BLACK);
+					DrawText(TextFormat("shake_time %.3f", shake_time), 8, 80, 32, BLACK);
 				}
 				if(finished)
 				{

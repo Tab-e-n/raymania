@@ -27,8 +27,8 @@ void FillProfile(Profile* out_profile, int done)
 
 	profile.car_road_palette = 0;
 	profile.car_drift_palette = 1;
-	profile.car_grip_palette = 0;
-	profile.car_terrain_palette = 0;
+	profile.car_grip_palette = 2;
+	profile.car_terrain_palette = 3;
 
 	profile.car_road_model = 0;
 	profile.car_drift_model = 0;

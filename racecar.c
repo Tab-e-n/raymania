@@ -24,6 +24,7 @@ int GetModelID(unsigned char model)
 CarStats DefaultStats(DefaultCar car)
 {
 	CarStats car_stats;
+	SurfaceStats stats;
 	switch(car)
 	{
 		case(CAR_ROAD):
@@ -34,10 +35,19 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.shake_frequency = 2.0;
 			car_stats.shake_weight = 5.0;
 
-			SurfaceStats stats;
-			stats.top_speed = 10;
+			car_stats.gears[0] = 4;
+			car_stats.gears[1] = 7;
+			car_stats.gears[2] = 10;
+			car_stats.gears[3] = 14;
+			car_stats.gears[4] = 20;
+			car_stats.gear_shift_speed = FRAME * 4;
+
 			stats.min_speed = 4;
-			stats.acceleration = 0.1;
+			stats.acceleration[0] = 0.2;
+			stats.acceleration[1] = 0.1;
+			stats.acceleration[2] = 0.1;
+			stats.acceleration[3] = 0.001;
+			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.1;
 			stats.friction = 0.05;
 
@@ -53,21 +63,31 @@ CarStats DefaultStats(DefaultCar car)
 			stats.do_vel_redirection = true;
 			car_stats.surface[SURFACE_ASPHALT] = stats;
 
-			stats.top_speed = 5;
 			stats.min_speed = 2;
+			stats.acceleration[0] = 0.1;
+			stats.acceleration[2] = 0.001;
 			stats.friction = 0.2;
+			stats.redirect_angle = PI*0.007;
+			stats.redirect_angle_loss = 0.014;
 			car_stats.surface[SURFACE_GRASS] = stats;
 
-			stats.top_speed = 10;
 			stats.min_speed = 8;
+			stats.acceleration[0] = 0.2;
+			stats.acceleration[2] = 0.1;
+			stats.friction = 0.05;
 			stats.turn_speed = PI*0.022;
 			stats.turn_speed_fix_threshold = 10;
 			stats.redirect_angle = PI*0.009;
 			stats.redirect_angle_loss = 0.012;
 			car_stats.surface[SURFACE_DIRT] = stats;
 
-			stats.top_speed = 20;
 			stats.min_speed = 8;
+			stats.acceleration[0] = 0.2;
+			stats.acceleration[1] = 0.1;
+			stats.acceleration[2] = 0.1;
+			stats.acceleration[3] = 0.05;
+			stats.acceleration[4] = 0.05;
+			stats.friction = 0.01;
 			stats.turn_speed = PI*0.0075;
 			stats.turn_speed_fix_threshold = 3;
 			stats.flip_turning_when_backwards = false;
@@ -75,8 +95,234 @@ CarStats DefaultStats(DefaultCar car)
 			stats.do_vel_redirection = false;
 			car_stats.surface[SURFACE_ICE] = stats;
 
-			stats.top_speed = 1;
 			stats.min_speed = 1;
+			stats.acceleration[0] = 0.1;
+			stats.acceleration[1] = 0.001;
+			stats.acceleration[2] = 0.001;
+			stats.acceleration[3] = 0.001;
+			stats.acceleration[4] = 0.001;
+			stats.friction = 0.03;
+			stats.flip_turning_when_backwards = false;
+			stats.flip_turning_when_going_backwards = false;
+			stats.do_vel_redirection = false;
+			car_stats.surface[SURFACE_WATER] = stats;
+
+			break;
+		case(CAR_DRIFT):
+			car_stats.size = (Vector2){14, 23};
+			car_stats.camera_shake_threshold = 0.8;
+			car_stats.speed_to_shake_ratio = 0.125;
+			car_stats.shake_amplitude = 5.0;
+			car_stats.shake_frequency = 2.0;
+			car_stats.shake_weight = 5.0;
+
+			car_stats.gears[0] = 2;
+			car_stats.gears[1] = 5;
+			car_stats.gears[2] = 10;
+			car_stats.gears[3] = 14;
+			car_stats.gears[4] = 20;
+			car_stats.gear_shift_speed = FRAME * 4;
+
+			stats.min_speed = 4;
+			stats.acceleration[0] = 0.1;
+			stats.acceleration[1] = 0.1;
+			stats.acceleration[2] = 0.1;
+			stats.acceleration[3] = 0.1;
+			stats.acceleration[4] = 0.1;
+			stats.decceleration = 0.1;
+			stats.friction = 0.05;
+
+			stats.turn_speed = PI*0.0075;
+			stats.turn_speed_fix_threshold = 3;
+			stats.turn_dir_gain = 0.1;
+			stats.turn_dir_loss = 1.0;
+			stats.flip_turning_when_backwards = true;
+			stats.flip_turning_when_going_backwards = false;
+
+			stats.redirect_angle = PI*0.012;
+			stats.redirect_angle_loss = 0.004;
+			stats.do_vel_redirection = true;
+			car_stats.surface[SURFACE_ASPHALT] = stats;
+
+			stats.min_speed = 2;
+			stats.friction = 0.2;
+			stats.redirect_angle = PI*0.007;
+			stats.redirect_angle_loss = 0.014;
+			car_stats.surface[SURFACE_GRASS] = stats;
+
+			stats.min_speed = 8;
+			stats.friction = 0.05;
+			stats.turn_speed = PI*0.022;
+			stats.turn_speed_fix_threshold = 10;
+			stats.redirect_angle = PI*0.009;
+			stats.redirect_angle_loss = 0.012;
+			car_stats.surface[SURFACE_DIRT] = stats;
+
+			stats.min_speed = 8;
+			stats.friction = 0.01;
+			stats.turn_speed = PI*0.0075;
+			stats.turn_speed_fix_threshold = 3;
+			stats.flip_turning_when_backwards = false;
+			stats.flip_turning_when_going_backwards = true;
+			stats.do_vel_redirection = false;
+			car_stats.surface[SURFACE_ICE] = stats;
+
+			stats.min_speed = 1;
+			stats.friction = 0.03;
+			stats.flip_turning_when_backwards = false;
+			stats.flip_turning_when_going_backwards = false;
+			stats.do_vel_redirection = false;
+			car_stats.surface[SURFACE_WATER] = stats;
+
+			break;
+		case(CAR_GRIP):
+			car_stats.size = (Vector2){14, 23};
+			car_stats.camera_shake_threshold = 0.8;
+			car_stats.speed_to_shake_ratio = 0.125;
+			car_stats.shake_amplitude = 5.0;
+			car_stats.shake_frequency = 2.0;
+			car_stats.shake_weight = 5.0;
+
+			car_stats.gears[0] = 2;
+			car_stats.gears[1] = 5;
+			car_stats.gears[2] = 10;
+			car_stats.gears[3] = 14;
+			car_stats.gears[4] = 20;
+			car_stats.gear_shift_speed = FRAME * 4;
+
+			stats.min_speed = 4;
+			stats.acceleration[0] = 0.1;
+			stats.acceleration[1] = 0.1;
+			stats.acceleration[2] = 0.1;
+			stats.acceleration[3] = 0.1;
+			stats.acceleration[4] = 0.1;
+			stats.decceleration = 0.1;
+			stats.friction = 0.05;
+
+			stats.turn_speed = PI*0.0075;
+			stats.turn_speed_fix_threshold = 3;
+			stats.turn_dir_gain = 0.1;
+			stats.turn_dir_loss = 1.0;
+			stats.flip_turning_when_backwards = true;
+			stats.flip_turning_when_going_backwards = false;
+
+			stats.redirect_angle = PI*0.012;
+			stats.redirect_angle_loss = 0.004;
+			stats.do_vel_redirection = true;
+			car_stats.surface[SURFACE_ASPHALT] = stats;
+
+			stats.min_speed = 2;
+			stats.friction = 0.2;
+			stats.redirect_angle = PI*0.007;
+			stats.redirect_angle_loss = 0.014;
+			car_stats.surface[SURFACE_GRASS] = stats;
+
+			stats.min_speed = 8;
+			stats.friction = 0.05;
+			stats.turn_speed = PI*0.022;
+			stats.turn_speed_fix_threshold = 10;
+			stats.redirect_angle = PI*0.009;
+			stats.redirect_angle_loss = 0.012;
+			car_stats.surface[SURFACE_DIRT] = stats;
+
+			stats.min_speed = 8;
+			stats.friction = 0.01;
+			stats.turn_speed = PI*0.0075;
+			stats.turn_speed_fix_threshold = 3;
+			stats.flip_turning_when_backwards = false;
+			stats.flip_turning_when_going_backwards = true;
+			stats.do_vel_redirection = false;
+			car_stats.surface[SURFACE_ICE] = stats;
+
+			stats.min_speed = 1;
+			stats.friction = 0.03;
+			stats.flip_turning_when_backwards = false;
+			stats.flip_turning_when_going_backwards = false;
+			stats.do_vel_redirection = false;
+			car_stats.surface[SURFACE_WATER] = stats;
+
+			break;
+		case(CAR_TERRAIN):
+			car_stats.size = (Vector2){14, 23};
+			car_stats.camera_shake_threshold = 0.8;
+			car_stats.speed_to_shake_ratio = 0.125;
+			car_stats.shake_amplitude = 5.0;
+			car_stats.shake_frequency = 2.0;
+			car_stats.shake_weight = 5.0;
+
+			car_stats.gears[0] = 2;
+			car_stats.gears[1] = 5;
+			car_stats.gears[2] = 8;
+			car_stats.gears[3] = 12;
+			car_stats.gears[4] = 16;
+			car_stats.gear_shift_speed = FRAME;
+
+			stats.min_speed = 4;
+			stats.acceleration[0] = 0.05;
+			stats.acceleration[1] = 0.03;
+			stats.acceleration[2] = 0.02;
+			stats.acceleration[3] = 0.01;
+			stats.acceleration[4] = 0.001;
+			stats.decceleration = 0.02;
+			stats.friction = 0.01;
+
+			stats.turn_speed = PI*0.0035;
+			stats.turn_speed_fix_threshold = 1.5;
+			stats.turn_dir_gain = 0.1;
+			stats.turn_dir_loss = 0.1;
+			stats.flip_turning_when_backwards = true;
+			stats.flip_turning_when_going_backwards = false;
+
+			stats.redirect_angle = PI*0.005;
+			stats.redirect_angle_loss = 0.005;
+			stats.do_vel_redirection = true;
+			car_stats.surface[SURFACE_ASPHALT] = stats;
+
+			stats.min_speed = 2;
+			stats.acceleration[0] = 0.02;
+			stats.acceleration[1] = 0.01;
+			stats.acceleration[2] = 0.001;
+			stats.acceleration[3] = 0.001;
+			stats.acceleration[4] = 0.001;
+			stats.friction = 0.01;
+			stats.redirect_angle = PI*0.002;
+			stats.redirect_angle_loss = 0.005;
+			car_stats.surface[SURFACE_GRASS] = stats;
+
+			stats.min_speed = 4;
+			stats.acceleration[0] = 0.05;
+			stats.acceleration[1] = 0.025;
+			stats.acceleration[2] = 0.01;
+			stats.acceleration[3] = 0.001;
+			stats.acceleration[4] = 0.001;
+			stats.friction = 0.02;
+			stats.turn_speed = PI*0.0052;
+			stats.turn_speed_fix_threshold = 2;
+			stats.redirect_angle = PI*0.009;
+			stats.redirect_angle_loss = 0.012;
+			car_stats.surface[SURFACE_DIRT] = stats;
+
+			stats.min_speed = 8;
+			stats.acceleration[0] = 0.05;
+			stats.acceleration[1] = 0.04;
+			stats.acceleration[2] = 0.03;
+			stats.acceleration[3] = 0.02;
+			stats.acceleration[4] = 0.01;
+			stats.friction = 0.002;
+			stats.turn_speed = PI*0.0045;
+			stats.turn_speed_fix_threshold = 1.5;
+			stats.flip_turning_when_backwards = false;
+			stats.flip_turning_when_going_backwards = true;
+			stats.do_vel_redirection = false;
+			car_stats.surface[SURFACE_ICE] = stats;
+
+			stats.min_speed = 1;
+			stats.acceleration[0] = 0.01;
+			stats.acceleration[1] = 0.001;
+			stats.acceleration[2] = 0.001;
+			stats.acceleration[3] = 0.001;
+			stats.acceleration[4] = 0.001;
+			stats.friction = 0.03;
 			stats.flip_turning_when_backwards = false;
 			stats.flip_turning_when_going_backwards = false;
 			stats.do_vel_redirection = false;
@@ -97,6 +343,8 @@ Racecar InitRacecar(CarStats* stats)
 	car.velocity = Vector2Zero();
 	car.position = Vector2Zero();
 	car.turn_dir = 0.0;
+	car.gear = 0;
+	car.gear_shift = 0.0;
 	CalculateRacecarWalls(&car, stats->size);
 	return car;
 }
@@ -107,6 +355,8 @@ void ResetRacecar(Racecar* car, Vector2 pos, Vector2 dir, Vector2 size)
 	car->velocity = Vector2Zero();
 	car->position = pos;
 	car->turn_dir = 0.0;
+	car->gear = 0;
+	car->gear_shift = 0.0;
 	CalculateRacecarWalls(car, size);
 }
 
@@ -315,6 +565,32 @@ Block CheckRacecarAreaColliding(Racecar* car, BlockWallArray block_walls[MAX_LOA
 		}
 	}
 	return block;
+}
+
+void RacecarGearUp(Racecar* car, float gears[GEAR_AMOUNT])
+{
+	if(car->gear < GEAR_AMOUNT - 1)
+	{
+		if(Vector2Length(car->velocity) >= gears[car->gear] - 0.1)
+		{
+			car->gear++;
+			car->gear_shift = 1.0;
+			if(DEBUG) TraceLog(LOG_INFO, "Gear Up: %i (%f)", car->gear, Vector2Length(car->velocity));
+		}
+	}
+}
+
+void RacecarGearDown(Racecar* car, float gears[GEAR_AMOUNT])
+{
+	if(car->gear > 0)
+	{
+		if(Vector2Length(car->velocity) < gears[car->gear - 1] - 0.1)
+		{
+			car->gear--;
+			car->gear_shift = 1.0;
+			if(DEBUG) TraceLog(LOG_INFO, "Gear Down: %i (%f)", car->gear, Vector2Length(car->velocity));
+		}
+	}
 }
 
 void MoveRacecar(Racecar* car, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS])
@@ -540,9 +816,6 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 		}
 	}
 
-	float angle = absf(Vector2Angle(car->velocity, car->rotation));
-	bool facing_foward = angle < PI * 0.5;
-
 	bool flip_turning = false;
 
 	if(stats->flip_turning_when_backwards)
@@ -560,18 +833,35 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 		CalculateRacecarWalls(car, car_stats->size);
 	}
 
-	if(InputHeld(input, INPUT_UP))
+	bool facing_foward = true;
+	if(!zero(car->velocity.x) || !zero(car->velocity.y))
 	{
-		if(!RacecarMaxVelocity(car, stats->top_speed) || !facing_foward)
+		float angle = absf(Vector2Angle(car->velocity, car->rotation));
+		facing_foward = angle < PI * 0.5;
+	}
+
+	//TraceLog(LOG_INFO, "prev vel %.3f %.3f", car->velocity.x, car->velocity.y);
+	if(car->gear_shift > 0.0)
+	{
+		car->gear_shift -= car_stats->gear_shift_speed;
+	}
+	else
+	{
+		RacecarGearDown(car, car_stats->gears);
+	}
+	if(car->gear_shift <= 0.0 && InputHeld(input, INPUT_UP))
+	{
+		RacecarGearUp(car, car_stats->gears);
+		if(!RacecarMaxVelocity(car, car_stats->gears[car->gear]) || !facing_foward)
 		{
-			AccelerateRacecar(car, stats->acceleration);
+			AccelerateRacecar(car, stats->acceleration[car->gear]);
 			if(facing_foward)
 			{
-				CapRacecarVelocity(car, stats->top_speed);
+				CapRacecarVelocity(car, car_stats->gears[car->gear]);
 			}
 		}
 	}
-	else if(InputHeld(input, INPUT_DOWN))
+	if(InputHeld(input, INPUT_DOWN))
 	{
 		if(!RacecarMaxVelocity(car, stats->min_speed) || facing_foward)
 		{
@@ -582,15 +872,26 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 			}
 		}
 	}
-	else
+	//TraceLog(LOG_INFO, "acc vel %.3f %.3f", car->velocity.x, car->velocity.y);
+	if(!zero(car->velocity.x) || !zero(car->velocity.y))
 	{
-		ApplyFrictionRacecar(car, stats->friction);
+		if(absf(car->velocity.x) < stats->friction || absf(car->velocity.y) < stats->friction)
+		{
+			float angle = absf(Vector2Angle(car->velocity, car->rotation));
+			facing_foward = angle < PI * 0.5;
+		}
+		if((!InputHeld(input, INPUT_UP) && facing_foward) || (!InputHeld(input, INPUT_DOWN) && !facing_foward))
+		{
+			ApplyFrictionRacecar(car, stats->friction);
+		}
 	}
+	//TraceLog(LOG_INFO, "frict vel %.3f %.3f", car->velocity.x, car->velocity.y);
 
 	if(stats->do_vel_redirection)
 	{
 		RedirectRacecarVelocity(&car->velocity, car->rotation, stats->redirect_angle, stats->redirect_angle_loss);
 	}
+	//TraceLog(LOG_INFO, "redir vel %.3f %.3f", car->velocity.x, car->velocity.y);
 
 	MoveRacecar(car, block_walls);
 

@@ -5,7 +5,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-#define DEBUG false
+#define DEBUG true
 
 #define SCREEN_SIZE (Vector2){1024, 640}
 #define SCREEN_CENTER (Vector2){512, 320}
@@ -63,6 +63,7 @@ extern void* _malloc(size_t size);
 extern void* _realloc(void* ptr, size_t size);
 extern void _free(void* ptr);
 
+bool zero(float x);
 int absi(int x);
 int sign(float x);
 float absf(float x);
