@@ -236,6 +236,7 @@ DemoSave* LoadDemo(const char* filename)
 	{
 		track_name_len++;
 	}
+	track_name_len++;
 	TraceLog(LOG_INFO, "MALLOC: load demo track_name %i", track_name_len);
 	demosave->track_name = (unsigned char*)_malloc(track_name_len);
 	for(int i = 0; i < track_name_len; i++)
@@ -247,8 +248,17 @@ DemoSave* LoadDemo(const char* filename)
 	{
 		demosave->checksum[i] = file_data[track_name_len + i];
 	}
+	TraceLog(LOG_INFO, "Converting to demo");
 	Demo* save_demo = (Demo*)(file_data + track_name_len + DEMO_CHECKSUM_SIZE);
-	unsigned char checksum[DEMO_CHECKSUM_SIZE];
+	if(sizeof(Demo) + save_demo->input_amount * DEMO_INPUT_ALLOC_SIZE + track_name_len + DEMO_CHECKSUM_SIZE > data_size)
+	{
+		UnloadFileData(file_data);
+		demosave->result = false;
+		TraceLog(LOG_WARNING, "FILEIO: [%s] Demo file is corrupted, it is not the size it claims.", filename);
+		return demosave;
+	}
+	unsigned char checksum[DEMO_CHECKSUM_SIZE] = {0};
+	TraceLog(LOG_INFO, "Checksumming");
 	ChecksumDemo(save_demo, checksum);
 	if(!ChecksumsMatch(checksum, demosave->checksum))
 	{
@@ -294,6 +304,7 @@ bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename)
 	unsigned char* file_data = LoadFileData(filename, &data_size);
 	unsigned char* save_file_data = PNULL;
 	unsigned int trname = TextLength(track_name) + 1;
+	TraceLog(LOG_INFO, "trname %i", trname);
 
 	if(file_data != PNULL)
 	{
@@ -311,7 +322,7 @@ bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename)
 				}
 				save_file_data[trname - 1] = 0; 
 				
-				unsigned char checksum[DEMO_CHECKSUM_SIZE];
+				unsigned char checksum[DEMO_CHECKSUM_SIZE] = {0};
 				ChecksumDemo(demo, checksum);
 				for(int i = 0; i < DEMO_CHECKSUM_SIZE; i++)
 				{
@@ -344,7 +355,7 @@ bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename)
 			}
 			save_file_data[trname - 1] = 0; 
 			
-			unsigned char checksum[DEMO_CHECKSUM_SIZE];
+			unsigned char checksum[DEMO_CHECKSUM_SIZE] = {0};
 			ChecksumDemo(demo, checksum);
 			for(int i = 0; i < DEMO_CHECKSUM_SIZE; i++)
 			{
@@ -374,7 +385,7 @@ bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename)
 		}
 		file_data[trname - 1] = 0; 
 			
-		unsigned char checksum[DEMO_CHECKSUM_SIZE];
+		unsigned char checksum[DEMO_CHECKSUM_SIZE] = {0};
 		ChecksumDemo(demo, checksum);
 		for(int i = 0; i < DEMO_CHECKSUM_SIZE; i++)
 		{

@@ -46,6 +46,7 @@ NOT DONE
 Audio omg
 Enviroment Visuals
 
+Different zoom for different cars?
 Other Racecars
 Standartized menus
 Arrow that points to the start in editor.
