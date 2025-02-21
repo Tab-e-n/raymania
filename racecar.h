@@ -7,7 +7,7 @@
 #include "blocks.h"
 #include "asset.h"
 
-#define RACECAR_DEBUG false
+#define RACECAR_DEBUG true
 #define GEAR_AMOUNT 5
 
 
@@ -28,7 +28,8 @@ typedef struct SurfaceStats
 		turn_dir_loss, // After turning, turning speed will lower by amount specified. A value of 1 is instant.
 
 		redirect_angle, // Will snap velocity's angle to car's rotation if the angle difference between them is under the value specified.
-		redirect_angle_loss;
+		redirect_angle_loss,
+		redirect_speed_loss; // Percentage of speed that remains after redirect.
 	bool flip_turning_when_backwards, // When car is going backwards, turn speed is flipped. Feels more natural this way.
 		flip_turning_when_going_backwards, // Same as previous, but only when the player is holding down.
 		do_vel_redirection; // Activates vel redirection. see redirect_angle for explanation.
@@ -94,7 +95,7 @@ void AccelerateRacecar(Racecar* car, float amount);
 void ApplyFrictionRacecar(Racecar* car, float amount);
 void CapRacecarVelocity(Racecar* car, float max);
 void CapRacecarVelocityBiDir(Racecar* car, float max, float min);
-void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float angle_change, float angle_loss);
+void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float angle_change, float angle_loss, float vel_percent);
 
 bool RacecarMaxVelocity(Racecar* car, float max);
 bool CheckRacecarWallColliding(Wall racecar_wall, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS], WallCollision* collision);

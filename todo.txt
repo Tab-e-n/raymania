@@ -26,7 +26,6 @@ Input Replays
 Editor Buttons
 Medals
 Party Mode like OG Trackmania
-Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
 Block Visuals (Only the ones near you render)
 Options Gameplay
 Options Audio
@@ -35,8 +34,11 @@ Big blocks prevent other blocks from being placed
 Racecar Visuals + Colorswaps
 Block mixing
 Gears
+Other Racecars
 
 IN PROGRESS
+Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
+Speedometer or something
 Blockmixing Overlaping blocks count on current tile
 Options Changing Profiles
 Options Models and Palettes
@@ -45,9 +47,8 @@ Actual Blocks
 NOT DONE
 Audio omg
 Enviroment Visuals
-
 Different zoom for different cars?
-Other Racecars
+
 Standartized menus
 Arrow that points to the start in editor.
 Removing Tracks, Profiles and Replays
