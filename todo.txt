@@ -35,11 +35,12 @@ Racecar Visuals + Colorswaps
 Block mixing
 Gears
 Other Racecars
+Blockmixing Overlaping blocks count on current tile
 
 IN PROGRESS
 Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
 Speedometer or something
-Blockmixing Overlaping blocks count on current tile
+Deleting bigger size blocks when not at their origin
 Options Changing Profiles
 Options Models and Palettes
 Actual Blocks

@@ -75,6 +75,7 @@ unsigned int GetPiece(PieceInfo* info, Block piece[BLOCKS_PER_PIECE]);
 
 bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info);
 bool DeletePiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], Vector2int placement);
+unsigned int OverlapingPieces(Track* track, Vector2int placement);
 
 void ClearTrack(Track* track);
 void MakeTrackBlocks(Track* track, Block blocks[MAX_BLOCK_AMOUNT]);

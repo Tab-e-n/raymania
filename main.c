@@ -442,6 +442,8 @@ int main(void)
 	bool saving_track = false;
 	unsigned char editor_four_option_selector = 0, efos_opt = 0;
 
+	unsigned int overlaping_blocks = 0;
+
 	// OPTIONS VAR
 	
 	bool reset_options = false;
@@ -1053,30 +1055,36 @@ int main(void)
 			{
 				MoveEditorCursor(&cursor_info, -1, 0);
 				GetPiece(&cursor_info, held_piece);
+				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
 			}
 			if(InputHeld(menu_input, INPUT_RIGHT))
 			{
 				MoveEditorCursor(&cursor_info, 1, 0);
 				GetPiece(&cursor_info, held_piece);
+				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
 			}
 			if(InputHeld(menu_input, INPUT_UP))
 			{
 				MoveEditorCursor(&cursor_info, 0, -1);
 				GetPiece(&cursor_info, held_piece);
+				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
 			}
 			if(InputHeld(menu_input, INPUT_DOWN))
 			{
 				MoveEditorCursor(&cursor_info, 0, 1);
 				GetPiece(&cursor_info, held_piece);
+				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
 			}
 
 			if(InputHeld(menu_input, INPUT_ENTER))
 			{
 				AddPiece(&track, blocks, &cursor_info);
+				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
 			}
 			if(InputHeld(menu_input, INPUT_BACK))
 			{
 				DeletePiece(&track, blocks, cursor_info.placement);
+				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
 			}
 
 			if(InputPressed(input, INPUT_ESC))
@@ -2573,6 +2581,7 @@ int main(void)
 				if(track.blockmixed)
 				{
 					DrawText("BLOCKMIXING ENABLED", 8, 40, 16, BLACK);
+					DrawText(TextFormat("overlaping blocks: %i", overlaping_blocks), 8, 56, 16, BLACK);
 					// TODO: Overlaping block count
 				}
 				if(piece_catalogue_pulled > 0.0)

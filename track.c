@@ -239,6 +239,23 @@ bool DeletePiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], Vector2int placem
 	}
 }
 
+unsigned int OverlapingPieces(Track* track, Vector2int placement)
+{
+	if(!track->blockmixed)
+	{
+		return 0;
+	}
+	unsigned int count = 0;
+	for(int i = 0; i < MAX_PIECES; i++)
+	{
+		if(Vector2intEqual(track->pieces[i].placement, placement))
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
 void ClearTrack(Track* track)
 {
 	//ClearPlacedBlocks(track->blocks);
