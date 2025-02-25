@@ -259,6 +259,7 @@ unsigned int OverlapingPieces(Track* track, Vector2int placement)
 void ClearTrack(Track* track)
 {
 	//ClearPlacedBlocks(track->blocks);
+	track->validated = false;
 	track->blockmixed = false;
 	track->has_start = false;
 	track->medal_bronz = 0.0;
@@ -510,6 +511,7 @@ void ResetMedalTimes(Track* track)
        	track->medal_silver = 0.0;
 	track->medal_gold = 0.0;
        	track->medal_author = 0.0;
+	track->validated = false;
 }
 
 void MoveEditorCursor(PieceInfo* info, int x, int y)

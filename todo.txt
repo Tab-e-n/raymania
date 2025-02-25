@@ -29,6 +29,7 @@ Party Mode like OG Trackmania
 Block Visuals (Only the ones near you render)
 Options Gameplay
 Options Audio
+Options Changing Profiles
 My Logo On Startup (Whatever That Is)
 Big blocks prevent other blocks from being placed
 Racecar Visuals + Colorswaps
@@ -36,12 +37,11 @@ Block mixing
 Gears
 Other Racecars
 Blockmixing Overlaping blocks count on current tile
+Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
 
 IN PROGRESS
-Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
-Speedometer or something
-Deleting bigger size blocks when not at their origin
-Options Changing Profiles
+Start draws a racecar in editor
+Speedometer or something with gears
 Options Models and Palettes
 Actual Blocks
 
@@ -49,8 +49,9 @@ NOT DONE
 Audio omg
 Enviroment Visuals
 Different zoom for different cars?
+Skid Lines
+Deleting bigger size blocks when not at their origin (might be too slow with current track structure)
+Arrow that points to the start in editor.
 
 Standartized menus
-Arrow that points to the start in editor.
 Removing Tracks, Profiles and Replays
-Skid Lines

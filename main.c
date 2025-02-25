@@ -448,6 +448,7 @@ int main(void)
 	
 	bool reset_options = false;
 	bool save_options = true;
+	bool back_to_opt = false;
 
 	int options_current = 0;
 	int options_page = 0;
@@ -578,8 +579,6 @@ int main(void)
 			LoadProfileDirectory(&fpl, PROFILE_DIRECTORY);
 
 			load_profiles = false;
-
-			save_options = true;
 		}
 		FadeIn(&camera, 0.05);
 		if(entering_profile_name)
@@ -618,6 +617,10 @@ int main(void)
 				else
 				{
 					current_game_screen = MENU;
+					if(back_to_opt)
+					{
+						current_game_screen = OPTIONS;
+					}
 					const char* path = (const char*)fpl.paths[current_profile];
 					if(party_mode)
 					{
@@ -626,7 +629,15 @@ int main(void)
 					else
 					{
 						profile = LoadProfile(path);
-						reset_menu = true;
+						if(back_to_opt)
+						{
+							reset_options = true;
+						}
+						else
+						{
+							reset_menu = true;
+						}
+						save_options = true;
 					}
 					UnloadDirectoryFiles(fpl);
 					fpl.count = 0;
@@ -642,10 +653,21 @@ int main(void)
 				else
 				{
 					profile = DefaultProfile();
-					reset_menu = true;
+					if(back_to_opt)
+					{
+						reset_options = true;
+					}
+					else
+					{
+						reset_menu = true;
+					}
 					save_options = false;
 				}
 				current_game_screen = MENU;
+				if(back_to_opt)
+				{
+					current_game_screen = OPTIONS;
+				}
 				UnloadDirectoryFiles(fpl);
 				fpl.count = 0;
 			}
@@ -1013,8 +1035,14 @@ int main(void)
 				end_efos = true;
 				switch(editor_four_option_selector)
 				{
-					case(1): track.car = efos_opt; break;
-					case(2): track.env = efos_opt; break;
+					case(1):
+						track.car = efos_opt;
+						ResetMedalTimes(&track);
+					break;
+					case(2):
+						track.env = efos_opt;
+						ResetMedalTimes(&track);
+					break;
 					case(3):
 						if(efos_opt == 3)
 						{
@@ -1080,11 +1108,13 @@ int main(void)
 			{
 				AddPiece(&track, blocks, &cursor_info);
 				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
+				ResetMedalTimes(&track);
 			}
 			if(InputHeld(menu_input, INPUT_BACK))
 			{
 				DeletePiece(&track, blocks, cursor_info.placement);
 				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
+				ResetMedalTimes(&track);
 			}
 
 			if(InputPressed(input, INPUT_ESC))
@@ -1226,6 +1256,7 @@ int main(void)
 								else
 								{
 									validating_track = true;
+									playing_demo = DEMO_OFF;
 								}
 							}
 							break;
@@ -1448,6 +1479,7 @@ int main(void)
 			cam_pos = Vector2Add(cam_pos, offset);
 
 			MoveCameraInstant(&camera, cam_pos);
+			load_placement = PositionToPlacement(camera.data.target);
 		}
 		else if(start_countdown)
 		{
@@ -1774,7 +1806,7 @@ int main(void)
 			}
 			if(InputHeld(menu_input, INPUT_DOWN))
 			{
-				if(options_current <= options_max)
+				if(options_current < options_max)
 				{
 					options_current++;
 				}
@@ -1880,7 +1912,9 @@ int main(void)
 				{
 					if(options_current == 0)
 					{
-						// TODO: CHANGING PROFILES
+						current_game_screen = PROFILES;
+						load_profiles = true;
+						back_to_opt = true;
 					}
 					else if(options_current == 1)
 					{
@@ -2034,6 +2068,7 @@ int main(void)
 						if(!validating_track && !party_mode)
 						{
 							const char* filename = DemoFilename(DEMO_DIRECTORY, TrackFileName(track_dir,track_name), profile.name);
+							TraceLog(LOG_INFO, "validating %i", validating_track);
 							DemoSave* demosave = LoadDemo(filename);
 							if(demosave->result)
 							{
@@ -2578,11 +2613,18 @@ int main(void)
 			{
 				DrawText(TextFormat("x: %i", cursor_info.placement.x), 8, 8, 16, BLACK);
 				DrawText(TextFormat("y: %i", cursor_info.placement.y), 8, 24, 16, BLACK);
+				if(track.validated)
+				{
+					DrawText("TRACK VALIDATED!", 8, 40, 16, BLACK);
+				}
+				else
+				{
+					DrawText("Track not validated.", 8, 40, 16, BLACK);
+				}
 				if(track.blockmixed)
 				{
-					DrawText("BLOCKMIXING ENABLED", 8, 40, 16, BLACK);
-					DrawText(TextFormat("overlaping blocks: %i", overlaping_blocks), 8, 56, 16, BLACK);
-					// TODO: Overlaping block count
+					DrawText("BLOCKMIXING ENABLED", 8, 56, 16, BLACK);
+					DrawText(TextFormat("overlaping blocks: %i", overlaping_blocks), 8, 72, 16, BLACK);
 				}
 				if(piece_catalogue_pulled > 0.0)
 				{
@@ -2734,9 +2776,17 @@ int main(void)
 					DrawText(TextFormat("Bronz: %.3f", track.medal_bronz), 8, 40, 16, BLACK);
 					DrawText(TextFormat("Silver: %.3f", track.medal_silver), 8, 56, 16, BLACK);
 					DrawText(TextFormat("Gold: %.3f", track.medal_gold), 8, 72, 16, BLACK);
+					if(validating_track)
+					{
+						DrawText(TextFormat("Author: %.3f", track.medal_author), 8, 88, 16, BLACK);
+					}
+					else if(ghost_demo != PNULL)
+					{
+						DrawText(TextFormat("PB: %.3f", ghost_demo->time), 8, 88, 16, BLACK);
+					}
 					if(race_showcase)
 					{
-						DrawText("Press enter to play", 8, 88, 16, BLACK);
+						DrawText("Press enter to play", 8, 104, 16, BLACK);
 					}
 				}
 				else if(start_countdown)

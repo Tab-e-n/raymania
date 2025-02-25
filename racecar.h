@@ -7,7 +7,7 @@
 #include "blocks.h"
 #include "asset.h"
 
-#define RACECAR_DEBUG true
+#define RACECAR_DEBUG false
 #define GEAR_AMOUNT 5
 
 
