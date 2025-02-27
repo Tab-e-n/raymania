@@ -38,6 +38,7 @@ Gears
 Other Racecars
 Blockmixing Overlaping blocks count on current tile
 Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
+Skid Lines
 
 IN PROGRESS
 Start draws a racecar in editor
@@ -49,7 +50,6 @@ NOT DONE
 Audio omg
 Enviroment Visuals
 Different zoom for different cars?
-Skid Lines
 Deleting bigger size blocks when not at their origin (might be too slow with current track structure)
 Arrow that points to the start in editor.
 
