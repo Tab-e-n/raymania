@@ -9,6 +9,7 @@
 
 #define RACECAR_DEBUG false
 #define GEAR_AMOUNT 5
+#define SKID_LINE_COUNT 60
 
 
 typedef enum DefaultCar {CAR_ROAD = 0, CAR_DRIFT, CAR_GRIP, CAR_TERRAIN} DefaultCar;
@@ -75,6 +76,13 @@ typedef struct MetaInfo
 		check_rot;
 } MetaInfo;
 
+typedef struct SkidLinePoint
+{
+	bool draw;
+	Vector2 position,
+		rotation;
+} SkidLinePoint;
+
 
 int GetModelID(unsigned char model);
 
@@ -113,5 +121,9 @@ void DrawRacecar(Racecar* car, bool ghost);
 void DrawRacecarWalls(Racecar* car, bool ghost);
 
 MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOCK_AMOUNT], BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS], RMInput input, DefaultEnviroment env);
+
+void ClearSkidLine(SkidLinePoint points[SKID_LINE_COUNT]);
+void AddSkidLinePoint(Racecar* car, SkidLinePoint points[SKID_LINE_COUNT]);
+void DrawSkidLine(SkidLinePoint points[SKID_LINE_COUNT], unsigned char model, Color color);
 
 #endif

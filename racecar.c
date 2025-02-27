@@ -193,7 +193,7 @@ CarStats DefaultStats(DefaultCar car)
 
 			break;
 		case(CAR_GRIP):
-			car_stats.size = (Vector2){12, 20};
+			car_stats.size = (Vector2){14, 23};
 			car_stats.camera_shake_threshold = 0.8;
 			car_stats.speed_to_shake_ratio = 0.125;
 			car_stats.shake_amplitude = 5.0;
@@ -941,5 +941,62 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 	MoveRacecar(car, block_walls);
 
 	return meta;
+}
+
+void ClearSkidLine(SkidLinePoint points[SKID_LINE_COUNT])
+{
+	for(int i = 0; i < SKID_LINE_COUNT; i++)
+	{
+		points[i] = (SkidLinePoint){0};
+	}
+}
+void AddSkidLinePoint(Racecar* car, SkidLinePoint points[SKID_LINE_COUNT])
+{
+	for(int i = 0; i < SKID_LINE_COUNT - 1; i++)
+	{
+		points[i] = points[i + 1];
+	}
+	bool draw = absf(Vector2Angle(car->velocity, car->rotation)) > PI * 0.02;
+	points[SKID_LINE_COUNT - 1] = (SkidLinePoint){draw, car->position, car->rotation};
+}
+void DrawSkidLine(SkidLinePoint points[SKID_LINE_COUNT], unsigned char model, Color color)
+{
+	Vector2 offsets[6] = {0};
+	Vector2 prev_off[6] = {0};
+	int off_count = 0;
+	switch(model)
+	{
+		case 0:
+			offsets[0] = (Vector2){14, 23};
+			offsets[1] = (Vector2){-14, 23};
+			offsets[2] = (Vector2){-14, -23};
+			offsets[3] = (Vector2){14, -23};
+			off_count = 4;
+			break;
+	}
+	for(int i = 0; i < off_count; i++)
+	{
+		prev_off[i] = (Vector2)
+		{
+			offsets[i].x * -points[0].rotation.y - offsets[i].y * points[0].rotation.x,
+			offsets[i].x * points[0].rotation.x - offsets[i].y * points[0].rotation.y
+		};
+	}
+	for(int i = 0; i < SKID_LINE_COUNT - 1; i++)
+	{
+		if(points[i].draw && points[i + 1].draw)
+		{
+			for(int j = 0; j < off_count; j++)
+			{
+				Vector2 offset = (Vector2)
+				{
+					offsets[j].x * -points[i + 1].rotation.y - offsets[j].y * points[i + 1].rotation.x,
+					offsets[j].x * points[i + 1].rotation.x - offsets[j].y * points[i + 1].rotation.y
+				};
+				DrawLineV(Vector2Add(points[i].position, prev_off[j]), Vector2Add(points[i + 1].position, offset), color);
+				prev_off[j] = offset;
+			}
+		}
+	}
 }
 

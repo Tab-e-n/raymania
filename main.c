@@ -396,6 +396,8 @@ int main(void)
 	car.position = Vector2Zero();
 	car.rotation = UP_VECTOR;
 
+	SkidLinePoint skid_line[SKID_LINE_COUNT] = {0};
+
 	unsigned int checkpoints_gotten = 0;
 	Vector2int checkpoints[MAX_CHECKPOINTS] = {0};
 	Vector2 check_pos = Vector2Zero();
@@ -1315,6 +1317,7 @@ int main(void)
 			CarSetVis(&car, profile, track.car);
 			CarSetVis(&dcar, profile, track.car);
 			MoveCameraInstant(&camera, car.position);
+			ClearSkidLine(skid_line);
 
 			dcheck_got = 0;
 			dcheck_pos = track.start_pos;
@@ -1548,6 +1551,7 @@ int main(void)
 			meta.checkpoint = false;
 			meta.finish = false;
 			meta = ProcessRacecar(&car, &car_stats, blocks, block_walls, input, track.env);
+			AddSkidLinePoint(&car, skid_line);
 
 			float speed_change = absf(previous_speed - Vector2Length(car.velocity));
 
@@ -1769,6 +1773,7 @@ int main(void)
 		{
 			ResetRacecar(&car, check_pos, check_rot, car_stats.size);
 			MoveCameraInstant(&camera, car.position);
+			ClearSkidLine(skid_line);
 		}
 
 		break;
@@ -2461,6 +2466,7 @@ int main(void)
 				{
 					DrawRacecar(&dcar, true);
 				}
+				DrawSkidLine(skid_line, car.model, rmc(RM_WHITE8));
 				DrawRacecar(&car, false);
 				if(DEBUG)
 				{
