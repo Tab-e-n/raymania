@@ -242,25 +242,167 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 	DrawText("< Exit", pos.x, pos.y, 32, text_color);
 }
 
-void CarSetVis(Racecar* car, Profile profile, DefaultCar type)
+void DrawOptionsCustomization(int car, int current, int max, int set)
+{
+	const Vector2 SIZE = (Vector2){768, 192};
+	const Vector2 HALF_SIZE = Vector2Scale(SIZE, 0.5);
+	const Vector2 POSITION = Vector2Subtract(SCREEN_CENTER, HALF_SIZE);
+
+	DrawRectangle(POSITION.x - 28, POSITION.y - 28, SIZE.x + 56, SIZE.y + 56, BLACK);
+	DrawRectangle(POSITION.x - 24, POSITION.y - 24, SIZE.x + 48, SIZE.y + 48, SKYBLUE);
+	DrawRectangle(POSITION.x, POSITION.y, SIZE.x - 512, SIZE.y, BLUE);
+	DrawRectangle(POSITION.x + 280, POSITION.y, SIZE.x - 280, SIZE.y, RAYWHITE);
+
+	Color text_color = BLACK;
+	Vector2 pos = (Vector2){0, 0};
+
+	for(int i = 0; i < 5; i++)
+	{
+		text_color = BLACK;
+		if(i == car)
+		{
+			text_color = RAYWHITE;
+		}
+		pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
+		if(i == 0)
+		{
+			DrawText("ROAD CAR", pos.x, pos.y, 32, text_color);
+		}
+		else if(i == 1)
+		{
+			DrawText("DRIFT CAR", pos.x, pos.y, 32, text_color);
+		}
+		else if(i == 2)
+		{
+			DrawText("GRIP CAR", pos.x, pos.y, 32, text_color);
+		}
+		else if(i == 3)
+		{
+			DrawText("TERRA CAR", pos.x, pos.y, 32, text_color);
+		}
+		else
+		{
+			DrawText("< Exit", pos.x, pos.y, 32, text_color);
+		}
+	}
+	if(car < 4)
+	{
+		pos = (Vector2){POSITION.x + 280, POSITION.y};
+		Vector2 pos_set = pos;
+		if(max <= 5 || current < 3)
+		{
+			pos.x += 96 * current;
+		}
+		else if(current + 2 >= max)
+		{
+			pos.x += 96 * (current - max + 5);
+			set = set - max + 5;
+		}
+		else
+		{
+			pos.x += 96 * 2;
+			set = set - current + 2;
+		}
+		if(set >= 0 && set < 5)
+		{
+			pos_set.x += 96 * set;
+			DrawRectangle(pos_set.x, pos_set.y, 96, SIZE.y, GREEN);
+		}
+		DrawLine(pos.x,      pos.y,          pos.x + 96, pos.y,          BLACK);
+		DrawLine(pos.x,      pos.y,          pos.x,      pos.y + SIZE.y, BLACK);
+		DrawLine(pos.x,      pos.y + SIZE.y, pos.x + 96, pos.y + SIZE.y, BLACK);
+		DrawLine(pos.x + 96, pos.y,          pos.x + 96, pos.y + SIZE.y, BLACK);
+	}
+}
+
+void DrawOptionsCars(int current, int max, unsigned char palette)
+{
+	const Vector2 HALF_SIZE = (Vector2){104, 96};
+	const Vector2 POSITION = Vector2Subtract(SCREEN_CENTER, HALF_SIZE);
+
+	int start = 0, end = 0;
+	if(max <= 5 || current < 3)
+	{
+		start = 0;
+		end = max > 5 ? 5 : max;
+	}
+	else if(current + 2 >= max)
+	{
+		start = max - 5;
+		end = max;
+	}
+	else
+	{
+		start = current - 2;
+		end = current + 3;
+	}
+
+	for(int i = start; i < end; i++)
+	{
+		Asset* asset = AllocRacecarAsset((unsigned char)i);
+		PaintAsset(asset, GetPalette(palette));
+		Vector2 pos = POSITION;
+		pos.x += 46 + 96 * (i - start);
+		pos.y += 96;
+		DrawAsset(asset, 1.5, pos);
+		FreeAsset(asset);
+	}
+}
+
+void DrawOptionsPalettes(int current, int max)
+{
+	const Vector2 HALF_SIZE = (Vector2){104, 96};
+	const Vector2 POSITION = Vector2Subtract(SCREEN_CENTER, HALF_SIZE);
+
+	int start = 0, end = 0;
+	if(max <= 5 || current < 3)
+	{
+		start = 0;
+		end = max > 5 ? 5 : max;
+	}
+	else if(current + 2 >= max)
+	{
+		start = max - 5;
+		end = max;
+	}
+	else
+	{
+		start = current - 2;
+		end = current + 3;
+	}
+
+	for(int i = start; i < end; i++)
+	{
+		Palette palette = GetPalette(i);
+		for(int j = 0; j < CAR_COLOR_AMOUNT; j++)
+		{
+			Vector2 pos = POSITION;
+			pos.x += 12 + 96 * (i - start) + 24 * (j % 3);
+			pos.y += 8 + 20 * (j / 3);
+			DrawRectangle(pos.x, pos.y, 24, 20, rmc(palette.colors[j]));
+		}
+	}
+}
+
+void CarSetVis(Racecar* car, Profile* profile, DefaultCar type)
 {
 	switch(type)
 	{
 		case CAR_ROAD:
-			car->palette = profile.car_road_palette;
-			car->model = profile.car_road_model;
+			car->palette = profile->car_road_palette;
+			car->model = profile->car_road_model;
 			break;
 		case CAR_DRIFT:
-			car->palette = profile.car_drift_palette;
-			car->model = profile.car_drift_model;
+			car->palette = profile->car_drift_palette;
+			car->model = profile->car_drift_model;
 			break;
 		case CAR_GRIP:
-			car->palette = profile.car_grip_palette;
-			car->model = profile.car_grip_model;
+			car->palette = profile->car_grip_palette;
+			car->model = profile->car_grip_model;
 			break;
 		case CAR_TERRAIN:
-			car->palette = profile.car_terrain_palette;
-			car->model = profile.car_terrain_model;
+			car->palette = profile->car_terrain_palette;
+			car->model = profile->car_terrain_model;
 			break;
 	}
 }
@@ -451,6 +593,8 @@ int main(void)
 	bool reset_options = false;
 	bool save_options = true;
 	bool back_to_opt = false;
+	unsigned char options_current_car = 0;
+	unsigned char options_customization = 0;
 
 	int options_current = 0;
 	int options_page = 0;
@@ -1314,8 +1458,8 @@ int main(void)
 			car_stats = DefaultStats(track.car);
 			ResetRacecar(&car, track.start_pos, track.start_rot, car_stats.size);
 			ResetRacecar(&dcar, track.start_pos, track.start_rot, car_stats.size);
-			CarSetVis(&car, profile, track.car);
-			CarSetVis(&dcar, profile, track.car);
+			CarSetVis(&car, &profile, track.car);
+			CarSetVis(&dcar, &profile, track.car);
 			MoveCameraInstant(&camera, car.position);
 			ClearSkidLine(skid_line);
 
@@ -1784,17 +1928,161 @@ int main(void)
 			options_current = 0;
 			options_max = 3;
 			options_page = 0;
+			options_current_car = 0;
+			options_customization = 0;
+		}
+		bool exit_options = false;
+		if(InputPressed(input, INPUT_ESC))
+		{
+			exit_options = true;
 		}
 
-		if(!entering_profile_name)
+		if(options_customization)
 		{
-			bool exit_options = false;
-
-			if(InputPressed(input, INPUT_ESC))
+			unsigned char hori_limit = 0;
+			if(options_customization == 1)
 			{
-				exit_options = true;
+				hori_limit = MODEL_AMOUNT;
 			}
-
+			else
+			{
+				hori_limit = PALETTE_AMOUNT;
+			}
+			bool reset_opt_curr = false;
+			if(InputHeld(menu_input, INPUT_DOWN))
+			{
+				if(options_current_car < 4)
+				{
+					options_current_car++;
+					reset_opt_curr = true;
+				}
+			}
+			if(InputHeld(menu_input, INPUT_UP))
+			{
+				if(options_current_car > 0)
+				{
+					options_current_car--;
+					reset_opt_curr = true;
+				}
+			}
+			if(reset_opt_curr)
+			{
+				if(options_customization == 1)
+				{
+					if(options_current_car == CAR_ROAD)
+					{
+						options_current = profile.car_road_model;
+					}
+					if(options_current_car == CAR_DRIFT)
+					{
+						options_current = profile.car_drift_model;
+					}
+					if(options_current_car == CAR_GRIP)
+					{
+						options_current = profile.car_grip_model;
+					}
+					if(options_current_car == CAR_TERRAIN)
+					{
+						options_current = profile.car_terrain_model;
+					}
+				}
+				else
+				{
+					if(options_current_car == CAR_ROAD)
+					{
+						options_current = profile.car_road_palette;
+					}
+					if(options_current_car == CAR_DRIFT)
+					{
+						options_current = profile.car_drift_palette;
+					}
+					if(options_current_car == CAR_GRIP)
+					{
+						options_current = profile.car_grip_palette;
+					}
+					if(options_current_car == CAR_TERRAIN)
+					{
+						options_current = profile.car_terrain_palette;
+					}
+				}
+			}
+			if(InputHeld(menu_input, INPUT_RIGHT))
+			{
+				if(options_current < hori_limit - 1)
+				{
+					options_current++;
+				}
+			}
+			if(InputHeld(menu_input, INPUT_LEFT))
+			{
+				if(options_current > 0)
+				{
+					options_current--;
+				}
+			}
+			if(InputPressed(input, INPUT_BACK))
+			{
+				if(options_current_car == 4)
+				{
+					options_customization = 0;
+					options_page = 1;
+					options_current = 0;
+				}
+				else
+				{
+					options_current_car = 4;
+				}
+			}
+			if(InputPressed(input, INPUT_ENTER))
+			{
+				if(options_current_car == 4)
+				{
+					options_customization = 0;
+					options_page = 1;
+					options_current = 0;
+				}
+				else if(options_customization == 1)
+				{
+					if(options_current_car == CAR_ROAD)
+					{
+						profile.car_road_model = options_current;
+					}
+					if(options_current_car == CAR_DRIFT)
+					{
+						profile.car_drift_model = options_current;
+					}
+					if(options_current_car == CAR_GRIP)
+					{
+						profile.car_grip_model = options_current;
+					}
+					if(options_current_car == CAR_TERRAIN)
+					{
+						profile.car_terrain_model = options_current;
+					}
+				}
+				else if(options_customization == 2)
+				{
+					if(options_current_car == CAR_ROAD)
+					{
+						profile.car_road_palette = options_current;
+					}
+					if(options_current_car == CAR_DRIFT)
+					{
+						profile.car_drift_palette = options_current;
+					}
+					if(options_current_car == CAR_GRIP)
+					{
+						profile.car_grip_palette = options_current;
+					}
+					if(options_current_car == CAR_TERRAIN)
+					{
+						profile.car_terrain_palette = options_current;
+					}
+				}
+			}
+		}
+		else if(!entering_profile_name)
+		{
 			switch(options_page)
 			{
 				case 4:
@@ -1876,6 +2164,25 @@ int main(void)
 					}
 				}
 			}
+			if(InputPressed(input, INPUT_BACK))
+			{
+				if(options_current == options_max)
+				{
+					if(options_page == 0)
+					{
+						exit_options = true;
+					}
+					else
+					{
+						options_page = 0;
+						options_current = 0;
+					}
+				}
+				else
+				{
+					options_current = options_max;
+				}
+			}
 			if(InputPressed(input, INPUT_ENTER))
 			{
 				if(options_current == options_max)
@@ -1929,11 +2236,15 @@ int main(void)
 					}
 					else if(options_current == 2)
 					{
-						// TODO: MODEL AND PALETTE SELECT
+						options_current_car = 0;
+						options_customization = 1;
+						options_current = 0;
 					}
 					else
 					{
-						// TODO: MODEL AND PALETTE SELECT
+						options_current_car = 0;
+						options_customization = 2;
+						options_current = 0;
 					}
 				}
 				else if(options_page == 2)
@@ -1963,16 +2274,15 @@ int main(void)
 					}
 				}
 			}
-
-			if(exit_options)
+		}
+		if(exit_options)
+		{
+			current_game_screen = MENU;
+			reset_menu = true;
+			if(save_options)
 			{
-				current_game_screen = MENU;
-				reset_menu = true;
-				if(save_options)
-				{
-					const char* fname = ProfileFilename(PROFILE_DIRECTORY, profile.name);
-					SaveProfile(&profile, fname);
-				}
+				const char* fname = ProfileFilename(PROFILE_DIRECTORY, profile.name);
+				SaveProfile(&profile, fname);
 			}
 		}
 		break;
@@ -2072,7 +2382,7 @@ int main(void)
 
 						if(!validating_track && !party_mode)
 						{
-							const char* filename = DemoFilename(DEMO_DIRECTORY, TrackFileName(track_dir,track_name), profile.name);
+							const char* filename = DemoFilename(DEMO_DIRECTORY, TrackFileName(track_dir, track_name), profile.name);
 							TraceLog(LOG_INFO, "validating %i", validating_track);
 							DemoSave* demosave = LoadDemo(filename);
 							if(demosave->result)
@@ -2865,7 +3175,45 @@ int main(void)
 			} break;
 			case OPTIONS:
 			{
-				DrawOptions(options_current, options_page, options_max, &profile);
+				if(options_customization)
+				{
+					unsigned char model = 0;
+					unsigned char palette = 0;
+					if(options_current_car == CAR_ROAD)
+					{
+						model = profile.car_road_model;
+						palette = profile.car_road_palette;
+					}
+					if(options_current_car == CAR_DRIFT)
+					{
+						model = profile.car_drift_model;
+						palette = profile.car_drift_palette;
+					}
+					if(options_current_car == CAR_GRIP)
+					{
+						model = profile.car_grip_model;
+						palette = profile.car_grip_palette;
+					}
+					if(options_current_car == CAR_TERRAIN)
+					{
+						model = profile.car_terrain_model;
+						palette = profile.car_terrain_palette;
+					}
+					if(options_customization == 1)
+					{
+						DrawOptionsCustomization(options_current_car, options_current, MODEL_AMOUNT, model);
+						if(options_current_car < 4) DrawOptionsCars(options_current, MODEL_AMOUNT, palette);
+					}
+					else
+					{
+						DrawOptionsCustomization(options_current_car, options_current, PALETTE_AMOUNT, palette);
+						if(options_current_car < 4) DrawOptionsPalettes(options_current, PALETTE_AMOUNT);
+					}
+				}
+				else
+				{
+					DrawOptions(options_current, options_page, options_max, &profile);
+				}
 			} break;
 		}
 

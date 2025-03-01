@@ -230,7 +230,7 @@ Palette GetPalette(unsigned char id)
 	// PALETTE DEFINITIONS
 	switch(id)
 	{
-		case 0:
+		case 0: // DEBUG GREYSCALE
 			palette.colors[CAR_WHEEL0] = RM_WHITE8;
 			palette.colors[CAR_WHEEL1] = RM_WHITE8;
 			palette.colors[CAR_WHEEL2] = RM_WHITE8;
@@ -257,7 +257,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA2] = RM_WHITE6;
 			palette.colors[CAR_EXTRA3] = RM_WHITE6;
 			break;
-		case 1:
+		case 1: // DEBUG YELLOW RED
 			palette.colors[CAR_WHEEL0] = RL_BLACK;
 			palette.colors[CAR_WHEEL1] = RL_GRAY2;
 			palette.colors[CAR_WHEEL2] = RL_BLACK;
@@ -284,7 +284,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA2] = RL_GRAY2;
 			palette.colors[CAR_EXTRA3] = RL_MAGENTA;
 			break;
-		case 2:
+		case 2: // DEBUG GREEN PURPLE
 			palette.colors[CAR_WHEEL0] = RL_BLACK;
 			palette.colors[CAR_WHEEL1] = RL_GRAY2;
 			palette.colors[CAR_WHEEL2] = RL_BLACK;
@@ -311,7 +311,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA2] = RL_GRAY2;
 			palette.colors[CAR_EXTRA3] = RL_GREEN0;
 			break;
-		case 3:
+		case 3: // DEBUG BLUE BROWN
 			palette.colors[CAR_WHEEL0] = RL_BLACK;
 			palette.colors[CAR_WHEEL1] = RL_GRAY2;
 			palette.colors[CAR_WHEEL2] = RL_BLACK;
@@ -337,6 +337,226 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA1] = RL_GRAY1;
 			palette.colors[CAR_EXTRA2] = RL_GRAY2;
 			palette.colors[CAR_EXTRA3] = RL_YELLOW0;
+			break;
+		case 4: // ASSIST (TEAL & CYAN)
+			palette.colors[CAR_WHEEL0] = RM_WHITE8;
+			palette.colors[CAR_WHEEL1] = RM_CYAN6;
+			palette.colors[CAR_WHEEL2] = RM_WHITE8;
+			palette.colors[CAR_BASE0] = RM_CYAN3;
+			palette.colors[CAR_BASE1] = RM_CYAN4;
+			palette.colors[CAR_BASE2] = RM_CYAN5;
+			palette.colors[CAR_ACCENT0] = RM_TEAL2;
+			palette.colors[CAR_ACCENT1] = RM_TEAL3;
+			palette.colors[CAR_ACCENT2] = RM_TEAL4;
+			palette.colors[CAR_DRIVER] = RM_LIME3;
+			palette.colors[CAR_SEAT] = RM_CYAN6;
+			palette.colors[CAR_HULL] = RM_WHITE8;
+			palette.colors[CAR_WINDOW0] = RM_CYAN6;
+			palette.colors[CAR_WINDOW1] = RM_CYAN6;
+			palette.colors[CAR_WINDOW2] = RM_CYAN6;
+			palette.colors[CAR_LIGHT_FRONT] = RM_TEAL0;
+			palette.colors[CAR_LIGHT_BACK] = RM_TEAL0;
+			palette.colors[CAR_LIGHT_OTHER] = RM_TEAL0;
+			palette.colors[CAR_NUMPLATE_BASE] = RM_WHITE1;
+			palette.colors[CAR_NUMPLATE_TEXT0] = RM_WHITE8;
+			palette.colors[CAR_NUMPLATE_TEXT1] = RM_CYAN3;
+			palette.colors[CAR_EXTRA0] = RM_WHITE2;
+			palette.colors[CAR_EXTRA1] = RM_WHITE3;
+			palette.colors[CAR_EXTRA2] = RM_WHITE4;
+			palette.colors[CAR_EXTRA3] = RM_LIME3;
+			break;
+		case 5: // HALLOWEEN (PURPLE & ORANGE)
+			palette.colors[CAR_WHEEL0] = RM_WHITE8;
+			palette.colors[CAR_WHEEL1] = RM_PURPLE6;
+			palette.colors[CAR_WHEEL2] = RM_WHITE8;
+			palette.colors[CAR_BASE0] = RM_PURPLE2;
+			palette.colors[CAR_BASE1] = RM_PURPLE3;
+			palette.colors[CAR_BASE2] = RM_PURPLE4;
+			palette.colors[CAR_ACCENT0] = RM_ORANGE2;
+			palette.colors[CAR_ACCENT1] = RM_ORANGE3;
+			palette.colors[CAR_ACCENT2] = RM_ORANGE4;
+			palette.colors[CAR_DRIVER] = RM_ORANGE3;
+			palette.colors[CAR_SEAT] = RM_PURPLE6;
+			palette.colors[CAR_HULL] = RM_WHITE8;
+			palette.colors[CAR_WINDOW0] = RM_PURPLE6;
+			palette.colors[CAR_WINDOW1] = RM_PURPLE6;
+			palette.colors[CAR_WINDOW2] = RM_PURPLE6;
+			palette.colors[CAR_LIGHT_FRONT] = RM_ORANGE0;
+			palette.colors[CAR_LIGHT_BACK] = RM_ORANGE0;
+			palette.colors[CAR_LIGHT_OTHER] = RM_ORANGE0;
+			palette.colors[CAR_NUMPLATE_BASE] = RM_WHITE1;
+			palette.colors[CAR_NUMPLATE_TEXT0] = RM_WHITE8;
+			palette.colors[CAR_NUMPLATE_TEXT1] = RM_ORANGE3;
+			palette.colors[CAR_EXTRA0] = RM_WHITE2;
+			palette.colors[CAR_EXTRA1] = RM_WHITE3;
+			palette.colors[CAR_EXTRA2] = RM_WHITE4;
+			palette.colors[CAR_EXTRA3] = RM_ORANGE3;
+			break;
+		case 6: // PINKY (PINK & MAGENTA)
+			palette.colors[CAR_WHEEL0] = RM_WHITE8;
+			palette.colors[CAR_WHEEL1] = RM_MAGENTA6;
+			palette.colors[CAR_WHEEL2] = RM_WHITE8;
+			palette.colors[CAR_BASE0] = RM_MAGENTA2;
+			palette.colors[CAR_BASE1] = RM_MAGENTA3;
+			palette.colors[CAR_BASE2] = RM_MAGENTA4;
+			palette.colors[CAR_ACCENT0] = RM_PINK2;
+			palette.colors[CAR_ACCENT1] = RM_PINK3;
+			palette.colors[CAR_ACCENT2] = RM_PINK4;
+			palette.colors[CAR_DRIVER] = RM_RED3;
+			palette.colors[CAR_SEAT] = RM_MAGENTA6;
+			palette.colors[CAR_HULL] = RM_WHITE8;
+			palette.colors[CAR_WINDOW0] = RM_MAGENTA6;
+			palette.colors[CAR_WINDOW1] = RM_MAGENTA6;
+			palette.colors[CAR_WINDOW2] = RM_MAGENTA6;
+			palette.colors[CAR_LIGHT_FRONT] = RM_PINK0;
+			palette.colors[CAR_LIGHT_BACK] = RM_PINK0;
+			palette.colors[CAR_LIGHT_OTHER] = RM_PINK0;
+			palette.colors[CAR_NUMPLATE_BASE] = RM_WHITE1;
+			palette.colors[CAR_NUMPLATE_TEXT0] = RM_WHITE8;
+			palette.colors[CAR_NUMPLATE_TEXT1] = RM_RED3;
+			palette.colors[CAR_EXTRA0] = RM_WHITE2;
+			palette.colors[CAR_EXTRA1] = RM_WHITE3;
+			palette.colors[CAR_EXTRA2] = RM_WHITE4;
+			palette.colors[CAR_EXTRA3] = RM_RED3;
+			break;
+		case 7: // SALMON (RED & NAVY)
+			palette.colors[CAR_WHEEL0] = RM_WHITE8;
+			palette.colors[CAR_WHEEL1] = RM_NAVY6;
+			palette.colors[CAR_WHEEL2] = RM_WHITE8;
+			palette.colors[CAR_BASE0] = RM_NAVY4;
+			palette.colors[CAR_BASE1] = RM_NAVY5;
+			palette.colors[CAR_BASE2] = RM_NAVY6;
+			palette.colors[CAR_ACCENT0] = RM_RED2;
+			palette.colors[CAR_ACCENT1] = RM_RED3;
+			palette.colors[CAR_ACCENT2] = RM_RED4;
+			palette.colors[CAR_DRIVER] = RM_RED1;
+			palette.colors[CAR_SEAT] = RM_NAVY6;
+			palette.colors[CAR_HULL] = RM_WHITE8;
+			palette.colors[CAR_WINDOW0] = RM_NAVY6;
+			palette.colors[CAR_WINDOW1] = RM_NAVY6;
+			palette.colors[CAR_WINDOW2] = RM_NAVY6;
+			palette.colors[CAR_LIGHT_FRONT] = RM_RED0;
+			palette.colors[CAR_LIGHT_BACK] = RM_RED0;
+			palette.colors[CAR_LIGHT_OTHER] = RM_RED0;
+			palette.colors[CAR_NUMPLATE_BASE] = RM_WHITE1;
+			palette.colors[CAR_NUMPLATE_TEXT0] = RM_WHITE8;
+			palette.colors[CAR_NUMPLATE_TEXT1] = RM_NAVY3;
+			palette.colors[CAR_EXTRA0] = RM_WHITE2;
+			palette.colors[CAR_EXTRA1] = RM_WHITE3;
+			palette.colors[CAR_EXTRA2] = RM_WHITE4;
+			palette.colors[CAR_EXTRA3] = RM_RED3;
+			break;
+		case 8: // GRASS (GREEN & LIME)
+			palette.colors[CAR_WHEEL0] = RM_WHITE8;
+			palette.colors[CAR_WHEEL1] = RM_GREEN6;
+			palette.colors[CAR_WHEEL2] = RM_WHITE8;
+			palette.colors[CAR_BASE0] = RM_GREEN2;
+			palette.colors[CAR_BASE1] = RM_GREEN3;
+			palette.colors[CAR_BASE2] = RM_GREEN4;
+			palette.colors[CAR_ACCENT0] = RM_LIME2;
+			palette.colors[CAR_ACCENT1] = RM_LIME3;
+			palette.colors[CAR_ACCENT2] = RM_LIME4;
+			palette.colors[CAR_DRIVER] = RM_LIME5;
+			palette.colors[CAR_SEAT] = RM_GREEN6;
+			palette.colors[CAR_HULL] = RM_WHITE8;
+			palette.colors[CAR_WINDOW0] = RM_GREEN6;
+			palette.colors[CAR_WINDOW1] = RM_GREEN6;
+			palette.colors[CAR_WINDOW2] = RM_GREEN6;
+			palette.colors[CAR_LIGHT_FRONT] = RM_LIME0;
+			palette.colors[CAR_LIGHT_BACK] = RM_LIME0;
+			palette.colors[CAR_LIGHT_OTHER] = RM_LIME0;
+			palette.colors[CAR_NUMPLATE_BASE] = RM_WHITE1;
+			palette.colors[CAR_NUMPLATE_TEXT0] = RM_WHITE8;
+			palette.colors[CAR_NUMPLATE_TEXT1] = RM_LIME3;
+			palette.colors[CAR_EXTRA0] = RM_WHITE2;
+			palette.colors[CAR_EXTRA1] = RM_WHITE3;
+			palette.colors[CAR_EXTRA2] = RM_WHITE4;
+			palette.colors[CAR_EXTRA3] = RM_LIME5;
+			break;
+		case 9: // SUNSHINE (YELLOW & BLUE)
+			palette.colors[CAR_WHEEL0] = RM_WHITE8;
+			palette.colors[CAR_WHEEL1] = RM_BLUE6;
+			palette.colors[CAR_WHEEL2] = RM_WHITE8;
+			palette.colors[CAR_BASE0] = RM_YELLOW2;
+			palette.colors[CAR_BASE1] = RM_YELLOW3;
+			palette.colors[CAR_BASE2] = RM_YELLOW4;
+			palette.colors[CAR_ACCENT0] = RM_BLUE2;
+			palette.colors[CAR_ACCENT1] = RM_BLUE3;
+			palette.colors[CAR_ACCENT2] = RM_BLUE4;
+			palette.colors[CAR_DRIVER] = RM_WHITE2;
+			palette.colors[CAR_SEAT] = RM_BLUE6;
+			palette.colors[CAR_HULL] = RM_WHITE8;
+			palette.colors[CAR_WINDOW0] = RM_BLUE6;
+			palette.colors[CAR_WINDOW1] = RM_BLUE6;
+			palette.colors[CAR_WINDOW2] = RM_BLUE6;
+			palette.colors[CAR_LIGHT_FRONT] = RM_YELLOW0;
+			palette.colors[CAR_LIGHT_BACK] = RM_YELLOW0;
+			palette.colors[CAR_LIGHT_OTHER] = RM_YELLOW0;
+			palette.colors[CAR_NUMPLATE_BASE] = RM_WHITE1;
+			palette.colors[CAR_NUMPLATE_TEXT0] = RM_WHITE8;
+			palette.colors[CAR_NUMPLATE_TEXT1] = RM_WHITE4;
+			palette.colors[CAR_EXTRA0] = RM_WHITE2;
+			palette.colors[CAR_EXTRA1] = RM_WHITE3;
+			palette.colors[CAR_EXTRA2] = RM_WHITE4;
+			palette.colors[CAR_EXTRA3] = RM_RED3;
+			break;
+		default:
+			if(id & 1)
+			{
+				palette.colors[CAR_WHEEL0] = RM_WHITE8;
+				palette.colors[CAR_WHEEL1] = RM_WHITE8;
+				palette.colors[CAR_WHEEL2] = RM_WHITE8;
+				palette.colors[CAR_BASE0] = RM_WHITE4;
+				palette.colors[CAR_BASE1] = RM_WHITE4;
+				palette.colors[CAR_BASE2] = RM_WHITE4;
+				palette.colors[CAR_ACCENT0] = RM_WHITE2;
+				palette.colors[CAR_ACCENT1] = RM_WHITE2;
+				palette.colors[CAR_ACCENT2] = RM_WHITE2;
+				palette.colors[CAR_DRIVER] = RM_WHITE3;
+				palette.colors[CAR_SEAT] = RM_WHITE7;
+				palette.colors[CAR_HULL] = RM_WHITE8;
+				palette.colors[CAR_WINDOW0] = RM_WHITE8;
+				palette.colors[CAR_WINDOW1] = RM_WHITE8;
+				palette.colors[CAR_WINDOW2] = RM_WHITE8;
+				palette.colors[CAR_LIGHT_FRONT] = RM_WHITE0;
+				palette.colors[CAR_LIGHT_BACK] = RM_WHITE1;
+				palette.colors[CAR_LIGHT_OTHER] = RM_WHITE0;
+				palette.colors[CAR_NUMPLATE_BASE] = RM_WHITE1;
+				palette.colors[CAR_NUMPLATE_TEXT0] = RM_WHITE8;
+				palette.colors[CAR_NUMPLATE_TEXT1] = RM_WHITE8;
+				palette.colors[CAR_EXTRA0] = RM_WHITE5;
+				palette.colors[CAR_EXTRA1] = RM_WHITE5;
+				palette.colors[CAR_EXTRA2] = RM_WHITE6;
+				palette.colors[CAR_EXTRA3] = RM_WHITE6;
+			}
+			else
+			{
+				palette.colors[CAR_WHEEL0] = RM_WHITE0;
+				palette.colors[CAR_WHEEL1] = RM_WHITE0;
+				palette.colors[CAR_WHEEL2] = RM_WHITE0;
+				palette.colors[CAR_BASE0] = RM_WHITE4;
+				palette.colors[CAR_BASE1] = RM_WHITE4;
+				palette.colors[CAR_BASE2] = RM_WHITE4;
+				palette.colors[CAR_ACCENT0] = RM_WHITE6;
+				palette.colors[CAR_ACCENT1] = RM_WHITE6;
+				palette.colors[CAR_ACCENT2] = RM_WHITE6;
+				palette.colors[CAR_DRIVER] = RM_WHITE5;
+				palette.colors[CAR_SEAT] = RM_WHITE1;
+				palette.colors[CAR_HULL] = RM_WHITE0;
+				palette.colors[CAR_WINDOW0] = RM_WHITE0;
+				palette.colors[CAR_WINDOW1] = RM_WHITE0;
+				palette.colors[CAR_WINDOW2] = RM_WHITE0;
+				palette.colors[CAR_LIGHT_FRONT] = RM_WHITE8;
+				palette.colors[CAR_LIGHT_BACK] = RM_WHITE7;
+				palette.colors[CAR_LIGHT_OTHER] = RM_WHITE8;
+				palette.colors[CAR_NUMPLATE_BASE] = RM_WHITE7;
+				palette.colors[CAR_NUMPLATE_TEXT0] = RM_WHITE0;
+				palette.colors[CAR_NUMPLATE_TEXT1] = RM_WHITE0;
+				palette.colors[CAR_EXTRA0] = RM_WHITE3;
+				palette.colors[CAR_EXTRA1] = RM_WHITE3;
+				palette.colors[CAR_EXTRA2] = RM_WHITE2;
+				palette.colors[CAR_EXTRA3] = RM_WHITE2;
+			}
 			break;
 	}
 	return palette;

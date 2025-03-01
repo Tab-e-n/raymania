@@ -9,7 +9,7 @@ int GetModelID(unsigned char model)
 {
 	switch(model)
 	{
-		case 0:
+		default:
 			return DRACECAR;
 	}
 	return DRACECAR;
@@ -709,6 +709,11 @@ Vector2int RacecarPlacement(Racecar* car)
 	return PositionToPlacement(car->position);
 }
 
+Asset* AllocRacecarAsset(unsigned char model)
+{
+	return AllocAsset(GetModelID(model), ROT_NORTH, 0.0);
+}
+
 Tri RotateTriCar(Tri tri, Vector2 rotation)
 {
 	Tri result = (Tri){0};
@@ -722,7 +727,7 @@ Tri RotateTriCar(Tri tri, Vector2 rotation)
 void DrawRacecar(Racecar* car, bool ghost)
 {
 	//TraceLog(LOG_INFO, "Rotation: %f, %f", car->rotation.x, car->rotation.y);
-	Asset* asset = AllocAsset(GetModelID(car->model), ROT_NORTH, 0.0);
+	Asset* asset = AllocRacecarAsset(car->model);
 	for(int i = 0; i < asset->tri_amount; i++)
 	{
 		asset->tris[i] = RotateTriCar(asset->tris[i], car->rotation);
@@ -950,6 +955,7 @@ void ClearSkidLine(SkidLinePoint points[SKID_LINE_COUNT])
 		points[i] = (SkidLinePoint){0};
 	}
 }
+
 void AddSkidLinePoint(Racecar* car, SkidLinePoint points[SKID_LINE_COUNT])
 {
 	for(int i = 0; i < SKID_LINE_COUNT - 1; i++)
@@ -959,6 +965,7 @@ void AddSkidLinePoint(Racecar* car, SkidLinePoint points[SKID_LINE_COUNT])
 	bool draw = absf(Vector2Angle(car->velocity, car->rotation)) > PI * 0.02;
 	points[SKID_LINE_COUNT - 1] = (SkidLinePoint){draw, car->position, car->rotation};
 }
+
 void DrawSkidLine(SkidLinePoint points[SKID_LINE_COUNT], unsigned char model, Color color)
 {
 	Vector2 offsets[6] = {0};

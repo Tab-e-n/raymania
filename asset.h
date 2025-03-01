@@ -6,6 +6,8 @@
 #include "rmlib.h"
 
 #define ASSET_AMOUNT 64
+#define PALETTE_AMOUNT 10 
+#define MODEL_AMOUNT 1
 
 
 typedef enum RacecarColors {

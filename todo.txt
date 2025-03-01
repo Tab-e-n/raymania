@@ -30,6 +30,7 @@ Block Visuals (Only the ones near you render)
 Options Gameplay
 Options Audio
 Options Changing Profiles
+Options Models and Palettes
 My Logo On Startup (Whatever That Is)
 Big blocks prevent other blocks from being placed
 Racecar Visuals + Colorswaps
@@ -41,17 +42,17 @@ Track Showcase before starting (From start through cp to finish, also shows meda
 Skid Lines
 
 IN PROGRESS
-Start draws a racecar in editor
+Fix track name sometimes having characters from previous names
 Speedometer or something with gears
-Options Models and Palettes
 Actual Blocks
-
-NOT DONE
 Audio omg
 Enviroment Visuals
+Arrow that points to the start in editor.
+
+NOT DONE
+Start draws a racecar in editor
 Different zoom for different cars?
 Deleting bigger size blocks when not at their origin (might be too slow with current track structure)
-Arrow that points to the start in editor.
 
 Standartized menus
 Removing Tracks, Profiles and Replays
