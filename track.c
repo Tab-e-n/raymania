@@ -467,6 +467,7 @@ const char* TrackFileName(unsigned char* track_dir, unsigned char name[TRACK_NAM
 
 void TrackNameFromFilename(const char* filename, unsigned char name[TRACK_NAME_LENGHT])
 {
+	ClearString(name, TRACK_NAME_LENGHT);
 	TraceLog(LOG_INFO, "|%s|", filename);
 	unsigned int len = TextFindLastChar(filename, '/') + 1;
 	if(TextLength(filename) - len < 4)

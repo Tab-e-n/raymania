@@ -42,7 +42,6 @@ Track Showcase before starting (From start through cp to finish, also shows meda
 Skid Lines
 
 IN PROGRESS
-Fix track name sometimes having characters from previous names
 Speedometer or something with gears
 Actual Blocks
 Audio omg

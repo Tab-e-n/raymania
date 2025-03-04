@@ -69,6 +69,9 @@ int sign(float x);
 float absf(float x);
 float min(float x, float y);
 float max(float x, float y);
+
+void ClearString(char* string, unsigned int n);
+
 float AirQuotesNoise(float point, bool flipped);
 
 Vector2 Vector2Sign(Vector2 vector);

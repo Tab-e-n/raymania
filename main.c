@@ -755,10 +755,7 @@ int main(void)
 					entering_profile_name = true;
 					inputing_name = 1;
 					name_lenght = PROFILE_NAME_LENGHT - 1;
-					for(int i = 0; i < PROFILE_NAME_LENGHT; i++)
-					{
-						profile_name[i] = 0;
-					}
+					ClearString(profile_name, PROFILE_NAME_LENGHT);
 				}
 				else
 				{
@@ -1368,10 +1365,7 @@ int main(void)
 							saving_track = true;
 							inputing_name = 1;
 							name_lenght = TRACK_NAME_LENGHT - 1;
-							for(int i = 0; i < TRACK_NAME_LENGHT; i++)
-							{
-								track_name[i] = 0;
-							}
+							ClearString(track_name, TRACK_NAME_LENGHT);
 							break;
 						case(EDITOR_CLEAR):
 							popup = POPUP_EDITOR_CLEAR;
@@ -2712,7 +2706,8 @@ int main(void)
 		}
 		if(track.env == ENV_ISLAND)
 		{
-			ClearBackground(BLUE);
+			DrawBackgroundWater(camera.data.target, camera.data.zoom, game_time);
+			//ClearBackground(BLUE);
 		}
 
 		// Gamespace

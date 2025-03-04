@@ -48,6 +48,11 @@ float max(float x, float y)
 	return (x > y ? x : y);
 }
 
+void ClearString(char* string, unsigned int size)
+{
+	for(int i = 0; i < size; i++) string[i] = 0;
+}
+
 float AirQuotesNoise(float point, bool flipped)
 {
 	float noise[40] = {
@@ -203,7 +208,6 @@ unsigned int TextFindLastChar(const char* text, unsigned char ch)
 
 Color rmc(char i)
 {
-	// TODO: Replace with custom colors
 	switch(i)
 	{
 		case(0):
