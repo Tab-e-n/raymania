@@ -847,7 +847,7 @@ void DrawAssetPixels(Asset* asset, float scale, Vector2 position, Color color)
 
 Color WaterColor(Vector2 pos, double game_time, Color wave, Color water)
 {
-	float color_step = AirQuotesNoise(pos.x * 0.005 + game_time * 0.3, false) + pos.x * 0.001 - pos.y * 0.003 + game_time * 0.25;
+	float color_step = AirQuotesNoise(pos.x * 0.005 + pos.y * 0.001 + game_time * 0.3, false) + pos.x * 0.001 - pos.y * 0.003 + game_time * 0.25;
 	color_step = Wrap(color_step, 0.0, 2.0);
 	if(color_step > 1.0)
 	{
@@ -864,34 +864,44 @@ Color WaterColor(Vector2 pos, double game_time, Color wave, Color water)
 void DrawBackgroundWater(Vector2 position, float scale, double game_time)
 {
 	Vector2 offset = (Vector2){Wrap(position.x, 0, 64), Wrap(position.y, 0, 128)};
-	Vector2 points = (Vector2){17 / scale + 3, 11 / scale + 6};
-	for(int y = 0; y < points.y; y++)
+	Vector2 points = (Vector2){17 / scale * .5 + 2, 11 / scale * .5 + 2};
+	for(int y = -points.y; y < points.y; y++)
 	{
-		for(int x = 0; x < points.x; x++)
+		for(int x = -points.x; x < points.x; x++)
 		{
-			Vector2 pos_a = (Vector2){x * 64 - 64, y * 64 - 128};
+			Vector2 pos_a = (Vector2){x * 64, y * 64 + 64};
 			if(y & 1)
 			{
 				pos_a.x += 32;
 			}
 			pos_a = Vector2Subtract(pos_a, offset);
+
 			Vector2 pos_b = pos_a;
 			pos_b.x += 64;
 			Vector2 pos_c_top = pos_a;
 			pos_c_top.x += 32;
-			pos_c_top.y += 64;
+			pos_c_top.y -= 64;
 			Vector2 pos_c_bot = pos_a;
 			pos_c_bot.x += 32;
-			pos_c_bot.y -= 64;
+			pos_c_bot.y += 64;
 
 			Color color_top = WaterColor(Vector2Add(pos_a, position), game_time, rmc(RM_TEAL0), rmc(RM_BLUE2));
 			Color color_bot = WaterColor(Vector2Add(pos_b, position), game_time, rmc(RM_TEAL0), rmc(RM_BLUE2));
+
 			pos_a = Vector2Scale(pos_a, scale);
+			pos_a = Vector2Add(pos_a, SCREEN_CENTER);
+
 			pos_b = Vector2Scale(pos_b, scale);
+			pos_b = Vector2Add(pos_b, SCREEN_CENTER);
+
 			pos_c_top = Vector2Scale(pos_c_top, scale);
+			pos_c_top = Vector2Add(pos_c_top, SCREEN_CENTER);
+
 			pos_c_bot = Vector2Scale(pos_c_bot, scale);
-			DrawTriangle(pos_a, pos_c_top, pos_b, color_top);
-			DrawTriangle(pos_a, pos_b, pos_c_bot, color_bot);
+			pos_c_bot = Vector2Add(pos_c_bot, SCREEN_CENTER);
+
+			DrawTriangle(pos_a, pos_b, pos_c_top, color_top);
+			DrawTriangle(pos_a, pos_c_bot, pos_b, color_bot);
 			//DrawPixel(pos_a.x, pos_a.y, BLACK);
 		}
 	}
