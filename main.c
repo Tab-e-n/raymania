@@ -3075,6 +3075,33 @@ int main(void)
 				else if(!race_showcase)
 				{
 					DrawText(TextFormat("%.3f", timer), 8, 572, 64, BLACK);
+					float speed = Vector2Length(car.velocity) * 100;
+					Color color = BLACK;
+					if(car.gear_shift > 0.0)
+					{
+						color = BLACK;
+					}
+					else if(car.gear == 0)
+					{
+						color = DARKPURPLE;
+					}
+					else if(car.gear == 1)
+					{
+						color = DARKBLUE;
+					}
+					else if(car.gear == 2)
+					{
+						color = DARKGREEN;
+					}
+					else if(car.gear == 3)
+					{
+						color = RED;
+					}
+					else if(car.gear == 4)
+					{
+						color = GOLD;
+					}
+					DrawText(TextFormat("%.0f", speed), 480, 572, 48, color);
 					if(track.checkpoint_amount > 0)
 					{
 						DrawText(TextFormat("%i/%i", checkpoints_gotten, track.checkpoint_amount), 896, 576, 64, BLUE);

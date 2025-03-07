@@ -40,9 +40,9 @@ Other Racecars
 Blockmixing Overlaping blocks count on current tile
 Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
 Skid Lines
+Speedometer or something with gears
 
 IN PROGRESS
-Speedometer or something with gears
 Actual Blocks
 Audio omg
 Enviroment Visuals
