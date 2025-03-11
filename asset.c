@@ -255,7 +255,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA0] = RM_WHITE5;
 			palette.colors[CAR_EXTRA1] = RM_WHITE5;
 			palette.colors[CAR_EXTRA2] = RM_WHITE6;
-			palette.colors[CAR_EXTRA3] = RM_WHITE6;
+			palette.colors[CAR_TRAIL] = RM_WHITE6;
 			break;
 		case 1: // DEBUG YELLOW RED
 			palette.colors[CAR_WHEEL0] = RL_BLACK;
@@ -282,7 +282,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA0] = RL_GRAY0;
 			palette.colors[CAR_EXTRA1] = RL_GRAY1;
 			palette.colors[CAR_EXTRA2] = RL_GRAY2;
-			palette.colors[CAR_EXTRA3] = RL_MAGENTA;
+			palette.colors[CAR_TRAIL] = RL_MAGENTA;
 			break;
 		case 2: // DEBUG GREEN PURPLE
 			palette.colors[CAR_WHEEL0] = RL_BLACK;
@@ -309,7 +309,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA0] = RL_GRAY0;
 			palette.colors[CAR_EXTRA1] = RL_GRAY1;
 			palette.colors[CAR_EXTRA2] = RL_GRAY2;
-			palette.colors[CAR_EXTRA3] = RL_GREEN0;
+			palette.colors[CAR_TRAIL] = RL_GREEN0;
 			break;
 		case 3: // DEBUG BLUE BROWN
 			palette.colors[CAR_WHEEL0] = RL_BLACK;
@@ -336,7 +336,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA0] = RL_GRAY0;
 			palette.colors[CAR_EXTRA1] = RL_GRAY1;
 			palette.colors[CAR_EXTRA2] = RL_GRAY2;
-			palette.colors[CAR_EXTRA3] = RL_YELLOW0;
+			palette.colors[CAR_TRAIL] = RL_YELLOW0;
 			break;
 		case 4: // ASSIST (TEAL & CYAN)
 			palette.colors[CAR_WHEEL0] = RM_WHITE8;
@@ -363,7 +363,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA0] = RM_WHITE2;
 			palette.colors[CAR_EXTRA1] = RM_WHITE3;
 			palette.colors[CAR_EXTRA2] = RM_WHITE4;
-			palette.colors[CAR_EXTRA3] = RM_LIME3;
+			palette.colors[CAR_TRAIL] = RM_LIME3;
 			break;
 		case 5: // HALLOWEEN (PURPLE & ORANGE)
 			palette.colors[CAR_WHEEL0] = RM_WHITE8;
@@ -390,7 +390,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA0] = RM_WHITE2;
 			palette.colors[CAR_EXTRA1] = RM_WHITE3;
 			palette.colors[CAR_EXTRA2] = RM_WHITE4;
-			palette.colors[CAR_EXTRA3] = RM_ORANGE3;
+			palette.colors[CAR_TRAIL] = RM_ORANGE3;
 			break;
 		case 6: // PINKY (PINK & MAGENTA)
 			palette.colors[CAR_WHEEL0] = RM_WHITE8;
@@ -417,7 +417,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA0] = RM_WHITE2;
 			palette.colors[CAR_EXTRA1] = RM_WHITE3;
 			palette.colors[CAR_EXTRA2] = RM_WHITE4;
-			palette.colors[CAR_EXTRA3] = RM_RED3;
+			palette.colors[CAR_TRAIL] = RM_RED3;
 			break;
 		case 7: // SALMON (RED & NAVY)
 			palette.colors[CAR_WHEEL0] = RM_WHITE8;
@@ -444,7 +444,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA0] = RM_WHITE2;
 			palette.colors[CAR_EXTRA1] = RM_WHITE3;
 			palette.colors[CAR_EXTRA2] = RM_WHITE4;
-			palette.colors[CAR_EXTRA3] = RM_RED3;
+			palette.colors[CAR_TRAIL] = RM_RED3;
 			break;
 		case 8: // GRASS (GREEN & LIME)
 			palette.colors[CAR_WHEEL0] = RM_WHITE8;
@@ -471,7 +471,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA0] = RM_WHITE2;
 			palette.colors[CAR_EXTRA1] = RM_WHITE3;
 			palette.colors[CAR_EXTRA2] = RM_WHITE4;
-			palette.colors[CAR_EXTRA3] = RM_LIME5;
+			palette.colors[CAR_TRAIL] = RM_LIME5;
 			break;
 		case 9: // SUNSHINE (YELLOW & BLUE)
 			palette.colors[CAR_WHEEL0] = RM_WHITE8;
@@ -498,7 +498,7 @@ Palette GetPalette(unsigned char id)
 			palette.colors[CAR_EXTRA0] = RM_WHITE2;
 			palette.colors[CAR_EXTRA1] = RM_WHITE3;
 			palette.colors[CAR_EXTRA2] = RM_WHITE4;
-			palette.colors[CAR_EXTRA3] = RM_RED3;
+			palette.colors[CAR_TRAIL] = RM_RED3;
 			break;
 		default:
 			if(id & 1)
@@ -527,7 +527,7 @@ Palette GetPalette(unsigned char id)
 				palette.colors[CAR_EXTRA0] = RM_WHITE5;
 				palette.colors[CAR_EXTRA1] = RM_WHITE5;
 				palette.colors[CAR_EXTRA2] = RM_WHITE6;
-				palette.colors[CAR_EXTRA3] = RM_WHITE6;
+				palette.colors[CAR_TRAIL] = RM_WHITE6;
 			}
 			else
 			{
@@ -555,7 +555,7 @@ Palette GetPalette(unsigned char id)
 				palette.colors[CAR_EXTRA0] = RM_WHITE3;
 				palette.colors[CAR_EXTRA1] = RM_WHITE3;
 				palette.colors[CAR_EXTRA2] = RM_WHITE2;
-				palette.colors[CAR_EXTRA3] = RM_WHITE2;
+				palette.colors[CAR_TRAIL] = RM_WHITE2;
 			}
 			break;
 	}
