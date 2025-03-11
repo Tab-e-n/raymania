@@ -10,5 +10,6 @@ files=$files" track.c"
 files=$files" profiles.c"
 files=$files" demos.c"
 files=$files" asset.c"
+files=$files" ui.c"
 
 gcc -o $output $files -lraylib

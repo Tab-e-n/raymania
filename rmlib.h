@@ -18,8 +18,6 @@
 #define INPUT_BLOCK 0.05
 #define INPUT_BLOCK_START 0.4
 
-#define FILE_LIST_PAGE_ITEMS 11
-
 #define BLOCK_SIZE 256
 #define INV_BLOCK_SIZE 1/BLOCK_SIZE
 #define BU 0.125*BLOCK_SIZE
@@ -91,10 +89,5 @@ void DrawUnitVector(Vector2 position, Vector2 magnitude, Color color);
 unsigned int TextFindLastChar(const char* text, unsigned char ch);
 
 Color rmc(char i);
-
-void MoveFileListCursor(unsigned int count, int* current, int move);
-void DrawFileList(FilePathList fpl, int current, Color bg1, Color bg2);
-void ChangeToDirectory(unsigned char* dir, unsigned char* new_dir, bool overwrite);
-void ReturnToParentDirectory(unsigned char* dir);
 
 #endif
