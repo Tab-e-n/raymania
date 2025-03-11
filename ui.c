@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include "rmlib.h"
 #include "profiles.h"
+#include "asset.h"
 #include "ui.h"
 
 void MoveFileListCursor(unsigned int count, int* current, int move)
@@ -94,6 +95,21 @@ void DrawCursor(Vector2 cursor_pos, float size, Color color)
 	DrawLine(cursor_pos.x, cursor_pos.y, cursor_pos.x, cursor_pos.y + size, color);
 	DrawLine(cursor_pos.x, cursor_pos.y + size, cursor_pos.x + size, cursor_pos.y + size, color);
 	DrawLine(cursor_pos.x + size, cursor_pos.y, cursor_pos.x + size, cursor_pos.y + size, color);
+}
+
+void DrawGuideArrow(Vector2 start, Vector2 target)
+{
+	Vector2 difference = Vector2Subtract(target, start);
+	Vector2 arrow_direction = Vector2Normalize(difference);
+	Vector2 arrow_offset = Vector2Scale(arrow_direction, 128);
+	Vector2 arrow_pos = Vector2Add(SCREEN_CENTER, arrow_offset);
+	Tri arrow = (Tri){0};
+	arrow.color = RM_LIME3;
+	arrow.a = (Vector2){16 * arrow_direction.x + arrow_pos.x, 16 * arrow_direction.y + arrow_pos.y};
+	arrow.b = (Vector2){8 * arrow_direction.y + arrow_pos.x, -8 * arrow_direction.x + arrow_pos.y};
+	arrow.c = (Vector2){-8 * arrow_direction.y + arrow_pos.x, 8 * arrow_direction.x + arrow_pos.y};
+	DrawTriangle(arrow.a, arrow.b, arrow.c, rmc(arrow.color));
+	DrawPixel(arrow_pos.x, arrow_pos.y, BLACK);
 }
 
 void DrawPartyMenu(int current_opt, unsigned int party_count, Profile* profiles)

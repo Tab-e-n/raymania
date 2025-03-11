@@ -41,12 +41,12 @@ Blockmixing Overlaping blocks count on current tile
 Track Showcase before starting (From start through cp to finish, also shows medal times and pbs)
 Skid Lines
 Speedometer or something with gears
+Arrow that points to the start in editor.
 
 IN PROGRESS
 Actual Blocks
 Audio omg
 Enviroment Visuals
-Arrow that points to the start in editor.
 
 NOT DONE
 Start draws a racecar in editor

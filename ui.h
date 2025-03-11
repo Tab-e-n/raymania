@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include "rmlib.h"
 #include "profiles.h"
+#include "asset.h"
 
 #define FILE_LIST_PAGE_ITEMS 11
 
@@ -18,6 +19,7 @@ void ChangeToDirectory(unsigned char* dir, unsigned char* new_dir, bool overwrit
 void ReturnToParentDirectory(unsigned char* dir);
 
 void DrawCursor(Vector2 cursor_pos, float size, Color color);
+void DrawGuideArrow(Vector2 start, Vector2 target);
 
 void DrawPartyMenu(int current_opt, unsigned int party_count, Profile* profile);
 

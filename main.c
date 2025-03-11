@@ -222,6 +222,7 @@ int main(void)
 
 	bool validating_track = false;
 	bool saving_track = false;
+	bool holding_start = false;
 	unsigned char editor_four_option_selector = 0, efos_opt = 0;
 
 	unsigned int overlaping_blocks = 0;
@@ -778,6 +779,7 @@ int main(void)
 			cursor_info.placement = PositionToPlacement(camera.data.target);
 			MoveEditorCursor(&cursor_info, 0, 0);
 			GetPiece(&cursor_info, held_piece);
+			holding_start = false;
 		}
 
 		ZoomCameraSmooth(&camera, 0.5, CAM_ZOOM_SPEED);
@@ -965,6 +967,14 @@ int main(void)
 					cursor_info.id = piece_catalogue_page[piece_catalogue_item];
 					GetPiece(&cursor_info, held_piece);
 					placing_pieces = true;
+					holding_start = false;
+					for(int i = 0; i < BLOCKS_PER_PIECE; i++)
+					{
+						if(held_piece[i].area.type == TYPE_START)
+						{
+							holding_start = true;
+						}
+					}
 				}
 			}
 			else
@@ -2574,6 +2584,10 @@ int main(void)
 				{
 					DrawText("BLOCKMIXING ENABLED", 8, 56, 16, BLACK);
 					DrawText(TextFormat("overlaping blocks: %i", overlaping_blocks), 8, 72, 16, BLACK);
+				}
+				if(track.has_start && holding_start)
+				{
+					DrawGuideArrow(camera.data.target, track.start_pos);
 				}
 				if(piece_catalogue_pulled > 0.0)
 				{
