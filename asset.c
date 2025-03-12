@@ -915,8 +915,8 @@ void DrawBackgroundVoid(Vector2 position, float zoom, double game_time)
 	for(int i = 0; i < 7; i++)
 	{
 		float gm = game_time * 0.1;
-		float gmwrapped = absf(1.0 - Wrap(gm + (7 - i) * 0.2, 0.0, 2.0));
-		float size = (13 - i * 2 + AirQuotesNoise(gm * 0.3 + i * 0.2, true) + (1.0 - gmwrapped * gmwrapped));
+		float gmwrapped = absf(1.0 - Wrap(gm + (7.0 - i) * 0.2, 0.0, 2.0));
+		float size = (13.0 - i * 2.0 + AirQuotesNoise(gm * 0.3 + i * 0.2, true) + (1.0 - gmwrapped * gmwrapped));
 		int in1 = i * 2;
 		tris[in1].a = (Vector2){0, 80 * size};
 		tris[in1].b = (Vector2){100 * size, 0};
