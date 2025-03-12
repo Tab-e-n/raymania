@@ -82,6 +82,8 @@ void PaintAsset(Asset* asset, Palette palette);
 void DrawAsset(Asset* asset, float scale, Vector2 position);
 void DrawAssetPixels(Asset* asset, float scale, Vector2 position, Color color);
 
-void DrawBackgroundWater(Vector2 position, float scale, double game_time);
+Color WaterColor(Vector2 pos, double game_time, Color wave, Color water);
+void DrawBackgroundWater(Vector2 position, float zoom, double game_time);
+void DrawBackgroundVoid(Vector2 position, float zoom, double game_time);
 
 #endif

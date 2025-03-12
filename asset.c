@@ -847,7 +847,7 @@ void DrawAssetPixels(Asset* asset, float scale, Vector2 position, Color color)
 
 Color WaterColor(Vector2 pos, double game_time, Color wave, Color water)
 {
-	float color_step = AirQuotesNoise(pos.x * 0.005 + pos.y * 0.001 + game_time * 0.3, false) + pos.x * 0.001 - pos.y * 0.003 + game_time * 0.25;
+	float color_step = AirQuotesNoise(pos.x * 0.005 + pos.y * 0.001 + game_time * 0.3, false) * 0.7 + pos.x * 0.001 - pos.y * 0.003 + game_time * 0.25;
 	color_step = Wrap(color_step, 0.0, 2.0);
 	if(color_step > 1.0)
 	{
@@ -861,10 +861,10 @@ Color WaterColor(Vector2 pos, double game_time, Color wave, Color water)
 	};
 }
 
-void DrawBackgroundWater(Vector2 position, float scale, double game_time)
+void DrawBackgroundWater(Vector2 position, float zoom, double game_time)
 {
 	Vector2 offset = (Vector2){Wrap(position.x, 0, 64), Wrap(position.y, 0, 128)};
-	Vector2 points = (Vector2){17 / scale * .5 + 2, 11 / scale * .5 + 2};
+	Vector2 points = (Vector2){17 / zoom * .5 + 2, 11 / zoom * .5 + 2};
 	for(int y = -points.y; y < points.y; y++)
 	{
 		for(int x = -points.x; x < points.x; x++)
@@ -888,21 +888,74 @@ void DrawBackgroundWater(Vector2 position, float scale, double game_time)
 			Color color_top = WaterColor(Vector2Add(pos_a, position), game_time, rmc(RM_TEAL0), rmc(RM_BLUE2));
 			Color color_bot = WaterColor(Vector2Add(pos_b, position), game_time, rmc(RM_TEAL0), rmc(RM_BLUE2));
 
-			pos_a = Vector2Scale(pos_a, scale);
+			pos_a = Vector2Scale(pos_a, zoom);
 			pos_a = Vector2Add(pos_a, SCREEN_CENTER);
 
-			pos_b = Vector2Scale(pos_b, scale);
+			pos_b = Vector2Scale(pos_b, zoom);
 			pos_b = Vector2Add(pos_b, SCREEN_CENTER);
 
-			pos_c_top = Vector2Scale(pos_c_top, scale);
+			pos_c_top = Vector2Scale(pos_c_top, zoom);
 			pos_c_top = Vector2Add(pos_c_top, SCREEN_CENTER);
 
-			pos_c_bot = Vector2Scale(pos_c_bot, scale);
+			pos_c_bot = Vector2Scale(pos_c_bot, zoom);
 			pos_c_bot = Vector2Add(pos_c_bot, SCREEN_CENTER);
 
 			DrawTriangle(pos_a, pos_b, pos_c_top, color_top);
 			DrawTriangle(pos_a, pos_c_bot, pos_b, color_bot);
 			//DrawPixel(pos_a.x, pos_a.y, BLACK);
 		}
+	}
+}
+
+void DrawBackgroundVoid(Vector2 position, float zoom, double game_time)
+{
+	position = Vector2Scale(position, -0.1);
+	ClearBackground(rmc(RM_WHITE8));
+	Tri tris[14];
+	for(int i = 0; i < 7; i++)
+	{
+		float gm = game_time * 0.1;
+		float gmwrapped = absf(1.0 - Wrap(gm + (7 - i) * 0.2, 0.0, 2.0));
+		float size = (13 - i * 2 + AirQuotesNoise(gm * 0.3 + i * 0.2, true) + (1.0 - gmwrapped * gmwrapped));
+		int in1 = i * 2;
+		tris[in1].a = (Vector2){0, 80 * size};
+		tris[in1].b = (Vector2){100 * size, 0};
+		tris[in1].c = (Vector2){-100 * size, 0};
+		tris[in1].color = RM_WHITE7 - i;
+
+		// TODO: MAKE POSITION EFFECT EACH TRIANGLE DIFFERENTLY
+		tris[in1].a = Vector2Add(tris[in1].a, position);
+		tris[in1].b = Vector2Add(tris[in1].b, position);
+		tris[in1].c = Vector2Add(tris[in1].c, position);
+
+		tris[in1].a = Vector2Scale(tris[in1].a, zoom);
+		tris[in1].b = Vector2Scale(tris[in1].b, zoom);
+		tris[in1].c = Vector2Scale(tris[in1].c, zoom);
+
+		tris[in1].a = Vector2Add(tris[in1].a, SCREEN_CENTER);
+		tris[in1].b = Vector2Add(tris[in1].b, SCREEN_CENTER);
+		tris[in1].c = Vector2Add(tris[in1].c, SCREEN_CENTER);
+
+		int in2 = i * 2 + 1;
+		tris[in2].a = (Vector2){0, -80 * size};
+		tris[in2].b = (Vector2){-100 * size, 0};
+		tris[in2].c = (Vector2){100 * size, 0};
+		tris[in2].color = RM_WHITE7 - i;
+
+		tris[in2].a = Vector2Add(tris[in2].a, position);
+		tris[in2].b = Vector2Add(tris[in2].b, position);
+		tris[in2].c = Vector2Add(tris[in2].c, position);
+
+		tris[in2].a = Vector2Scale(tris[in2].a, zoom);
+		tris[in2].b = Vector2Scale(tris[in2].b, zoom);
+		tris[in2].c = Vector2Scale(tris[in2].c, zoom);
+
+		tris[in2].a = Vector2Add(tris[in2].a, SCREEN_CENTER);
+		tris[in2].b = Vector2Add(tris[in2].b, SCREEN_CENTER);
+		tris[in2].c = Vector2Add(tris[in2].c, SCREEN_CENTER);
+	}
+	for(int i = 0; i < 14; i++)
+	{
+		DrawTriangle(tris[i].a, tris[i].b, tris[i].c, rmc(tris[i].color));
 	}
 }

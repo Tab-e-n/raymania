@@ -2344,6 +2344,10 @@ int main(void)
 	BeginDrawing();
 
 		ClearBackground(RAYWHITE);
+		if(track.env == ENV_VOID)
+		{
+			DrawBackgroundVoid(camera.data.target, camera.data.zoom, game_time);
+		}
 		if(track.env == ENV_MEADOW)
 		{
 			ClearBackground(LIME);
