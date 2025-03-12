@@ -853,12 +853,15 @@ Color WaterColor(Vector2 pos, double game_time, Color wave, Color water)
 	{
 		color_step = 2.0 - color_step;
 	}
-	return (Color){
+	return ColorLerp(water, wave, color_step);
+	/*
+	(Color){
 		Lerp(water.r, wave.r, color_step),
 		Lerp(water.g, wave.g, color_step),
 		Lerp(water.b, wave.b, color_step),
 		255
 	};
+	*/
 }
 
 void DrawBackgroundWater(Vector2 position, float zoom, double game_time)
@@ -909,52 +912,49 @@ void DrawBackgroundWater(Vector2 position, float zoom, double game_time)
 
 void DrawBackgroundVoid(Vector2 position, float zoom, double game_time)
 {
-	position = Vector2Scale(position, -0.1);
-	ClearBackground(rmc(RM_WHITE8));
-	Tri tris[14];
-	for(int i = 0; i < 7; i++)
+	ClearBackground(rmc(RM_WHITE0));
+	Tri tris[18];
+	float wgt = Wrap(game_time * 0.1, 0.0, 1.0);
+	position = Vector2Scale(position, 0.1);
+	for(int i = 0; i < 9; i++)
 	{
-		float gm = game_time * 0.1;
-		float gmwrapped = absf(1.0 - Wrap(gm + (7.0 - i) * 0.2, 0.0, 2.0));
-		float size = (13.0 - i * 2.0 + AirQuotesNoise(gm * 0.3 + i * 0.2, true) + (1.0 - gmwrapped * gmwrapped));
-		int in1 = i * 2;
-		tris[in1].a = (Vector2){0, 80 * size};
-		tris[in1].b = (Vector2){100 * size, 0};
-		tris[in1].c = (Vector2){-100 * size, 0};
-		tris[in1].color = RM_WHITE7 - i;
+		int i1 = i * 2;
+		int i2 = i1 + 1;
+		float size = 8.0 - i + wgt;
 
-		// TODO: MAKE POSITION EFFECT EACH TRIANGLE DIFFERENTLY
-		tris[in1].a = Vector2Add(tris[in1].a, position);
-		tris[in1].b = Vector2Add(tris[in1].b, position);
-		tris[in1].c = Vector2Add(tris[in1].c, position);
+		tris[i1].a = (Vector2){0, 320 * size};
+		tris[i1].b = (Vector2){320 * size, 0};
+		tris[i1].c = (Vector2){-320 * size, 0};
+		tris[i1].a = Vector2Subtract(tris[i1].a, position);
+		tris[i1].b = Vector2Subtract(tris[i1].b, position);
+		tris[i1].c = Vector2Subtract(tris[i1].c, position);
+		tris[i1].a = Vector2Scale(tris[i1].a, zoom);
+		tris[i1].b = Vector2Scale(tris[i1].b, zoom);
+		tris[i1].c = Vector2Scale(tris[i1].c, zoom);
+		tris[i1].a = Vector2Add(tris[i1].a, SCREEN_CENTER);
+		tris[i1].b = Vector2Add(tris[i1].b, SCREEN_CENTER);
+		tris[i1].c = Vector2Add(tris[i1].c, SCREEN_CENTER);
+		tris[i1].color = RM_WHITE0 + i;
 
-		tris[in1].a = Vector2Scale(tris[in1].a, zoom);
-		tris[in1].b = Vector2Scale(tris[in1].b, zoom);
-		tris[in1].c = Vector2Scale(tris[in1].c, zoom);
-
-		tris[in1].a = Vector2Add(tris[in1].a, SCREEN_CENTER);
-		tris[in1].b = Vector2Add(tris[in1].b, SCREEN_CENTER);
-		tris[in1].c = Vector2Add(tris[in1].c, SCREEN_CENTER);
-
-		int in2 = i * 2 + 1;
-		tris[in2].a = (Vector2){0, -80 * size};
-		tris[in2].b = (Vector2){-100 * size, 0};
-		tris[in2].c = (Vector2){100 * size, 0};
-		tris[in2].color = RM_WHITE7 - i;
-
-		tris[in2].a = Vector2Add(tris[in2].a, position);
-		tris[in2].b = Vector2Add(tris[in2].b, position);
-		tris[in2].c = Vector2Add(tris[in2].c, position);
-
-		tris[in2].a = Vector2Scale(tris[in2].a, zoom);
-		tris[in2].b = Vector2Scale(tris[in2].b, zoom);
-		tris[in2].c = Vector2Scale(tris[in2].c, zoom);
-
-		tris[in2].a = Vector2Add(tris[in2].a, SCREEN_CENTER);
-		tris[in2].b = Vector2Add(tris[in2].b, SCREEN_CENTER);
-		tris[in2].c = Vector2Add(tris[in2].c, SCREEN_CENTER);
+		tris[i2].a = (Vector2){0, -320 * size};
+		tris[i2].b = (Vector2){-320 * size, 0};
+		tris[i2].c = (Vector2){320 * size, 0};
+		tris[i2].a = Vector2Subtract(tris[i2].a, position);
+		tris[i2].b = Vector2Subtract(tris[i2].b, position);
+		tris[i2].c = Vector2Subtract(tris[i2].c, position);
+		tris[i2].a = Vector2Scale(tris[i2].a, zoom);
+		tris[i2].b = Vector2Scale(tris[i2].b, zoom);
+		tris[i2].c = Vector2Scale(tris[i2].c, zoom);
+		tris[i2].a = Vector2Add(tris[i2].a, SCREEN_CENTER);
+		tris[i2].b = Vector2Add(tris[i2].b, SCREEN_CENTER);
+		tris[i2].c = Vector2Add(tris[i2].c, SCREEN_CENTER);
+		tris[i2].color = RM_WHITE0 + i;
 	}
-	for(int i = 0; i < 14; i++)
+	for(int i = 0; i < 16; i++)
+	{
+		DrawTriangle(tris[i].a, tris[i].b, tris[i].c, ColorLerp(rmc(tris[i].color + 1), rmc(tris[i].color), wgt));
+	}
+	for(int i = 16; i < 18; i++)
 	{
 		DrawTriangle(tris[i].a, tris[i].b, tris[i].c, rmc(tris[i].color));
 	}

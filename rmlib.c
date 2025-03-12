@@ -110,6 +110,17 @@ Vector2int Vector2intSubtract(Vector2int a, Vector2int b)
 	return (Vector2int){a.x - b.x, a.y - b.y};
 }
 
+Color ColorLerp(Color color_start, Color color_end, float amount)
+{
+	return (Color)
+	{
+		Lerp(color_start.r, color_end.r, amount),
+		Lerp(color_start.g, color_end.g, amount),
+		Lerp(color_start.b, color_end.b, amount),
+		Lerp(color_start.a, color_end.a, amount),
+	};
+}
+
 void CheckKeyboardInput(RMInput* input)
 {
 	input->past = input->current;

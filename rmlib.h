@@ -79,6 +79,8 @@ Vector2 InvertAroundPoint(Vector2 position, Vector2 point);
 bool Vector2intEqual(Vector2int a, Vector2int b);
 Vector2int Vector2intSubtract(Vector2int a, Vector2int b);
 
+Color ColorLerp(Color color_start, Color color_end, float amount);
+
 void CheckKeyboardInput(RMInput* input);
 bool InputHeld(RMInput input, int key);
 bool InputPressed(RMInput input, int key);
