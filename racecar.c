@@ -43,9 +43,9 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.gear_shift_speed = FRAME * 4;
 
 			stats.min_speed = 4;
-			stats.acceleration[0] = 0.15;
-			stats.acceleration[1] = 0.1;
-			stats.acceleration[2] = 0.1;
+			stats.acceleration[0] = 0.075;
+			stats.acceleration[1] = 0.05;
+			stats.acceleration[2] = 0.05;
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.1;
@@ -65,7 +65,7 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.surface[SURFACE_ASPHALT] = stats;
 
 			stats.min_speed = 2;
-			stats.acceleration[0] = 0.1;
+			stats.acceleration[0] = 0.05;
 			stats.acceleration[2] = 0.001;
 			stats.friction = 0.2;
 			stats.redirect_angle = PI*0.007;
@@ -74,8 +74,8 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.surface[SURFACE_GRASS] = stats;
 
 			stats.min_speed = 8;
-			stats.acceleration[0] = 0.15;
-			stats.acceleration[2] = 0.1;
+			stats.acceleration[0] = 0.075;
+			stats.acceleration[2] = 0.05;
 			stats.friction = 0.05;
 			stats.turn_speed = PI*0.022;
 			stats.turn_speed_fix_threshold = 10;
@@ -85,11 +85,11 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.surface[SURFACE_DIRT] = stats;
 
 			stats.min_speed = 8;
-			stats.acceleration[0] = 0.1;
-			stats.acceleration[1] = 0.08;
-			stats.acceleration[2] = 0.06;
-			stats.acceleration[3] = 0.04;
-			stats.acceleration[4] = 0.02;
+			stats.acceleration[0] = 0.05;
+			stats.acceleration[1] = 0.04;
+			stats.acceleration[2] = 0.03;
+			stats.acceleration[3] = 0.02;
+			stats.acceleration[4] = 0.01;
 			stats.friction = 0.01;
 			stats.turn_speed = PI*0.0075;
 			stats.turn_speed_fix_threshold = 3;
@@ -99,7 +99,7 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.surface[SURFACE_ICE] = stats;
 
 			stats.min_speed = 1;
-			stats.acceleration[0] = 0.1;
+			stats.acceleration[0] = 0.05;
 			stats.acceleration[1] = 0.001;
 			stats.acceleration[2] = 0.001;
 			stats.acceleration[3] = 0.001;
@@ -124,7 +124,7 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.gears[2] = 10;
 			car_stats.gears[3] = 14;
 			car_stats.gears[4] = 18;
-			car_stats.gear_shift_speed = FRAME * 4;
+			car_stats.gear_shift_speed = FRAME * 8;
 
 			stats.min_speed = 4;
 			stats.acceleration[0] = 0.05;
@@ -208,10 +208,10 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.gear_shift_speed = FRAME * 4;
 
 			stats.min_speed = 5;
-			stats.acceleration[0] = 0.2;
-			stats.acceleration[1] = 0.1;
-			stats.acceleration[2] = 0.05;
-			stats.acceleration[3] = 0.01;
+			stats.acceleration[0] = 0.1;
+			stats.acceleration[1] = 0.05;
+			stats.acceleration[2] = 0.025;
+			stats.acceleration[3] = 0.005;
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.1;
 			stats.friction = 0.1;
@@ -230,9 +230,9 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.surface[SURFACE_ASPHALT] = stats;
 
 			stats.min_speed = 5;
-			stats.acceleration[0] = 0.02;
-			stats.acceleration[1] = 0.01;
-			stats.acceleration[2] = 0.005;
+			stats.acceleration[0] = 0.01;
+			stats.acceleration[1] = 0.005;
+			stats.acceleration[2] = 0.001;
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
 			stats.friction = 0.2;
@@ -244,9 +244,9 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.surface[SURFACE_GRASS] = stats;
 
 			stats.min_speed = 6;
-			stats.acceleration[0] = 0.15;
-			stats.acceleration[1] = 0.075;
-			stats.acceleration[2] = 0.007;
+			stats.acceleration[0] = 0.075;
+			stats.acceleration[1] = 0.0325;
+			stats.acceleration[2] = 0.0035;
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
 			stats.friction = 0.1;
@@ -258,11 +258,11 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.surface[SURFACE_DIRT] = stats;
 
 			stats.min_speed = 8;
-			stats.acceleration[0] = 0.2;
-			stats.acceleration[1] = 0.15;
-			stats.acceleration[2] = 0.1;
-			stats.acceleration[3] = 0.05;
-			stats.acceleration[4] = 0.01;
+			stats.acceleration[0] = 0.1;
+			stats.acceleration[1] = 0.075;
+			stats.acceleration[2] = 0.05;
+			stats.acceleration[3] = 0.025;
+			stats.acceleration[4] = 0.005;
 			stats.friction = 0.02;
 			stats.turn_speed = PI*0.02;
 			stats.turn_speed_fix_threshold = 9;
@@ -272,7 +272,7 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.surface[SURFACE_ICE] = stats;
 
 			stats.min_speed = 1;
-			stats.acceleration[0] = 0.02;
+			stats.acceleration[0] = 0.01;
 			stats.acceleration[1] = 0.001;
 			stats.acceleration[2] = 0.001;
 			stats.acceleration[3] = 0.001;

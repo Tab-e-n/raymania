@@ -42,11 +42,11 @@ Track Showcase before starting (From start through cp to finish, also shows meda
 Skid Lines
 Speedometer or something with gears
 Arrow that points to the start in editor.
+Enviroment Visuals
 
 IN PROGRESS
 Actual Blocks
 Audio omg
-Enviroment Visuals
 
 NOT DONE
 Start draws a racecar in editor
