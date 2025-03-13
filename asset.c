@@ -912,7 +912,7 @@ void DrawBackgroundWater(Vector2 position, float zoom, double game_time)
 
 void DrawBackgroundVoid(Vector2 position, float zoom, double game_time)
 {
-	ClearBackground(rmc(RM_WHITE0));
+	ClearBackground(rmc(RM_WHITE8));
 	Tri tris[18];
 	float wgt = Wrap(game_time * 0.1, 0.0, 1.0);
 	position = Vector2Scale(position, 0.1);
@@ -935,7 +935,7 @@ void DrawBackgroundVoid(Vector2 position, float zoom, double game_time)
 		tris[i1].a = Vector2Add(tris[i1].a, SCREEN_CENTER);
 		tris[i1].b = Vector2Add(tris[i1].b, SCREEN_CENTER);
 		tris[i1].c = Vector2Add(tris[i1].c, SCREEN_CENTER);
-		tris[i1].color = RM_WHITE0 + i;
+		tris[i1].color = RM_WHITE8 - i;
 
 		tris[i2].a = (Vector2){0, -320 * size};
 		tris[i2].b = (Vector2){-320 * size, 0};
@@ -949,13 +949,13 @@ void DrawBackgroundVoid(Vector2 position, float zoom, double game_time)
 		tris[i2].a = Vector2Add(tris[i2].a, SCREEN_CENTER);
 		tris[i2].b = Vector2Add(tris[i2].b, SCREEN_CENTER);
 		tris[i2].c = Vector2Add(tris[i2].c, SCREEN_CENTER);
-		tris[i2].color = RM_WHITE0 + i;
+		tris[i2].color = RM_WHITE8 - i;
 
 		position = Vector2Subtract(position, Vector2Scale(position, .125));
 	}
 	for(int i = 0; i < 16; i++)
 	{
-		DrawTriangle(tris[i].a, tris[i].b, tris[i].c, ColorLerp(rmc(tris[i].color + 1), rmc(tris[i].color), wgt));
+		DrawTriangle(tris[i].a, tris[i].b, tris[i].c, ColorLerp(rmc(tris[i].color - 1), rmc(tris[i].color), wgt));
 	}
 	for(int i = 16; i < 18; i++)
 	{
