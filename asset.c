@@ -921,13 +921,14 @@ void DrawBackgroundVoid(Vector2 position, float zoom, double game_time)
 		int i1 = i * 2;
 		int i2 = i1 + 1;
 		float size = 8.0 - i + wgt;
+		Vector2 pos = Vector2Subtract(position, Vector2Scale(position, .125 * (1.0 - wgt)));
 
 		tris[i1].a = (Vector2){0, 320 * size};
 		tris[i1].b = (Vector2){320 * size, 0};
 		tris[i1].c = (Vector2){-320 * size, 0};
-		tris[i1].a = Vector2Subtract(tris[i1].a, position);
-		tris[i1].b = Vector2Subtract(tris[i1].b, position);
-		tris[i1].c = Vector2Subtract(tris[i1].c, position);
+		tris[i1].a = Vector2Subtract(tris[i1].a, pos);
+		tris[i1].b = Vector2Subtract(tris[i1].b, pos);
+		tris[i1].c = Vector2Subtract(tris[i1].c, pos);
 		tris[i1].a = Vector2Scale(tris[i1].a, zoom);
 		tris[i1].b = Vector2Scale(tris[i1].b, zoom);
 		tris[i1].c = Vector2Scale(tris[i1].c, zoom);
@@ -939,9 +940,9 @@ void DrawBackgroundVoid(Vector2 position, float zoom, double game_time)
 		tris[i2].a = (Vector2){0, -320 * size};
 		tris[i2].b = (Vector2){-320 * size, 0};
 		tris[i2].c = (Vector2){320 * size, 0};
-		tris[i2].a = Vector2Subtract(tris[i2].a, position);
-		tris[i2].b = Vector2Subtract(tris[i2].b, position);
-		tris[i2].c = Vector2Subtract(tris[i2].c, position);
+		tris[i2].a = Vector2Subtract(tris[i2].a, pos);
+		tris[i2].b = Vector2Subtract(tris[i2].b, pos);
+		tris[i2].c = Vector2Subtract(tris[i2].c, pos);
 		tris[i2].a = Vector2Scale(tris[i2].a, zoom);
 		tris[i2].b = Vector2Scale(tris[i2].b, zoom);
 		tris[i2].c = Vector2Scale(tris[i2].c, zoom);
@@ -949,6 +950,8 @@ void DrawBackgroundVoid(Vector2 position, float zoom, double game_time)
 		tris[i2].b = Vector2Add(tris[i2].b, SCREEN_CENTER);
 		tris[i2].c = Vector2Add(tris[i2].c, SCREEN_CENTER);
 		tris[i2].color = RM_WHITE0 + i;
+
+		position = Vector2Subtract(position, Vector2Scale(position, .125));
 	}
 	for(int i = 0; i < 16; i++)
 	{
