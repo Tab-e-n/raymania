@@ -13,6 +13,17 @@
 #define MIN_PARTY_TIMER 1
 
 
+typedef enum OptionPages
+{
+	OPTPAGE_MAIN,
+	OPTPAGE_PROFILES,
+	OPTPAGE_GAMEPLAY,
+	OPTPAGE_AUDIO,
+	OPTPAGE_EDITOR,
+	OPTPAGE_PARTY,
+} OptionPages;
+
+
 void MoveFileListCursor(unsigned int count, int* current, int move);
 void DrawFileList(FilePathList fpl, int current, Color bg1, Color bg2);
 void ChangeToDirectory(unsigned char* dir, unsigned char* new_dir, bool overwrite);

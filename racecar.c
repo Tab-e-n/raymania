@@ -50,6 +50,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.1;
 			stats.friction = 0.05;
+			stats.always_apply_friction = false;
 
 			stats.turn_speed = PI*0.0075;
 			stats.turn_speed_fix_threshold = 3;
@@ -105,6 +106,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
 			stats.friction = 0.03;
+			stats.always_apply_friction = true;
 			stats.flip_turning_when_backwards = false;
 			stats.flip_turning_when_going_backwards = false;
 			stats.do_vel_redirection = false;
@@ -134,6 +136,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.05;
 			stats.friction = 0.05;
+			stats.always_apply_friction = false;
 
 			stats.turn_speed = PI*0.0355;
 			stats.turn_speed_fix_threshold = 18;
@@ -185,7 +188,8 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.surface[SURFACE_ICE] = stats;
 
 			stats.min_speed = 1;
-			stats.friction = 0.1;
+			stats.friction = 0.01;
+			stats.always_apply_friction = true;
 			stats.flip_turning_when_backwards = false;
 			stats.flip_turning_when_going_backwards = false;
 			stats.do_vel_redirection = false;
@@ -215,8 +219,9 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.1;
 			stats.friction = 0.1;
+			stats.always_apply_friction = false;
 
-			stats.turn_speed = PI*0.02;
+			stats.turn_speed = PI*0.0175;
 			stats.turn_speed_fix_threshold = 6;
 			stats.turn_dir_gain = 0.1;
 			stats.turn_dir_loss = 1.0;
@@ -236,7 +241,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
 			stats.friction = 0.2;
-			stats.turn_speed = PI*0.02;
+			stats.turn_speed = PI*0.0175;
 			stats.turn_speed_fix_threshold = 12;
 			stats.redirect_angle = PI*0.02;
 			stats.redirect_angle_loss = 0.024;
@@ -250,7 +255,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
 			stats.friction = 0.1;
-			stats.turn_speed = PI*0.02;
+			stats.turn_speed = PI*0.0175;
 			stats.turn_speed_fix_threshold = 12;
 			stats.redirect_angle = PI*0.022;
 			stats.redirect_angle_loss = 0.016;
@@ -264,7 +269,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.025;
 			stats.acceleration[4] = 0.005;
 			stats.friction = 0.02;
-			stats.turn_speed = PI*0.02;
+			stats.turn_speed = PI*0.0175;
 			stats.turn_speed_fix_threshold = 9;
 			stats.flip_turning_when_backwards = false;
 			stats.flip_turning_when_going_backwards = true;
@@ -277,7 +282,8 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[2] = 0.001;
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
-			stats.friction = 0.2;
+			stats.friction = 0.02;
+			stats.always_apply_friction = true;
 			stats.flip_turning_when_backwards = false;
 			stats.flip_turning_when_going_backwards = false;
 			stats.do_vel_redirection = false;
@@ -307,6 +313,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.02;
 			stats.friction = 0.01;
+			stats.always_apply_friction = false;
 
 			stats.turn_speed = PI*0.0035;
 			stats.turn_speed_fix_threshold = 1.5;
@@ -362,12 +369,13 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.surface[SURFACE_ICE] = stats;
 
 			stats.min_speed = 1;
-			stats.acceleration[0] = 0.01;
+			stats.acceleration[0] = 0.04;
 			stats.acceleration[1] = 0.001;
 			stats.acceleration[2] = 0.001;
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
 			stats.friction = 0.03;
+			stats.always_apply_friction = true;
 			stats.flip_turning_when_backwards = false;
 			stats.flip_turning_when_going_backwards = false;
 			stats.do_vel_redirection = false;
@@ -930,7 +938,11 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 			float angle = absf(Vector2Angle(car->velocity, car->rotation));
 			facing_foward = angle < PI * 0.5;
 		}
-		if((!InputHeld(input, INPUT_UP) && facing_foward) || (!InputHeld(input, INPUT_DOWN) && !facing_foward))
+		if(stats->always_apply_friction)
+		{
+			ApplyFrictionRacecar(car, stats->friction);
+		}
+		else if((!InputHeld(input, INPUT_UP) && facing_foward) || (!InputHeld(input, INPUT_DOWN) && !facing_foward))
 		{
 			ApplyFrictionRacecar(car, stats->friction);
 		}

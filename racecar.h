@@ -33,7 +33,8 @@ typedef struct SurfaceStats
 		redirect_speed_loss; // Percentage of speed that remains after redirect.
 	bool flip_turning_when_backwards, // When car is going backwards, turn speed is flipped. Feels more natural this way.
 		flip_turning_when_going_backwards, // Same as previous, but only when the player is holding down.
-		do_vel_redirection; // Activates vel redirection. see redirect_angle for explanation.
+		do_vel_redirection, // Activates vel redirection. see redirect_angle for explanation.
+		always_apply_friction; // Friction is applied even when holding a direction.
 } SurfaceStats;
 
 typedef struct CarStats

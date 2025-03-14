@@ -162,7 +162,7 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 	Color text_color = BLACK;
 
 	// OPTIONS DRAW
-	if(page == 0)
+	if(page == OPTPAGE_MAIN)
 	{
 		for(int i = 0; i < max; i++)
 		{
@@ -184,13 +184,17 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 			{
 				DrawText("AUDIO", pos.x, pos.y, 32, text_color);
 			}
-			else
+			else if(i == 3)
 			{
 				DrawText("EDITOR", pos.x, pos.y, 32, text_color);
 			}
+			else
+			{
+				DrawText("PARTY", pos.x, pos.y, 32, text_color);
+			}
 		}
 	}
-	if(page == 1)
+	if(page == OPTPAGE_PROFILES)
 	{
 		for(int i = 0; i < max; i++)
 		{
@@ -218,7 +222,7 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 			}
 		}
 	}
-	if(page == 2)
+	if(page == OPTPAGE_GAMEPLAY)
 	{
 		for(int i = 0; i < max; i++)
 		{
@@ -267,7 +271,7 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 			}
 		}
 	}
-	if(page == 3)
+	if(page == OPTPAGE_AUDIO)
 	{
 		for(int i = 0; i < max; i++)
 		{
@@ -291,7 +295,7 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 			}
 		}
 	}
-	if(page == 4)
+	if(page == OPTPAGE_EDITOR)
 	{
 		for(int i = 0; i < max; i++)
 		{
@@ -310,6 +314,29 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 				else
 				{
 					DrawText("Blockmixing: OFF", pos.x, pos.y, 32, text_color);
+				}
+			}
+		}
+	}
+	if(page == OPTPAGE_PARTY)
+	{
+		for(int i = 0; i < max; i++)
+		{
+			text_color = BLACK;
+			if(i == current)
+			{
+				text_color = RAYWHITE;
+			}
+			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
+			if(i == 0)
+			{
+				if(GetProfileBool(profile, PRF_BOOL_HIDE_PARTY_TIME))
+				{
+					DrawText("Hide remaining time: ON", pos.x, pos.y, 32, text_color);
+				}
+				else
+				{
+					DrawText("Hide remaining time: OFF", pos.x, pos.y, 32, text_color);
 				}
 			}
 		}

@@ -35,7 +35,7 @@ void FillProfile(Profile* out_profile, int done)
 	profile.car_grip_model = 0;
 	profile.car_terrain_model = 0;
 
-	profile.booleans_0 = 0b101;
+	profile.booleans_0 = 0b00101;
 
 	profile.master_volume = 0;
 	profile.sfx_volume = 0;

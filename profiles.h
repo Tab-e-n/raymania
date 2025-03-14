@@ -18,6 +18,7 @@ typedef enum ProfileBoolean {
 	PRF_BOOL_CAM_CENTERED,
 	PRF_BOOL_GHOST_ENABLED,
 	PRF_BOOL_BLOCKMIXING,
+	PRF_BOOL_HIDE_PARTY_TIME,
 } ProfileBoolean;
 
 typedef struct Profile {

@@ -1607,7 +1607,7 @@ int main(void)
 					reset_opt_curr = true;
 				}
 			}
-			if(reset_opt_curr)
+			if(reset_opt_curr || options_current == -1)
 			{
 				if(options_customization == 1)
 				{
@@ -1727,16 +1727,19 @@ int main(void)
 		{
 			switch(options_page)
 			{
-				case 4:
+				case OPTPAGE_EDITOR:
+				case OPTPAGE_PARTY:
 					options_max = 1;
 					break;
-				case 3:
+				case OPTPAGE_AUDIO:
 					options_max = 3;
 					break;
-				case 0:
-				case 1:
-				case 2:
+				case OPTPAGE_PROFILES:
+				case OPTPAGE_GAMEPLAY:
 					options_max = 4;
+					break;
+				case OPTPAGE_MAIN:
+					options_max = 5;
 					break;
 			}
 			if(InputHeld(menu_input, INPUT_DOWN))
@@ -1829,40 +1832,45 @@ int main(void)
 			{
 				if(options_current == options_max)
 				{
-					if(options_page == 0)
+					if(options_page == OPTPAGE_MAIN)
 					{
 						exit_options = true;
 					}
 					else
 					{
-						options_page = 0;
+						options_page = OPTPAGE_MAIN;
 						options_current = 0;
 					}
 				}
-				else if(options_page == 0)
+				else if(options_page == OPTPAGE_MAIN)
 				{
 					if(options_current == 0)
 					{
-						options_page = 1;
+						options_page = OPTPAGE_PROFILES;
 						options_current = 0;
 					}
 					else if(options_current == 1)
 					{
-						options_page = 2;
+						options_page = OPTPAGE_GAMEPLAY;
 						options_current = 0;
 					}
 					else if(options_current == 2)
 					{
-						options_page = 3;
+						options_page = OPTPAGE_AUDIO;
 						options_current = 0;
 					}
-					else
+					else if(options_current == 3)
 					{
-						options_page = 4;
+						options_page = OPTPAGE_EDITOR;
+						options_current = 0;
+					}
+					else if(options_current == 4)
+					{
+						options_page = OPTPAGE_PARTY;
 						options_current = 0;
 					}
 				}
-				else if(options_page == 1)
+				else if(options_page == OPTPAGE_PROFILES)
 				{
 					if(options_current == 0)
 					{
@@ -1880,16 +1888,16 @@ int main(void)
 					{
 						options_current_car = 0;
 						options_customization = 1;
-						options_current = 0;
+						options_current = -1;
 					}
 					else
 					{
 						options_current_car = 0;
 						options_customization = 2;
-						options_current = 0;
+						options_current = -1;
 					}
 				}
-				else if(options_page == 2)
+				else if(options_page == OPTPAGE_GAMEPLAY)
 				{
 					if(options_current == 0)
 					{
@@ -1907,12 +1915,20 @@ int main(void)
 						SetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED, !b);
 					}
 				}
-				else if(options_page == 4)
+				else if(options_page == OPTPAGE_EDITOR)
 				{
 					if(options_current == 0)
 					{
 						bool b = GetProfileBool(&profile, PRF_BOOL_BLOCKMIXING);
 						SetProfileBool(&profile, PRF_BOOL_BLOCKMIXING, !b);
+					}
+				}
+				else if(options_page == OPTPAGE_PARTY)
+				{
+					if(options_current == 0)
+					{
+						bool b = GetProfileBool(&profile, PRF_BOOL_HIDE_PARTY_TIME);
+						SetProfileBool(&profile, PRF_BOOL_HIDE_PARTY_TIME, !b);
 					}
 				}
 			}
@@ -2825,7 +2841,7 @@ int main(void)
 				{
 					Color ctext = BLACK, btext = VIOLET;
 					bool render_timers = true;
-					if(timer == 0.0 || stop_inputs)
+					if(!GetProfileBool(&profile, PRF_BOOL_HIDE_PARTY_TIME) || timer == 0.0 || stop_inputs)
 					{
 						ctext.a = 255;
 						btext.a = 255;
