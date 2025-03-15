@@ -103,6 +103,11 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 			id[0] = B1x1AR0;
 			id[1] = DVOID;
 			break;
+		case(12):
+			blocks_used = 1;
+			id[0] = B1x1AT0;
+			id[1] = DVOID;
+			break;
 		default:
 			blocks_used = 0;
 			break;

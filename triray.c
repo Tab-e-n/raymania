@@ -44,12 +44,14 @@ Tri MovePoint(Tri tri, Vector2 shift, int point)
 void PrintAsset(Asset* asset)
 {
 	TraceLog(LOG_INFO, "PRINTING ASSET");
+	int id = 0;
 	for(int i = 0; i < TRI_AMOUNT; i++)
 	{
 		Tri tri = asset->tris[i];
 		if(!TriIsPoint(tri))
 		{
-			TraceLog(LOG_INFO, "%i: %f %f %f %f %f %f", i, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y);
+			TraceLog(LOG_INFO, "%i: %f %f %f %f %f %f", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y);
+			id++;
 		}
 	}
 }
@@ -82,6 +84,7 @@ void PrintAssetCentered(Asset* asset)
 		}
 	}
 	Vector2 center = (Vector2){(border_hori.x + border_hori.y) * -0.5, (border_veri.x + border_veri.y) * -0.5};
+	int id = 0;
 	for(int i = 0; i < TRI_AMOUNT; i++)
 	{
 		Tri tri = asset->tris[i];
@@ -89,7 +92,8 @@ void PrintAssetCentered(Asset* asset)
 		{
 			//TraceLog(LOG_INFO, "%f %f", center.x, center.y);
 			tri = MoveTri(tri, center);
-			TraceLog(LOG_INFO, "asset->tris[%i] = (Tri){%f, %f, %f, %f, %f, %f, %i};", i, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, tri.color);
+			TraceLog(LOG_INFO, "asset->tris[%i] = (Tri){%f, %f, %f, %f, %f, %f, %i};", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, tri.color);
+			id++;
 		}
 	}
 }
@@ -410,14 +414,21 @@ int main(void)
 		{
 			int last_tri = 0;
 			bool found = false;
-			for(int i = 0; i < TRI_AMOUNT; i++)
+			for(int i = TRI_AMOUNT - 1; i >= 0; i--)
 			{
 				Tri tri = asset->tris[i];
 				if(TriIsPoint(tri))
 				{
 					continue;
 				}
-				last_tri = i;
+				if(last_tri == 0)
+				{
+					last_tri = i;
+				}
+				if(i == current_tri)
+				{
+					continue;
+				}
 				if(CheckCollisionPointTriangle(world_pos, tri.a, tri.b, tri.c))
 				{
 					current_tri = i;
@@ -505,7 +516,7 @@ int main(void)
 						pos.x -= 59 * COLOR_SELECT_SIZE;
 						pos.y = COLOR_SELECT_SIZE;
 					}
-					DrawRectangle(pos.x, pos.y, COLOR_SELECT_SIZE, COLOR_SELECT_SIZE, ColorFromIndex(i));
+					DrawRectangle(pos.x, pos.y, COLOR_SELECT_SIZE, COLOR_SELECT_SIZE, rmc(i));
 				}
 			}
 		EndMode2D();

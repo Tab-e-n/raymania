@@ -79,6 +79,11 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 			block.area = (Area){TYPE_ASPHALT, BU, 0, 7*BU, 8*BU};
 			block.size = (Vector2int){1, 1};
 			break;
+		case(B1x1AT0):
+			// Problem with turns; they are not square.
+			block.area = (Area){TYPE_ASPHALT, 0, 0, 8*BU, 8*BU};
+			block.size = (Vector2int){1, 1};
+			break;
 		default:
 			block.id = 0;
 			block.area = (Area){TYPE_VOID, 0, 0, 0, 0};
@@ -327,6 +332,63 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 			block_walls.walls[9] = (Wall){1*BU, 8*BU, .75*BU, 8.25*BU};
 			block_walls.walls[10] = (Wall){7*BU, 8*BU, 7.25*BU, 8.25*BU};
 			block_walls.walls[11] = (Wall){7.5*BU, 8*BU, 7.25*BU, 8.25*BU};
+			break;
+		case(B1x1AT0):
+			// 2 side walls, basic turn
+			block_walls.wall_amount = 13;
+			block_walls.walls[0] = (Wall){0*BU, 7*BU, -.25*BU, 7.25*BU};
+			block_walls.walls[1] = (Wall){0*BU, 7.5*BU, -.25*BU, 7.25*BU};
+			block_walls.walls[2] = (Wall){.5*BU, 8*BU, .75*BU, 8.25*BU};
+			block_walls.walls[3] = (Wall){1*BU, 8*BU, .75*BU, 8.25*BU};
+			block_walls.walls[4] = (Wall){0*BU, 7*BU, .5*BU, 8*BU};
+			block_walls.walls[5] = (Wall){0*BU, 7.5*BU, 1*BU, 8*BU};
+			/*
+			block_walls.walls[0] = (Wall){0*BU, 0*BU, 0*BU, 0*BU};
+			0, 7.5*BU
+			0.5*BU, 8*BU
+			BU, 8*BU
+
+			BU, 8*BU
+			0, 7*BU
+			0, 7.5*BU
+
+			0*BU, 7*BU
+			0*BU, 7.5*BU
+			-0.25*BU, 7.25*BU
+
+			0.5*BU, 8*BU
+			0.75*BU, 8.25*BU
+			1*BU, 8*BU
+
+
+			7*BU, 8*BU
+			7.5*BU, 8*BU
+			6.375*BU, 4.375*BU
+			0, 4.000000
+			0, BU
+			28.000000, 12.000000
+			28.000000, 12.000000
+			51.000000, 35.000000
+			43.000000, 21.000000
+			0, 4.000000
+			28.000000, 12.000000
+			30.000000, BU
+			43.000000, 21.000000
+			30.000000, 8.000000
+			28.000000, 12.000000
+			60.000000, 8*BU
+			55.000000, 33.000000
+			51.000000, 35.000000
+			55.000000, 33.000000
+			43.000000, 21.000000
+			51.000000, 35.000000
+			0*BU, 0.5*BU
+			0*BU, 1*BU
+			-0.25*BU, 0.75*BU
+			7*BU, 8*BU
+			7.25*BU, 8.25*BU
+			7.5*BU, 8*BU
+			*/
 			break;
 		default:
 			block_walls.wall_amount = 0;

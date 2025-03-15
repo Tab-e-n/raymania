@@ -45,6 +45,7 @@ Arrow that points to the start in editor.
 Enviroment Visuals
 
 IN PROGRESS
+BU print triray
 Angular velocity & better collisions
 Actual Blocks
 Audio omg
