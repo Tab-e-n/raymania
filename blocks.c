@@ -69,20 +69,37 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 		case(D1x1S):
 			block.area = (Area){TYPE_START, 0, BU * 3.5, BLOCK_SIZE, BU};
 			block.size = (Vector2int){1, 1};
-			block.z = 1;
+			block.z = 2;
 			break;
 		case(D1x1A):
 			block.area = (Area){TYPE_ASPHALT, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
 			block.size = (Vector2int){1, 1};
 			break;
 		case(B1x1AR0):
+			/*
 			block.area = (Area){TYPE_ASPHALT, BU, 0, 7*BU, 8*BU};
 			block.size = (Vector2int){1, 1};
 			break;
+			*/
 		case(B1x1AT0):
 			// Problem with turns; they are not square.
 			block.area = (Area){TYPE_ASPHALT, 0, 0, 8*BU, 8*BU};
 			block.size = (Vector2int){1, 1};
+			break;
+		case(B1x1CR0):
+			block.area = (Area){TYPE_CHECKPOINT, 1*BU, 3.25*BU, 6*BU, 1.5*BU};
+			block.size = (Vector2int){1, 1};
+			block.z = 2;
+			break;
+		case(B1x1SR0):
+			block.area = (Area){TYPE_START, 1*BU, 1.25*BU, 6*BU, 1.5*BU};
+			block.size = (Vector2int){1, 1};
+			block.z = 2;
+			break;
+		case(B1x1FR0):
+			block.area = (Area){TYPE_FINISH, 1*BU, 1.25*BU, 6*BU, 1.5*BU};
+			block.size = (Vector2int){1, 1};
+			block.z = 2;
 			break;
 		default:
 			block.id = 0;
@@ -91,14 +108,38 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 			break;
 	}
 
-	if(rot == ROT_EAST || rot == ROT_WEST)
+	if(rot == ROT_SOUTH)
 	{
-		double t = block.area.rect.width;
-		block.area.rect.width = block.area.rect.height;
-		block.area.rect.height = t;
-		t = block.area.rect.x;
-		block.area.rect.x = block.area.rect.y;
-		block.area.rect.y = t;
+		Area area = block.area;
+
+		area.rect.x = BLOCK_SIZE * block.size.x - block.area.rect.x - area.rect.width;
+		area.rect.y = BLOCK_SIZE * block.size.y - block.area.rect.y - area.rect.height;
+
+		block.area = area;
+	}
+	if(rot == ROT_EAST)
+	{
+		Area area = block.area;
+		double t = area.rect.width;
+		area.rect.width = area.rect.height;
+		area.rect.height = t;
+
+		area.rect.x = BLOCK_SIZE * block.size.y - block.area.rect.y - area.rect.width;
+		area.rect.y = block.area.rect.x;
+
+		block.area = area;
+	}
+	if(rot == ROT_WEST)
+	{
+		Area area = block.area;
+		double t = area.rect.width;
+		area.rect.width = area.rect.height;
+		area.rect.height = t;
+
+		area.rect.x = block.area.rect.y;
+		area.rect.y = BLOCK_SIZE * block.size.x - block.area.rect.y - area.rect.height;
+
+		block.area = area;
 	}
 
 	block.area.rect.x += (double)pos.x * BLOCK_SIZE;
@@ -280,14 +321,15 @@ void DrawBlockDebugAdv(Block block, float scale, Vector2 position)
 	DrawRectangleRec(rect, c_area);
 }
 
-void DrawPlacedBlocksDebug(Block blocks[MAX_BLOCK_AMOUNT], int z)
+void DrawPlacedBlocksDebug(Block blocks[MAX_BLOCK_AMOUNT], int layer[ASSET_AMOUNT])
 {
-	for(int i = 0; i < MAX_BLOCK_AMOUNT; i++)
+	for(int i = 0; i < ASSET_AMOUNT; i++)
 	{
-		if(blocks[i].z == z)
+		if(layer[i] < 0)
 		{
-			DrawBlockDebug(blocks[i]);
+			continue;
 		}
+		DrawBlockDebug(blocks[layer[i]]);
 	}
 }
 

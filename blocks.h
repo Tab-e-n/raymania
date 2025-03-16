@@ -7,6 +7,8 @@
 #include "asset.h"
 
 
+#define BLOCK_DEBUG false
+
 #define MAX_BLOCK_AMOUNT 2048
 #define MAX_LOADED_BLOCK_WALLS 18
 #define MAX_BLOCK_WALL_AMOUNT 32
@@ -63,7 +65,7 @@ void DrawBlockAdv(Block block, float scale, Vector2 position, double game_time);
 void DrawLoadedBlocks(Block blocks[MAX_BLOCK_AMOUNT], int layer[ASSET_AMOUNT], double game_time);
 void DrawBlockDebug(Block block);
 void DrawBlockDebugAdv(Block block, float scale, Vector2 position);
-void DrawPlacedBlocksDebug(Block blocks[MAX_BLOCK_AMOUNT], int z);
+void DrawPlacedBlocksDebug(Block blocks[MAX_BLOCK_AMOUNT], int layer[ASSET_AMOUNT]);
 
 BlockWallArray MakeBlockWalls(int block_id, Block block);
 void ClearLoadedBlockWalls(BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS]);

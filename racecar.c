@@ -49,6 +49,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.1;
+			stats.gear_shift_acceleration_punish = 0.3;
 			stats.friction = 0.05;
 			stats.always_apply_friction = false;
 
@@ -135,6 +136,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.01;
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.05;
+			stats.gear_shift_acceleration_punish = 0.3;
 			stats.friction = 0.05;
 			stats.always_apply_friction = false;
 
@@ -218,6 +220,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.005;
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.1;
+			stats.gear_shift_acceleration_punish = 0.1;
 			stats.friction = 0.1;
 			stats.always_apply_friction = false;
 
@@ -311,6 +314,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[2] = 0.02;
 			stats.acceleration[3] = 0.01;
 			stats.acceleration[4] = 0.001;
+			stats.gear_shift_acceleration_punish = 0.3;
 			stats.decceleration = 0.02;
 			stats.friction = 0.01;
 			stats.always_apply_friction = false;
@@ -907,12 +911,20 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 	{
 		RacecarGearDown(car, car_stats->gears);
 	}
-	if(car->gear_shift <= 0.0 && InputHeld(input, INPUT_UP))
+	if(InputHeld(input, INPUT_UP))
 	{
-		RacecarGearUp(car, car_stats->gears);
+		float acceleration = stats->acceleration[car->gear];
+		if(car->gear_shift <= 0.0)
+		{
+			RacecarGearUp(car, car_stats->gears);
+		}
+		else
+		{
+			acceleration *= stats->gear_shift_acceleration_punish;
+		}
 		if(!RacecarMaxVelocity(car, car_stats->gears[car->gear]) || !facing_foward)
 		{
-			AccelerateRacecar(car, stats->acceleration[car->gear]);
+			AccelerateRacecar(car, acceleration);
 			if(facing_foward)
 			{
 				CapRacecarVelocity(car, car_stats->gears[car->gear]);

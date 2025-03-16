@@ -2395,15 +2395,20 @@ int main(void)
 
 		LoadNearbyBlocks(blocks, layers, load_placement);
 
-		for(int i = 0; i < PLAYER_LAYER; i ++)
+		if(BLOCK_DEBUG)
 		{
-			DrawLoadedBlocks(blocks, layers[i], game_time);
-		}
-
-		//DrawPlacedBlocksDebug(blocks, 0);
-		if(DEBUG)
-		{
+			for(int i = 0; i < PLAYER_LAYER; i++)
+			{
+				DrawPlacedBlocksDebug(blocks, layers[i]);
+			}
 			DrawLoadedBlockWallsDebug(block_walls);
+		}
+		else
+		{
+			for(int i = 0; i < PLAYER_LAYER; i++)
+			{
+				DrawLoadedBlocks(blocks, layers[i], game_time);
+			}
 		}
 
 		switch(current_game_screen)
@@ -2448,12 +2453,20 @@ int main(void)
 			} break;
 		}
 
-		for(int i = PLAYER_LAYER; i < Z_LAYERS; i ++)
+		if(BLOCK_DEBUG)
 		{
-			DrawLoadedBlocks(blocks, layers[i], game_time);
+			for(int i = PLAYER_LAYER; i < Z_LAYERS; i ++)
+			{
+				DrawPlacedBlocksDebug(blocks, layers[i]);
+			}
 		}
-
-		//DrawPlacedBlocksDebug(blocks, 1);
+		else
+		{
+			for(int i = PLAYER_LAYER; i < Z_LAYERS; i ++)
+			{
+				DrawLoadedBlocks(blocks, layers[i], game_time);
+			}
+		}
 
 		EndMode2D();
 

@@ -19,6 +19,7 @@ typedef struct SurfaceStats
 {
 	float acceleration[GEAR_AMOUNT], // Increase to velocity when holding up.
 		decceleration, // Decrease to velocity when holding down.
+		gear_shift_acceleration_punish, // When shifting gears, multiplies accel by this number.
 		friction, // Decrease to velocity, scales based on current speed.
 		//top_speed, // Max allowed speed when accelerating (Car can go faster than speed specified).
 		min_speed, // top speed but backwards.

@@ -112,7 +112,7 @@ void PrintAssetBU(Asset* asset)
 			tri.a = Vector2Scale(tri.a, .125);
 			tri.b = Vector2Scale(tri.b, .125);
 			tri.c = Vector2Scale(tri.c, .125);
-			TraceLog(LOG_INFO, "asset->tris[%i] = (Tri){%e*BU, %e*BU, %e*BU, %e*BU, %e*BU, %e*BU, %i};", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, tri.color);
+			TraceLog(LOG_INFO, "asset->tris[%i] = (Tri){%g*BU, %g*BU, %g*BU, %g*BU, %g*BU, %g*BU, %i};", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, tri.color);
 			id++;
 		}
 	}
@@ -304,6 +304,32 @@ int main(void)
 			asset->tris[current_tri] = tri;
 			TraceLog(LOG_INFO, "Flip tri points");
 		}
+		if(IsKeyPressed(KEY_T))
+		{
+			if(current_tri != 0)
+			{
+				if(IsKeyDown(KEY_LEFT_CONTROL))
+				{
+					Tri zero = asset->tris[0];
+					asset->tris[0] = asset->tris[current_tri];
+					for(int i = current_tri; i > 0; i--)
+					{
+						asset->tris[i] = asset->tris[i - 1];
+					}
+					asset->tris[1] = zero;
+					current_tri = 0;
+					TraceLog(LOG_INFO, "Move tri to background");
+				}
+				else
+				{
+					Tri temp = asset->tris[current_tri];
+					asset->tris[current_tri] = asset->tris[current_tri - 1];
+					asset->tris[current_tri - 1] = temp;
+					current_tri--;
+					TraceLog(LOG_INFO, "Move tri back");
+				}
+			}
+		}
 		if(IsKeyPressed(KEY_B))
 		{
 			bg++;
@@ -334,6 +360,15 @@ int main(void)
 		if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_L))
 		{
 			LoadAsset(asset, "tri.ass");
+			for(int i = TRI_AMOUNT; i >= 0; i--)
+			{
+				Tri tri = asset->tris[i];
+				if(!TriIsPoint(tri))
+				{
+					current_tri = i;
+					break;
+				}
+			}
 		}
 		if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_S))
 		{
@@ -388,6 +423,10 @@ int main(void)
 		}
 		if(input_timer >= 15)
 		{
+			if(IsKeyDown(KEY_LEFT_SHIFT))
+			{
+				shift = Vector2Scale(shift, 8);
+			}
 			if(IsKeyDown(KEY_LEFT_CONTROL))
 			{
 				for(int i = 0; i < TRI_AMOUNT; i++)
@@ -461,7 +500,7 @@ int main(void)
 				{
 					last_tri = i;
 				}
-				if(i == current_tri)
+				if(!edit_points && i == current_tri)
 				{
 					continue;
 				}

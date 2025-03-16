@@ -45,7 +45,8 @@ Arrow that points to the start in editor.
 Enviroment Visuals
 
 IN PROGRESS
-BU print triray
+Triray color constants when BU and Game printing
+Car still should accelerate when switching gears, just not over limit.
 Angular velocity & better collisions
 Actual Blocks
 Audio omg
