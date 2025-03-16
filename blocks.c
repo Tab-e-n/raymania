@@ -335,60 +335,26 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 			break;
 		case(B1x1AT0):
 			// 2 side walls, basic turn
-			block_walls.wall_amount = 13;
+			block_walls.wall_amount = 17;
 			block_walls.walls[0] = (Wall){0*BU, 7*BU, -.25*BU, 7.25*BU};
 			block_walls.walls[1] = (Wall){0*BU, 7.5*BU, -.25*BU, 7.25*BU};
 			block_walls.walls[2] = (Wall){.5*BU, 8*BU, .75*BU, 8.25*BU};
 			block_walls.walls[3] = (Wall){1*BU, 8*BU, .75*BU, 8.25*BU};
-			block_walls.walls[4] = (Wall){0*BU, 7*BU, .5*BU, 8*BU};
-			block_walls.walls[5] = (Wall){0*BU, 7.5*BU, 1*BU, 8*BU};
-			/*
-			block_walls.walls[0] = (Wall){0*BU, 0*BU, 0*BU, 0*BU};
-			0, 7.5*BU
-			0.5*BU, 8*BU
-			BU, 8*BU
+			block_walls.walls[4] = (Wall){0*BU, 7.5*BU, .5*BU, 8*BU};
+			block_walls.walls[5] = (Wall){0*BU, 7*BU, 1*BU, 8*BU};
 
-			BU, 8*BU
-			0, 7*BU
-			0, 7.5*BU
+			block_walls.walls[6] = (Wall){-0.25*BU, 0.75*BU, 0*BU, 1*BU};
+			block_walls.walls[7] = (Wall){0*BU, 1*BU, 3.5*BU, 1.5*BU};
+			block_walls.walls[8] = (Wall){3.5*BU, 1.5*BU, 6.5*BU, 4.5*BU};
+			block_walls.walls[9] = (Wall){6.5*BU, 4.5*BU, 7*BU, 8*BU};
+			block_walls.walls[10] = (Wall){7*BU, 8*BU, 7.25*BU, 8.25*BU};
 
-			0*BU, 7*BU
-			0*BU, 7.5*BU
-			-0.25*BU, 7.25*BU
-
-			0.5*BU, 8*BU
-			0.75*BU, 8.25*BU
-			1*BU, 8*BU
-
-
-			7*BU, 8*BU
-			7.5*BU, 8*BU
-			6.375*BU, 4.375*BU
-			0, 4.000000
-			0, BU
-			28.000000, 12.000000
-			28.000000, 12.000000
-			51.000000, 35.000000
-			43.000000, 21.000000
-			0, 4.000000
-			28.000000, 12.000000
-			30.000000, BU
-			43.000000, 21.000000
-			30.000000, 8.000000
-			28.000000, 12.000000
-			60.000000, 8*BU
-			55.000000, 33.000000
-			51.000000, 35.000000
-			55.000000, 33.000000
-			43.000000, 21.000000
-			51.000000, 35.000000
-			0*BU, 0.5*BU
-			0*BU, 1*BU
-			-0.25*BU, 0.75*BU
-			7*BU, 8*BU
-			7.25*BU, 8.25*BU
-			7.5*BU, 8*BU
-			*/
+			block_walls.walls[11] = (Wall){-0.25*BU, 0.75*BU, 0*BU, 0.5*BU};
+			block_walls.walls[12] = (Wall){0*BU, 0.5*BU, 3.75*BU, 1*BU};
+			block_walls.walls[13] = (Wall){3.75*BU, 1*BU, 5.375*BU, 2.625*BU};
+			block_walls.walls[14] = (Wall){5.375*BU, 2.625*BU, 7*BU, 4.25*BU};
+			block_walls.walls[15] = (Wall){7*BU, 4.25*BU, 7.5*BU, 8*BU};
+			block_walls.walls[16] = (Wall){7.5*BU, 8*BU, 7.25*BU, 8.25*BU};
 			break;
 		default:
 			block_walls.wall_amount = 0;

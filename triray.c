@@ -98,6 +98,26 @@ void PrintAssetCentered(Asset* asset)
 	}
 }
 
+void PrintAssetBU(Asset* asset)
+{
+	TraceLog(LOG_INFO, "PRINTING ASSET (BU)");
+	Vector2 pivot = (Vector2){-96, -48};
+	int id = 0;
+	for(int i = 0; i < TRI_AMOUNT; i++)
+	{
+		Tri tri = asset->tris[i];
+		if(!TriIsPoint(tri))
+		{
+			tri = MoveTri(tri, pivot);
+			tri.a = Vector2Scale(tri.a, .125);
+			tri.b = Vector2Scale(tri.b, .125);
+			tri.c = Vector2Scale(tri.c, .125);
+			TraceLog(LOG_INFO, "asset->tris[%i] = (Tri){%e*BU, %e*BU, %e*BU, %e*BU, %e*BU, %e*BU, %i};", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, tri.color);
+			id++;
+		}
+	}
+}
+
 bool LoadAsset(Asset* asset, const char* filename)
 {
 	int data_size;
@@ -221,8 +241,8 @@ int main(void)
 	Asset* asset = MallocAsset(TRI_AMOUNT);
 
 	int current_tri = 0, current_point = -1;
-	char bg = 0, tricol = 0, input_timer = 0;
-	bool draw_pixels = true, edit_points = false, color_select = false, draw_hitbox = false;
+	char bg = 0, tricol = 0, input_timer = 0, draw_hitbox = 0;
+	bool draw_pixels = true, edit_points = false, color_select = false;
 	Camera2D camera = (Camera2D){0};
 	camera.zoom = 4.0;
 
@@ -241,11 +261,14 @@ int main(void)
 		{
 			if(IsKeyDown(KEY_LEFT_CONTROL))
 			{
-				draw_hitbox = !draw_hitbox;
+				draw_hitbox++;
+				if(draw_hitbox >= 3) draw_hitbox = 0;
+				TraceLog(LOG_INFO, "Drawing hitbox: %i", draw_hitbox);
 			}
 			else
 			{
 				draw_pixels = !draw_pixels;
+				TraceLog(LOG_INFO, "Toggle drawing pixels");
 			}
 		}
 		if(IsKeyPressed(KEY_E))
@@ -263,6 +286,14 @@ int main(void)
 				current_point = 0;
 				edit_points = true;
 			}
+			if(edit_points)
+			{
+				TraceLog(LOG_INFO, "Editing point: %i", current_point);
+			}
+			else
+			{
+				TraceLog(LOG_INFO, "Editing tri");
+			}
 		}
 		if(IsKeyPressed(KEY_F))
 		{
@@ -271,6 +302,7 @@ int main(void)
 			tri.a = tri.b;
 			tri.b = t;
 			asset->tris[current_tri] = tri;
+			TraceLog(LOG_INFO, "Flip tri points");
 		}
 		if(IsKeyPressed(KEY_B))
 		{
@@ -285,6 +317,10 @@ int main(void)
 			if(IsKeyDown(KEY_LEFT_CONTROL))
 			{
 				PrintAssetCentered(asset);
+			}
+			else if(IsKeyDown(KEY_LEFT_SHIFT))
+			{
+				PrintAssetBU(asset);
 			}
 			else
 			{
@@ -459,11 +495,17 @@ int main(void)
 					ClearBackground(GRAY);
 					break;
 			}
-			if(draw_hitbox)
+			if(draw_hitbox == 1)
 			{
-				Vector2 car_size = (Vector2){64, 104};
+				Vector2 car_size = (Vector2){56, 92};
 				Vector2 pos = (Vector2){SCREEN_CENTER.x * .25 - car_size.x * .5, SCREEN_CENTER.y * .25 - car_size.y * .5};
 				DrawRectangleLines(pos.x, pos.y, car_size.x, car_size.y, DARKGRAY);
+			}
+			if(draw_hitbox == 2)
+			{
+				Vector2 block_size = (Vector2){64, 64};
+				Vector2 pos = (Vector2){SCREEN_CENTER.x * .25 - block_size.x * .5, SCREEN_CENTER.y * .25 - block_size.y * .5};
+				DrawRectangleLines(pos.x, pos.y, block_size.x, block_size.y, DARKGRAY);
 			}
 			Vector2 pos = (Vector2){0.0, 0.0};
 			DrawAsset(asset, 1.0, pos);

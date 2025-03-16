@@ -26,14 +26,17 @@ void RaylibLogo(void)
     // Main game loop
     while (state != 4)    // Detect window close button or ESC key
     {
-	if(GetKeyPressed() && state != 3)
+	if(state != 3)
 	{
-	    state = 3;
-            topSideRecWidth = 256;
-            leftSideRecHeight = 256;
-            bottomSideRecWidth = 256;
-            rightSideRecHeight = 256;
-	    lettersCount = 6;
+		if(GetKeyPressed())
+		{
+		    state = 3;
+		    topSideRecWidth = 256;
+		    leftSideRecHeight = 256;
+		    bottomSideRecWidth = 256;
+		    rightSideRecHeight = 256;
+		    lettersCount = 6;
+		}
 	}
         // Update
         if (state == 0)                 // State 0: Small box blinking
@@ -138,10 +141,16 @@ void TabinLogo(void)
 
 	while(state != END)
 	{
-		if(GetKeyPressed() && state < WAIT)
+		if(state < WAIT)
 		{
-			state_change = true;
-			state = WAIT;
+			if(GetKeyPressed())
+			{
+				state_change = true;
+				state = WAIT;
+			}
+		}
+		if(state_change)
+		{
 		}
 		else if(state == JUMP_IN)
 		{
@@ -787,19 +796,19 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			break;
 		case(B1x1AT0):
 			asset = MallocAsset(17);
-			asset->tris[0] = (Tri){0, 7.5*BU, 0.5*BU, 8*BU, BU, 8*BU, RM_WHITE7};
-			asset->tris[1] = (Tri){BU, 8*BU, 0, 7*BU, 0, 7.5*BU, RM_WHITE7};
-			asset->tris[2] = (Tri){7*BU, 8*BU, 7.5*BU, 8*BU, 6.375*BU, 4.375*BU, RM_WHITE7};
-			asset->tris[3] = (Tri){0, .5*BU, 0, BU, 28.000000, 12.000000, RM_WHITE7};
-			asset->tris[4] = (Tri){28.000000, 12.000000, 51.000000, 35.000000, 43.000000, 21.000000, RM_WHITE7};
-			asset->tris[5] = (Tri){0, .5*BU, 28.000000, 12.000000, 30.000000, BU, RM_WHITE7};
-			asset->tris[6] = (Tri){43.000000, 21.000000, 30.000000, BU, 28.000000, 12.000000, RM_WHITE7};
-			asset->tris[7] = (Tri){60.000000, 8*BU, 55.000000, 33.000000, 51.000000, 35.000000, RM_WHITE7};
-			asset->tris[8] = (Tri){55.000000, 33.000000, 43.000000, 21.000000, 51.000000, 35.000000, RM_WHITE7};
-			asset->tris[9] = (Tri){8.000000, 8*BU, 56.000000, 8*BU, 51.000000, 35.000000, RM_WHITE5};
-			asset->tris[10] = (Tri){0, 56.000000, 28.000000, 12.000000, 0, BU, RM_WHITE5};
-			asset->tris[11] = (Tri){0, 56.000000, BU, 64.000000, 28.000000, 12.000000, RM_WHITE5};
-			asset->tris[12] = (Tri){28.000000, 12.000000, BU, 64.000000, 51.000000, 35.000000, RM_WHITE5};
+			asset->tris[0] = (Tri){0.000000*BU, 7.500000*BU, 0.500000*BU, 8.000000*BU, 1.000000*BU, 8.000000*BU, RM_WHITE7};
+			asset->tris[1] = (Tri){1.000000*BU, 8.000000*BU, 0.000000*BU, 7.000000*BU, 0.000000*BU, 7.500000*BU, RM_WHITE7};
+			asset->tris[2] = (Tri){7.000000*BU, 8.000000*BU, 7.500000*BU, 8.000000*BU, 6.5*BU, 4.5*BU, RM_WHITE7};
+			asset->tris[3] = (Tri){0.000000*BU, 0.500000*BU, 0.000000*BU, 1.000000*BU, 3.500000*BU, 1.500000*BU, RM_WHITE7};
+			asset->tris[4] = (Tri){3.500000*BU, 1.500000*BU, 6.5*BU, 4.5*BU, 5.375000*BU, 2.625000*BU, RM_WHITE7};
+			asset->tris[5] = (Tri){0.000000*BU, 0.500000*BU, 3.500000*BU, 1.500000*BU, 3.750000*BU, 1.000000*BU, RM_WHITE7};
+			asset->tris[6] = (Tri){5.375000*BU, 2.625000*BU, 3.750000*BU, 1.000000*BU, 3.500000*BU, 1.500000*BU, RM_WHITE7};
+			asset->tris[7] = (Tri){7.500000*BU, 8.000000*BU, 7*BU, 4.25*BU, 6.5*BU, 4.5*BU, RM_WHITE7};
+			asset->tris[8] = (Tri){7*BU, 4.25*BU, 5.375000*BU, 2.625000*BU, 6.5*BU, 4.5*BU, RM_WHITE7};
+			asset->tris[9] = (Tri){1.000000*BU, 8.000000*BU, 7.000000*BU, 8.000000*BU, 6.5*BU, 4.5*BU, RM_WHITE5};
+			asset->tris[10] = (Tri){0.000000*BU, 7.000000*BU, 3.500000*BU, 1.500000*BU, 0.000000*BU, 1.000000*BU, RM_WHITE5};
+			asset->tris[11] = (Tri){0.000000*BU, 7.000000*BU, 1.000000*BU, 8.000000*BU, 3.500000*BU, 1.500000*BU, RM_WHITE5};
+			asset->tris[12] = (Tri){3.500000*BU, 1.500000*BU, 1.000000*BU, 8.000000*BU, 6.5*BU, 4.5*BU, RM_WHITE5};
 			asset->tris[13] = (Tri){0*BU, 0.5*BU, 0*BU, 1*BU, -0.25*BU, 0.75*BU, RM_WHITE7};
 			asset->tris[14] = (Tri){0*BU, 7*BU, 0*BU, 7.5*BU, -0.25*BU, 7.25*BU, RM_WHITE7};
 			asset->tris[15] = (Tri){0.5*BU, 8*BU, 0.75*BU, 8.25*BU, 1*BU, 8*BU, RM_WHITE7};
