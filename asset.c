@@ -839,6 +839,15 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[0] = (Tri){7.5*BU, 1.25*BU, .5*BU, 1.25*BU, .5*BU, 2.75*BU, RM_RED4};
 			asset->tris[1] = (Tri){.5*BU, 2.75*BU, 7.5*BU, 2.75*BU, 7.5*BU, 1.25*BU, RM_RED4};
 			break;
+		case(B1x1VB0):
+			asset = MallocAsset(6);
+			asset->tris[0] = (Tri){4.75*BU, 4.25*BU, 4.75*BU, 3.75*BU, 4.25*BU, 3.25*BU, RM_WHITE7};
+			asset->tris[1] = (Tri){4.75*BU, 4.25*BU, 4.25*BU, 3.25*BU, 4.25*BU, 4.75*BU, RM_WHITE7};
+			asset->tris[2] = (Tri){4.25*BU, 4.75*BU, 4.25*BU, 3.25*BU, 3.75*BU, 4.75*BU, RM_WHITE7};
+			asset->tris[3] = (Tri){3.25*BU, 3.75*BU, 3.25*BU, 4.25*BU, 3.75*BU, 4.75*BU, RM_WHITE7};
+			asset->tris[4] = (Tri){3.25*BU, 3.75*BU, 3.75*BU, 4.75*BU, 3.75*BU, 3.25*BU, RM_WHITE7};
+			asset->tris[5] = (Tri){3.75*BU, 3.25*BU, 3.75*BU, 4.75*BU, 4.25*BU, 3.25*BU, RM_WHITE7};
+			break;
 		default:
 			asset = MallocAsset(4);
 			asset->tris[0] = (Tri){0, 0, 0, BU, BU, 0, 3};

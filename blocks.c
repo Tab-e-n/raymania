@@ -101,6 +101,10 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 			block.size = (Vector2int){1, 1};
 			block.z = 2;
 			break;
+		case(B1x1VB0):
+			block.area = (Area){TYPE_VOID, 4*BU, 4*BU, 0, 0};
+			block.size = (Vector2int){1, 1};
+			break;
 		default:
 			block.id = 0;
 			block.area = (Area){TYPE_VOID, 0, 0, 0, 0};
@@ -137,7 +141,7 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 		area.rect.height = t;
 
 		area.rect.x = block.area.rect.y;
-		area.rect.y = BLOCK_SIZE * block.size.x - block.area.rect.y - area.rect.height;
+		area.rect.y = BLOCK_SIZE * block.size.x - block.area.rect.x - area.rect.height;
 
 		block.area = area;
 	}
@@ -397,6 +401,17 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 			block_walls.walls[14] = (Wall){5.375*BU, 2.625*BU, 7*BU, 4.25*BU};
 			block_walls.walls[15] = (Wall){7*BU, 4.25*BU, 7.5*BU, 8*BU};
 			block_walls.walls[16] = (Wall){7.5*BU, 8*BU, 7.25*BU, 8.25*BU};
+			break;
+		case(B1x1VB0):
+			block_walls.wall_amount = 8;
+			block_walls.walls[0] = (Wall){3.25*BU, 3.75*BU, 3.75*BU, 3.25*BU};
+			block_walls.walls[1] = (Wall){3.75*BU, 3.25*BU, 4.25*BU, 3.25*BU};
+			block_walls.walls[2] = (Wall){4.25*BU, 3.25*BU, 4.75*BU, 3.75*BU};
+			block_walls.walls[3] = (Wall){4.75*BU, 3.75*BU, 4.75*BU, 4.25*BU};
+			block_walls.walls[4] = (Wall){4.75*BU, 4.25*BU, 4.25*BU, 4.75*BU};
+			block_walls.walls[5] = (Wall){4.25*BU, 4.75*BU, 3.75*BU, 4.75*BU};
+			block_walls.walls[6] = (Wall){3.75*BU, 4.75*BU, 3.25*BU, 4.25*BU};
+			block_walls.walls[7] = (Wall){3.25*BU, 4.25*BU, 3.25*BU, 3.75*BU};
 			break;
 		default:
 			block_walls.wall_amount = 0;

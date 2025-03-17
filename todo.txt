@@ -46,12 +46,14 @@ Enviroment Visuals
 
 IN PROGRESS
 Triray color constants when BU and Game printing
-Car still should accelerate when switching gears, just not over limit.
 Angular velocity & better collisions
 Actual Blocks
 Audio omg
 
 NOT DONE
+Custom asset rotation
+Blocks have more pieces
+Tracks have more blocks
 Start draws a racecar in editor
 Different zoom for different cars?
 Deleting bigger size blocks when not at their origin (might be too slow with current track structure)
