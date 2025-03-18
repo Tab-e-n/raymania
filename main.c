@@ -216,7 +216,7 @@ int main(void)
 
 	Block held_piece[BLOCKS_PER_PIECE] = {0}, piece_catalogue[PIECE_CATALOGUE_LENGHT] = {0};
 	unsigned int piece_catalogue_page[9] = {0};
-	unsigned int piece_catalogue_page_num = 0;
+	unsigned int piece_catalogue_page_num = PIECE_CATALOGUE_START_PAGE;
 	unsigned int piece_catalogue_item = 0;
 	float piece_catalogue_pulled = 0.0;
 
@@ -766,7 +766,7 @@ int main(void)
 			reset_editor = false;
 
 			placing_pieces = true;
-			piece_catalogue_page_num = 0;
+			piece_catalogue_page_num = PIECE_CATALOGUE_START_PAGE;
 			piece_catalogue_item = 0;
 			piece_catalogue_pulled = 0.0;
 			editor_four_option_selector = 0;
@@ -2657,7 +2657,8 @@ int main(void)
 								DrawText("CAR", pos.x, pos.y, TEXT_SIZE, ORANGE);
 								break;
 							case(EDITOR_PAGE_JUMP):
-								DrawText("JUMP", pos.x, pos.y, TEXT_SIZE, VIOLET);
+								DrawText("PAGE", pos.x, pos.y, TEXT_SIZE, VIOLET);
+								DrawText(TextFormat("%i", piece_catalogue_page_num), pos.x, pos.y + TEXT_SIZE, TEXT_SIZE, VIOLET);
 								break;
 							case(EDITOR_MEDALS):
 								DrawText("TIME", pos.x, pos.y, TEXT_SIZE, GRAY);

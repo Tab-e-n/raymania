@@ -50,13 +50,14 @@ Angular velocity & better collisions
 Actual Blocks
 Audio omg
 
-NOT DONE
-Custom asset rotation
-Blocks have more pieces
-Tracks have more blocks
+LATER
 Start draws a racecar in editor
 Different zoom for different cars?
 Deleting bigger size blocks when not at their origin (might be too slow with current track structure)
 
+Custom asset rotation
+Block area rotation (same equation as racecar rot)
+Blocks have more pieces
+Tracks have more blocks
 Standartized menus
 Removing Tracks, Profiles and Replays

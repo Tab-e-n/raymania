@@ -98,40 +98,55 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 			id[0] = D1x1A;
 			id[1] = DVOID;
 			break;
-		case(11):
+		case(11): // Basic Straight
 			blocks_used = 1;
 			id[0] = B1x1AR0;
 			id[1] = DVOID;
 			break;
-		case(12):
+		case(12): // Basic Turn
 			blocks_used = 1;
 			id[0] = B1x1AT0;
 			id[1] = DVOID;
 			break;
-		case(13):
+		case(13): // Checkpoint
 			blocks_used = 2;
 			id[0] = B1x1AR0;
 			id[1] = B1x1CR0;
 			break;
-		case(14):
+		case(14): // Start
 			blocks_used = 2;
 			id[0] = B1x1AR0;
 			id[1] = B1x1SR0;
 			break;
-		case(15):
+		case(15): // Finish
 			blocks_used = 2;
 			id[0] = B1x1AR0;
 			id[1] = B1x1FR0;
 			break;
-		case(16):
+		case(16): // Straight with center obstacle
 			blocks_used = 2;
 			id[0] = B1x1AR0;
 			id[1] = B1x1VB0;
 			break;
-		case(17):
+		case(17): // Turn with out obstacle
 			blocks_used = 2;
 			id[0] = B1x1AT0;
 			id[1] = B1x1VB0;
+			break;
+		case(18): // Turn with inner obstacle
+			blocks_used = 2;
+			id[0] = B1x1AT0;
+			id[1] = B1x1VB1;
+			break;
+		case(19): // Straight with two diagonal obstacles
+			blocks_used = 2;
+			id[0] = B1x1AR0;
+			id[1] = B1x1VB2;
+			break;
+		case(20): // Straight with two diagonal obstacles (mirror)
+			blocks_used = 2;
+			id[0] = B1x1AR0;
+			id[1] = B1x1VB3;
 			break;
 		default:
 			blocks_used = 0;
@@ -577,8 +592,30 @@ void PiecesInPage(unsigned int page[9], unsigned int page_num)
 		case(PAGE_DEBUG_2):
 			for(int i = 0; i < 9; i++)
 			{
-				page[i] = i + 10;
+				page[i] = 10;
 			}
+			break;
+		case(PAGE_ROAD_BASE):
+			page[0] = 14;
+			page[1] = 13;
+			page[2] = 15;
+			page[3] = 11;
+			page[4] = 12;
+			page[5] = 0;
+			page[6] = 0;
+			page[7] = 0;
+			page[8] = 0;
+			break;
+		case(PAGE_ROAD_OBSTACLE):
+			page[0] = 16;
+			page[1] = 19;
+			page[2] = 20;
+			page[3] = 17;
+			page[4] = 18;
+			page[5] = 0;
+			page[6] = 0;
+			page[7] = 0;
+			page[8] = 0;
 			break;
 	}
 }
