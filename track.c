@@ -148,6 +148,21 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 			id[0] = B1x1AR0;
 			id[1] = B1x1VB3;
 			break;
+		case(21): // Big turn
+			blocks_used = 1;
+			id[0] = B2x2AT0;
+			id[1] = DVOID;
+			break;
+		case(22): // T-Junction
+			blocks_used = 1;
+			id[0] = B1x1AJ0;
+			id[1] = DVOID;
+			break;
+		case(23): // Crossroad
+			blocks_used = 1;
+			id[0] = B1x1AJ1;
+			id[1] = DVOID;
+			break;
 		default:
 			blocks_used = 0;
 			break;
@@ -601,9 +616,9 @@ void PiecesInPage(unsigned int page[9], unsigned int page_num)
 			page[2] = 15;
 			page[3] = 11;
 			page[4] = 12;
-			page[5] = 0;
-			page[6] = 0;
-			page[7] = 0;
+			page[5] = 21;
+			page[6] = 22;
+			page[7] = 23;
 			page[8] = 0;
 			break;
 		case(PAGE_ROAD_OBSTACLE):

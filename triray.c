@@ -7,6 +7,131 @@
 #define TRI_AMOUNT 256
 
 
+const char* rmcname(char c)
+{
+	switch(c)
+	{
+		case(RL_GRAY0): return "RL_GRAY0\0";
+		case(RL_GRAY1): return "RL_GRAY1\0";
+		case(RL_GRAY2): return "RL_GRAY2\0";
+		case(RL_YELLOW0): return "RL_YELLOW0\0";
+		case(RL_YELLOW1): return "RL_YELLOW1\0";
+		case(RL_YELLOW2): return "RL_YELLOW2\0";
+		case(RL_RED0): return "RL_RED0\0";
+		case(RL_RED1): return "RL_RED1\0";
+		case(RL_RED2): return "RL_RED2\0";
+		case(RL_GREEN0): return "RL_GREEN0\0";
+		case(RL_GREEN1): return "RL_GREEN1\0";
+		case(RL_GREEN2): return "RL_GREEN2\0";
+		case(RL_BLUE0): return "RL_BLUE0\0";
+		case(RL_BLUE1): return "RL_BLUE1\0";
+		case(RL_BLUE2): return "RL_BLUE2\0";
+		case(RL_PURPLE0): return "RL_PURPLE0\0";
+		case(RL_PURPLE1): return "RL_PURPLE1\0";
+		case(RL_PURPLE2): return "RL_PURPLE2\0";
+		case(RL_BROWN0): return "RL_BROWN0\0";
+		case(RL_BROWN1): return "RL_BROWN1\0";
+		case(RL_BROWN2): return "RL_BROWN2\0";
+		case(RL_WHITE): return "RL_WHITE\0";
+		case(RL_BLACK): return "RL_BLACK\0";
+		case(RL_MAGENTA): return "RL_MAGENTA\0";
+		case(RL_RAYWHITE): return "RL_RAYWHITE\0";
+		case(RM_WHITE0): return "RM_WHITE0\0";
+		case(RM_WHITE1): return "RM_WHITE1\0";
+		case(RM_WHITE2): return "RM_WHITE2\0";
+		case(RM_WHITE3): return "RM_WHITE3\0";
+		case(RM_WHITE4): return "RM_WHITE4\0";
+		case(RM_WHITE5): return "RM_WHITE5\0";
+		case(RM_WHITE6): return "RM_WHITE6\0";
+		case(RM_WHITE7): return "RM_WHITE7\0";
+		case(RM_WHITE8): return "RM_WHITE8\0";
+		case(RM_RED0): return "RM_RED0\0";
+		case(RM_RED1): return "RM_RED1\0";
+		case(RM_RED2): return "RM_RED2\0";
+		case(RM_RED3): return "RM_RED3\0";
+		case(RM_RED4): return "RM_RED4\0";
+		case(RM_RED5): return "RM_RED5\0";
+		case(RM_RED6): return "RM_RED6\0";
+		case(RM_YELLOW0): return "RM_YELLOW0\0";
+		case(RM_YELLOW1): return "RM_YELLOW1\0";
+		case(RM_YELLOW2): return "RM_YELLOW2\0";
+		case(RM_YELLOW3): return "RM_YELLOW3\0";
+		case(RM_YELLOW4): return "RM_YELLOW4\0";
+		case(RM_YELLOW5): return "RM_YELLOW5\0";
+		case(RM_YELLOW6): return "RM_YELLOW6\0";
+		case(RM_GREEN0): return "RM_GREEN0\0";
+		case(RM_GREEN1): return "RM_GREEN1\0";
+		case(RM_GREEN2): return "RM_GREEN2\0";
+		case(RM_GREEN3): return "RM_GREEN3\0";
+		case(RM_GREEN4): return "RM_GREEN4\0";
+		case(RM_GREEN5): return "RM_GREEN5\0";
+		case(RM_GREEN6): return "RM_GREEN6\0";
+		case(RM_CYAN0): return "RM_CYAN0\0";
+		case(RM_CYAN1): return "RM_CYAN1\0";
+		case(RM_CYAN2): return "RM_CYAN2\0";
+		case(RM_CYAN3): return "RM_CYAN3\0";
+		case(RM_CYAN4): return "RM_CYAN4\0";
+		case(RM_CYAN5): return "RM_CYAN5\0";
+		case(RM_CYAN6): return "RM_CYAN6\0";
+		case(RM_NAVY0): return "RM_NAVY0\0";
+		case(RM_NAVY1): return "RM_NAVY1\0";
+		case(RM_NAVY2): return "RM_NAVY2\0";
+		case(RM_NAVY3): return "RM_NAVY3\0";
+		case(RM_NAVY4): return "RM_NAVY4\0";
+		case(RM_NAVY5): return "RM_NAVY5\0";
+		case(RM_NAVY6): return "RM_NAVY6\0";
+		case(RM_PINK0): return "RM_PINK0\0";
+		case(RM_PINK1): return "RM_PINK1\0";
+		case(RM_PINK2): return "RM_PINK2\0";
+		case(RM_PINK3): return "RM_PINK3\0";
+		case(RM_PINK4): return "RM_PINK4\0";
+		case(RM_PINK5): return "RM_PINK5\0";
+		case(RM_PINK6): return "RM_PINK6\0";
+		case(RM_ORANGE0): return "RM_ORANGE0\0";
+		case(RM_ORANGE1): return "RM_ORANGE1\0";
+		case(RM_ORANGE2): return "RM_ORANGE2\0";
+		case(RM_ORANGE3): return "RM_ORANGE3\0";
+		case(RM_ORANGE4): return "RM_ORANGE4\0";
+		case(RM_ORANGE5): return "RM_ORANGE5\0";
+		case(RM_ORANGE6): return "RM_ORANGE6\0";
+		case(RM_LIME0): return "RM_LIME0\0";
+		case(RM_LIME1): return "RM_LIME1\0";
+		case(RM_LIME2): return "RM_LIME2\0";
+		case(RM_LIME3): return "RM_LIME3\0";
+		case(RM_LIME4): return "RM_LIME4\0";
+		case(RM_LIME5): return "RM_LIME5\0";
+		case(RM_LIME6): return "RM_LIME6\0";
+		case(RM_TEAL0): return "RM_TEAL0\0";
+		case(RM_TEAL1): return "RM_TEAL1\0";
+		case(RM_TEAL2): return "RM_TEAL2\0";
+		case(RM_TEAL3): return "RM_TEAL3\0";
+		case(RM_TEAL4): return "RM_TEAL4\0";
+		case(RM_TEAL5): return "RM_TEAL5\0";
+		case(RM_TEAL6): return "RM_TEAL6\0";
+		case(RM_BLUE0): return "RM_BLUE0\0";
+		case(RM_BLUE1): return "RM_BLUE1\0";
+		case(RM_BLUE2): return "RM_BLUE2\0";
+		case(RM_BLUE3): return "RM_BLUE3\0";
+		case(RM_BLUE4): return "RM_BLUE4\0";
+		case(RM_BLUE5): return "RM_BLUE5\0";
+		case(RM_BLUE6): return "RM_BLUE6\0";
+		case(RM_PURPLE0): return "RM_PURPLE0\0";
+		case(RM_PURPLE1): return "RM_PURPLE1\0";
+		case(RM_PURPLE2): return "RM_PURPLE2\0";
+		case(RM_PURPLE3): return "RM_PURPLE3\0";
+		case(RM_PURPLE4): return "RM_PURPLE4\0";
+		case(RM_PURPLE5): return "RM_PURPLE5\0";
+		case(RM_PURPLE6): return "RM_PURPLE6\0";
+		case(RM_MAGENTA0): return "RM_MAGENTA0\0";
+		case(RM_MAGENTA1): return "RM_MAGENTA1\0";
+		case(RM_MAGENTA2): return "RM_MAGENTA2\0";
+		case(RM_MAGENTA3): return "RM_MAGENTA3\0";
+		case(RM_MAGENTA4): return "RM_MAGENTA4\0";
+		case(RM_MAGENTA5): return "RM_MAGENTA5\0";
+		case(RM_MAGENTA6): return "RM_MAGENTA6\0";
+	}
+}
+
 Tri SetPoint(Tri tri, Vector2 pos, int point)
 {
 	if(point == 0)
@@ -92,7 +217,7 @@ void PrintAssetCentered(Asset* asset)
 		{
 			//TraceLog(LOG_INFO, "%f %f", center.x, center.y);
 			tri = MoveTri(tri, center);
-			TraceLog(LOG_INFO, "asset->tris[%i] = (Tri){%f, %f, %f, %f, %f, %f, %i};", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, tri.color);
+			TraceLog(LOG_INFO, "asset->tris[%i] = (Tri){%f, %f, %f, %f, %f, %f, %s};", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, rmcname(tri.color));
 			id++;
 		}
 	}
@@ -112,7 +237,7 @@ void PrintAssetBU(Asset* asset)
 			tri.a = Vector2Scale(tri.a, .125);
 			tri.b = Vector2Scale(tri.b, .125);
 			tri.c = Vector2Scale(tri.c, .125);
-			TraceLog(LOG_INFO, "asset->tris[%i] = (Tri){%g*BU, %g*BU, %g*BU, %g*BU, %g*BU, %g*BU, %i};", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, tri.color);
+			TraceLog(LOG_INFO, "asset->tris[%i] = (Tri){%g*BU, %g*BU, %g*BU, %g*BU, %g*BU, %g*BU, %s};", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, rmcname(tri.color));
 			id++;
 		}
 	}
@@ -342,11 +467,11 @@ int main(void)
 		{
 			if(IsKeyDown(KEY_LEFT_CONTROL))
 			{
-				PrintAssetCentered(asset);
+				PrintAssetBU(asset);
 			}
 			else if(IsKeyDown(KEY_LEFT_SHIFT))
 			{
-				PrintAssetBU(asset);
+				PrintAssetCentered(asset);
 			}
 			else
 			{
@@ -355,7 +480,18 @@ int main(void)
 		}
 		if(IsKeyPressed(KEY_C))
 		{
-			color_select = !color_select;
+			if(IsKeyDown(KEY_LEFT_SHIFT))
+			{
+				asset->tris[current_tri].color = tricol;
+			}
+			else if(IsKeyDown(KEY_LEFT_CONTROL))
+			{
+				tricol = asset->tris[current_tri].color;
+			}
+			else
+			{
+				color_select = !color_select;
+			}
 		}
 		if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_L))
 		{

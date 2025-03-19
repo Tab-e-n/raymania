@@ -35,12 +35,18 @@ typedef enum RacecarColors {
  *  - C, Checkpoint
  *  - F, Finish
  *  - S, Start
+ *  Other info
+ *  - R, Roads
+ *  - T, Turns
+ *  - B, Obstacles
+ *  - J, Junctions, Splits, Crossings
  */
 typedef enum BlockID {
 	DVOID,
 	D1x1GWN, D2x1AIO, D2x2DIO, D1x1GWS, D1x1I, D1x1C, D1x1F, D1x1S,
 	D1x1A, DRACECAR, D3, D4, D5, D6, D7, D8, D9,
-	B1x1AR0, B1x1AT0, B1x1CR0, B1x1SR0, B1x1FR0, B1x1VB0, B1x1VB1, B1x1VB2, B1x1VB3
+	B1x1AR0, B1x1AT0, B1x1CR0, B1x1SR0, B1x1FR0, B1x1VB0, B1x1VB1, B1x1VB2,
+	B1x1VB3, B2x2AT0, B1x1AJ0, B1x1AJ1
 } BlockID;
 
 typedef struct Palette

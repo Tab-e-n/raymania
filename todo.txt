@@ -45,16 +45,17 @@ Arrow that points to the start in editor.
 Enviroment Visuals
 
 IN PROGRESS
-Triray color constants when BU and Game printing
-Angular velocity & better collisions
+better collisions (sliding along walls)
 Actual Blocks
 Audio omg
 
-LATER
+BEFORE PLAYTEST MAYBE
+angular velocity?
 Start draws a racecar in editor
 Different zoom for different cars?
 Deleting bigger size blocks when not at their origin (might be too slow with current track structure)
 
+LATER
 Custom asset rotation
 Block area rotation (same equation as racecar rot)
 Blocks have more pieces
