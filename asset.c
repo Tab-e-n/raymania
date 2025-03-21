@@ -24,7 +24,7 @@ void RaylibLogo(void)
     float alpha = 1.0f;             // Useful for fading
 
     // Main game loop
-    while (state != 4)    // Detect window close button or ESC key
+    while (state != 4 && !WindowShouldClose())    // Detect window close button or ESC key
     {
 	if(state != 3)
 	{
@@ -139,7 +139,7 @@ void TabinLogo(void)
 	float frames = 0.0;
 	unsigned int letters = 0;
 
-	while(state != END)
+	while(state != END && !WindowShouldClose())
 	{
 		if(state < WAIT)
 		{
@@ -196,6 +196,7 @@ void TabinLogo(void)
 			{
 			}
 		}
+
 		BeginDrawing();
 
 		ClearBackground(RAYWHITE);

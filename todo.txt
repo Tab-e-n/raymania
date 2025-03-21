@@ -47,6 +47,7 @@ Enviroment Visuals
 IN PROGRESS
 better collisions (sliding along walls)
 Actual Blocks
+Booster
 Audio omg
 
 BEFORE PLAYTEST MAYBE

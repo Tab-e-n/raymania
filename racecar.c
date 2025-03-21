@@ -656,7 +656,6 @@ void MoveRacecar(Racecar* car, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS
 	bool collided = false;
 	for(int i = 0; i < 4; i++)
 	{
-		Vector2 prev_pos = car->position;
 		car->position = Vector2Add(car->position, quarter_step);
 
 		Wall wall[4];
@@ -697,13 +696,31 @@ void MoveRacecar(Racecar* car, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS
 				}
 			}
 			car->velocity = Vector2Scale(car->velocity, fraction);
-			car->position = prev_pos;
 			for(int i = 0; i < 4; i++)
 			{
 				if(hit[i])
 				{
-					car->position.x += (car->position.x - col[i].point.x) * 0.01;
-					car->position.y += (car->position.y - col[i].point.y) * 0.01;
+					Vector2 pos_close = ClosestPoint(col[i].wall.pos_x, col[i].wall.pos_y, car->position);
+					Vector2 away_direction = Vector2Normalize(Vector2Subtract(car->position, pos_close));
+
+					pos_close = ClosestPoint(col[i].wall.pos_x, col[i].wall.pos_y, wall[i].pos_x);
+					Vector2 diff = Vector2Subtract(pos_close, wall[i].pos_x);
+					if(Vector2Equals(Vector2Normalize(diff), away_direction))
+					{
+						car->position = Vector2Add(car->position, diff);
+					}
+
+					pos_close = ClosestPoint(col[i].wall.pos_x, col[i].wall.pos_y, wall[i].pos_y);
+					diff = Vector2Subtract(pos_close, wall[i].pos_y);
+					if(Vector2Equals(Vector2Normalize(diff), away_direction))
+					{
+						car->position = Vector2Add(car->position, diff);
+					}
+
+					wall[0] = ShiftWall(car->w_front, car->position);
+					wall[1] = ShiftWall(car->w_back, car->position);
+					wall[2] = ShiftWall(car->w_left, car->position);
+					wall[3] = ShiftWall(car->w_right, car->position);
 				}
 			}
 		}

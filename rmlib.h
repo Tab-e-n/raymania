@@ -75,6 +75,7 @@ float AirQuotesNoise(float point, bool flipped);
 Vector2 Vector2Sign(Vector2 vector);
 Vector2 Vector2Swap(Vector2 vector);
 Vector2 InvertAroundPoint(Vector2 position, Vector2 point);
+Vector2 ClosestPoint(Vector2 a, Vector2 b, Vector2 p);
 
 bool Vector2intEqual(Vector2int a, Vector2int b);
 Vector2int Vector2intSubtract(Vector2int a, Vector2int b);

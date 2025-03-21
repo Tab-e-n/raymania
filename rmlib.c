@@ -100,6 +100,18 @@ Vector2 InvertAroundPoint(Vector2 position, Vector2 point)
 	return Vector2Add(point, dif);
 }
 
+Vector2 ClosestPoint(Vector2 a, Vector2 b, Vector2 p)
+{
+	Vector2 u = (Vector2){a.x - b.x, a.y - b.y};
+	float d = u.x * u.x + u.y * u.y;
+	if(d == 0)
+	{
+		return a;
+	}
+	float s = ((p.x - a.x) * u.y + (a.y - p.y) * u.x) / d;
+	return (Vector2){p.x - u.y * s, p.y + u.x * s};
+}
+
 bool Vector2intEqual(Vector2int a, Vector2int b)
 {
 	return a.x == b.x && a.y == b.y;

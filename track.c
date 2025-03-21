@@ -617,20 +617,20 @@ void PiecesInPage(unsigned int page[9], unsigned int page_num)
 			page[3] = 11;
 			page[4] = 12;
 			page[5] = 21;
-			page[6] = 22;
-			page[7] = 23;
-			page[8] = 0;
+			page[6] = 0; // 2x2 Road wiggly
+			page[7] = 0; // mirror of previous
+			page[8] = 0; // Booster
 			break;
 		case(PAGE_ROAD_OBSTACLE):
-			page[0] = 16;
-			page[1] = 19;
-			page[2] = 20;
-			page[3] = 17;
-			page[4] = 18;
-			page[5] = 0;
-			page[6] = 0;
-			page[7] = 0;
-			page[8] = 0;
+			page[0] = 22;
+			page[1] = 23;
+			page[2] = 0; // 2x3 Y split
+			page[3] = 0; // 2x3 T split
+			page[4] = 16;
+			page[5] = 19;
+			page[6] = 20;
+			page[7] = 17;
+			page[8] = 18;
 			break;
 	}
 }
