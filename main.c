@@ -56,6 +56,14 @@ int main(void)
 	HideCursor();
 	SetExitKey(KEY_NULL);
 
+#ifdef WINDOWS
+	TraceLog(LOG_INFO, "OS: Windows");
+#elifdef LINUX
+	TraceLog(LOG_INFO, "OS: Linux");
+#else
+	TraceLog(LOG_INFO, "OS: Other");
+#endif // WINDOWS
+
 	if(!DEBUG)
 	{
 		RaylibLogo();
@@ -228,7 +236,7 @@ int main(void)
 	unsigned int overlaping_blocks = 0;
 
 	// OPTIONS VAR
-	
+
 	bool reset_options = false;
 	bool save_options = true;
 	bool back_to_opt = false;
@@ -2642,10 +2650,10 @@ int main(void)
 								DrawText("EXIT", pos.x, pos.y, TEXT_SIZE, RED);
 								break;
 							case(EDITOR_LOAD):
-								DrawText("LOD", pos.x, pos.y, TEXT_SIZE, DARKGREEN);
+								DrawText("LOAD", pos.x, pos.y, TEXT_SIZE, DARKGREEN);
 								break;
 							case(EDITOR_SAVE):
-								DrawText("SAV", pos.x, pos.y, TEXT_SIZE, DARKBLUE);
+								DrawText("SAVE", pos.x, pos.y, TEXT_SIZE, DARKBLUE);
 								break;
 							case(EDITOR_CLEAR):
 								DrawText("CLR", pos.x, pos.y, TEXT_SIZE, MAROON);

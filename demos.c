@@ -159,7 +159,11 @@ const char* DemoFilename(unsigned char* demo_dir, const char* track_filepath, un
 	{
 		filepath[i] = demo_dir[i];
 	}
+#ifdef WINDOWS
+	filepath[dir_len] = '\\';
+#else
 	filepath[dir_len] = '/';
+#endif // WINDOWS
 	for(int i = 0; i < track_len; i++)
 	{
 		filepath[i + dir_len + 1] = track_filepath[i];
@@ -320,8 +324,8 @@ bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename)
 				{
 					save_file_data[i] = (unsigned char)track_name[i];
 				}
-				save_file_data[trname - 1] = 0; 
-				
+				save_file_data[trname - 1] = 0;
+
 				unsigned char checksum[DEMO_CHECKSUM_SIZE] = {0};
 				ChecksumDemo(demo, checksum);
 				for(int i = 0; i < DEMO_CHECKSUM_SIZE; i++)
@@ -353,8 +357,8 @@ bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename)
 			{
 				save_file_data[i] = (unsigned char)track_name[i];
 			}
-			save_file_data[trname - 1] = 0; 
-			
+			save_file_data[trname - 1] = 0;
+
 			unsigned char checksum[DEMO_CHECKSUM_SIZE] = {0};
 			ChecksumDemo(demo, checksum);
 			for(int i = 0; i < DEMO_CHECKSUM_SIZE; i++)
@@ -383,8 +387,8 @@ bool SaveDemo(Demo* demo, unsigned char* track_name, const char* filename)
 		{
 			file_data[i] = (unsigned char)track_name[i];
 		}
-		file_data[trname - 1] = 0; 
-			
+		file_data[trname - 1] = 0;
+
 		unsigned char checksum[DEMO_CHECKSUM_SIZE] = {0};
 		ChecksumDemo(demo, checksum);
 		for(int i = 0; i < DEMO_CHECKSUM_SIZE; i++)

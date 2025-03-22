@@ -7,7 +7,7 @@
 void MoveFileListCursor(unsigned int count, int* current, int move)
 {
 	*current = *current + move;
-	if(*current < 0) 
+	if(*current < 0)
 	{
 		*current = 0;
 	}
@@ -25,7 +25,7 @@ void DrawFileList(FilePathList fpl, int current, Color bg1, Color bg2)
 	DrawRectangle(POSITION.x - 4, POSITION.y - 4, SIZE.x + 8, SIZE.y + 8, BLACK);
 	DrawRectangle(POSITION.x, POSITION.y, SIZE.x, SIZE.y, bg1); // GREEN
 	DrawRectangle(POSITION.x + 24, POSITION.y + 24, SIZE.x - 48, SIZE.y - 80, bg2); // LIME
-	
+
 	//DrawText("Exit - Backspace", POSITION.x + SIZE.x - 182, POSITION.y + SIZE.y - 44, 32, BLACK);
 	int page = current / FILE_LIST_PAGE_ITEMS;
 	DrawText(TextFormat("%i/%i", page + 1, (fpl.count - 1) / FILE_LIST_PAGE_ITEMS + 1), POSITION.x + 24, POSITION.y + SIZE.y - 44, 32, BLACK);
@@ -38,7 +38,11 @@ void DrawFileList(FilePathList fpl, int current, Color bg1, Color bg2)
 			break;
 		}
 		unsigned char* filepath = fpl.paths[item];
+#ifdef WINDOWS
+		unsigned int pos = TextFindLastChar(filepath, '\\'), len = TextLength(filepath);
+#else
 		unsigned int pos = TextFindLastChar(filepath, '/'), len = TextLength(filepath);
+#endif
 		//TraceLog(LOG_INFO, "RL_MALLOC: draw file list");
 		unsigned char* file = (unsigned char*)RL_MALLOC(len - pos);
 		for(int j = 0; j < len - pos - 1; j++)
@@ -79,7 +83,11 @@ void ChangeToDirectory(unsigned char* dir, unsigned char* new_dir, bool overwrit
 
 void ReturnToParentDirectory(unsigned char* dir)
 {
+#ifdef WINDOWS
+	unsigned int pos = TextFindLastChar(dir, '\\');
+#else
 	unsigned int pos = TextFindLastChar(dir, '/');
+#endif
 	if(pos == 0)
 	{
 		return;

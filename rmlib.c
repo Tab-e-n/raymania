@@ -142,7 +142,7 @@ void CheckKeyboardInput(RMInput* input)
 	input->current += (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) << INPUT_RIGHT;
 	input->current += (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) << INPUT_UP;
 	input->current += (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) << INPUT_DOWN;
-	input->current += IsKeyDown(KEY_BACKSPACE) << INPUT_BACK;
+	input->current += (IsKeyDown(KEY_BACKSPACE) || IsKeyDown(KEY_DELETE)) << INPUT_BACK;
 	input->current += IsKeyDown(KEY_ENTER) << INPUT_ENTER;
 	input->current += IsKeyDown(KEY_ESCAPE) << INPUT_ESC;
 	input->current += IsKeyDown(KEY_R) << INPUT_R;
@@ -166,7 +166,7 @@ bool InputPressed(RMInput input, int key)
 bool DirectionMenuInput(RMInput* menu, RMInput input, float* block, int key)
 {
 	bool success = false;
-	if(InputPressed(input, key)) 
+	if(InputPressed(input, key))
 	{
 		menu->current += (0b1 << key);
 		*block = INPUT_BLOCK_START;
