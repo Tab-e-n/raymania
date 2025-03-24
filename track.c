@@ -163,6 +163,11 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 			id[0] = B1x1AJ1;
 			id[1] = DVOID;
 			break;
+		case(24):
+			blocks_used = 2;
+			id[0] = B1x1AR0;
+			id[1] = B1x1BR0;
+			break;
 		default:
 			blocks_used = 0;
 			break;
@@ -619,7 +624,7 @@ void PiecesInPage(unsigned int page[9], unsigned int page_num)
 			page[5] = 21;
 			page[6] = 0; // 2x2 Road wiggly
 			page[7] = 0; // mirror of previous
-			page[8] = 0; // Booster
+			page[8] = 24;
 			break;
 		case(PAGE_ROAD_OBSTACLE):
 			page[0] = 22;

@@ -435,6 +435,31 @@ int main(void)
 			{
 				if(IsKeyDown(KEY_LEFT_CONTROL))
 				{
+					Tri base = asset->tris[current_tri];
+					Tri tri;
+					int start = current_tri;
+					do
+					{
+						current_tri++;
+						if(current_tri == TRI_AMOUNT)
+						{
+							current_tri = 0;
+						}
+						tri = asset->tris[current_tri];
+					}
+					while(!TriIsPoint(tri) && !(start == current_tri));
+					if(start != current_tri)
+					{
+						asset->tris[current_tri] = base;
+						TraceLog(LOG_INFO, "Duplicated tri");
+					}
+					else
+					{
+						TraceLog(LOG_WARNING, "Cannot duplicate tri");
+					}
+				}
+				else if(IsKeyDown(KEY_LEFT_SHIFT))
+				{
 					Tri zero = asset->tris[0];
 					asset->tris[0] = asset->tris[current_tri];
 					for(int i = current_tri; i > 0; i--)

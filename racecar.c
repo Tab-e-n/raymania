@@ -49,6 +49,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.1;
+			stats.boost_acceleration = 0.075;
 			stats.gear_shift_acceleration_punish = 0.3;
 			stats.friction = 0.05;
 			stats.always_apply_friction = false;
@@ -136,6 +137,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.01;
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.05;
+			stats.boost_acceleration = 0.05;
 			stats.gear_shift_acceleration_punish = 0.3;
 			stats.friction = 0.03;
 			stats.always_apply_friction = false;
@@ -220,6 +222,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.005;
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.1;
+			stats.boost_acceleration = 0.1;
 			stats.gear_shift_acceleration_punish = 0.1;
 			stats.friction = 0.001;
 			stats.always_apply_friction = true;
@@ -314,8 +317,9 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[2] = 0.02;
 			stats.acceleration[3] = 0.01;
 			stats.acceleration[4] = 0.001;
-			stats.gear_shift_acceleration_punish = 0.3;
 			stats.decceleration = 0.02;
+			stats.boost_acceleration = 0.05;
+			stats.gear_shift_acceleration_punish = 0.3;
 			stats.friction = 0.01;
 			stats.always_apply_friction = false;
 
@@ -853,6 +857,7 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 			break;
 		case(TYPE_START):
 		case(TYPE_ASPHALT):
+		case(TYPE_BOOSTER):
 		default:
 			stats = &car_stats->surface[SURFACE_ASPHALT];
 			break;
@@ -948,6 +953,11 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 			}
 		}
 	}
+	if(type == TYPE_BOOSTER)
+	{
+		float acceleration = stats->boost_acceleration;
+		AccelerateRacecar(car, acceleration);
+	}
 	if(InputHeld(input, INPUT_DOWN))
 	{
 		if(!RacecarMaxVelocity(car, stats->min_speed) || facing_foward)
@@ -985,6 +995,19 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 	//TraceLog(LOG_INFO, "redir vel %.3f %.3f", car->velocity.x, car->velocity.y);
 
 	MoveRacecar(car, block_walls);
+
+	if(type == TYPE_BOOSTER)
+	{
+		car->boost = 1.0;
+	}
+	else if(car->boost > 0)
+	{
+		car->boost -= FRAME;
+		if(car->boost < 0.0)
+		{
+			car->boost = 0.0;
+		}
+	}
 
 	return meta;
 }

@@ -45,7 +45,7 @@ Arrow that points to the start in editor.
 Enviroment Visuals
 
 IN PROGRESS
-better collisions (sliding along walls)
+duplicating tris in triray
 Actual Blocks
 Booster
 Audio omg

@@ -2738,25 +2738,28 @@ int main(void)
 					}
 					else if(timer < track.medal_author)
 					{
-						DrawText("AUTHOR MEDAL!!!", 192, 88, 96, BLACK);
+						DrawText("AUTHOR MEDAL!!!", 160, 88, 96, BLACK);
 					}
 					else if(timer < track.medal_gold)
 					{
-						DrawText("GOLD MEDAL!!", 256, 88, 96, BLACK);
+						DrawText("GOLD MEDAL!!", 192, 88, 96, BLACK);
 					}
 					else if(timer < track.medal_silver)
 					{
-						DrawText("Silver medal!", 256, 88, 96, BLACK);
+						DrawText("Silver medal!", 192, 88, 96, BLACK);
 					}
 					else if(timer < track.medal_bronz)
 					{
-						DrawText("Bronz medal.", 256, 88, 96, BLACK);
+						DrawText("Bronz medal.", 192, 88, 96, BLACK);
 					}
 					DrawText(TextFormat("%.3f", timer), 384, 192, 96, BLACK);
+					int replay_pos = 352;
 					if(party_mode)
 					{
-						DrawText(TextFormat("Up next: %i. %s", current_profile + 1, party_profiles[current_profile].name), 384, 320, 32, BLACK);
+						DrawText(TextFormat("Up next: %i. %s", current_profile + 1, party_profiles[current_profile].name), 384, 352, 32, BLACK);
+						replay_pos += 32;
 					}
+					DrawText("Save replay with R.", 384, replay_pos, 32, BLACK);
 				}
 				else if(!race_showcase)
 				{
@@ -2924,15 +2927,6 @@ int main(void)
 				}
 			} break;
 		}
-
-		/*
-		Asset* asset = AllocAsset(1, ROT_NORTH, game_time);
-		//TraceLog(LOG_INFO, "%i %i", asset->tri_amount, asset->tris[0].color);
-		DrawTriangle(asset->tris[0].a, asset->tris[0].b, asset->tris[0].c, RAYWHITE);
-		Vector2 pos = (Vector2){0.0, 0.0};
-		DrawAsset(asset, 1.0, pos);
-		FreeAsset(asset);
-		*/
 
 		if(file_list_active)
 		{

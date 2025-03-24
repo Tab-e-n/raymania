@@ -108,6 +108,11 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 			block.area = (Area){TYPE_VOID, 0, 0, 0, 0};
 			block.size = (Vector2int){1, 1};
 			break;
+		case(B1x1BR0):
+			block.area = (Area){TYPE_BOOSTER, 1*BU, 0*BU, 6*BU, 8*BU};
+			block.size = (Vector2int){1, 1};
+			block.z = 1;
+			break;
 		default:
 			block.id = 0;
 			block.area = (Area){TYPE_VOID, 0, 0, 0, 0};

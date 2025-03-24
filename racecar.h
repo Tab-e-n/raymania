@@ -19,6 +19,7 @@ typedef struct SurfaceStats
 {
 	float acceleration[GEAR_AMOUNT], // Increase to velocity when holding up.
 		decceleration, // Decrease to velocity when holding down.
+		boost_acceleration, // Increase to velocity when on a booster
 		gear_shift_acceleration_punish, // When shifting gears, multiplies accel by this number.
 		friction, // Decrease to velocity, scales based on current speed.
 		//top_speed, // Max allowed speed when accelerating (Car can go faster than speed specified).
@@ -60,7 +61,7 @@ typedef struct Racecar
 	Vector2 position,
 		rotation,
 		velocity;
-	float turn_dir, gear_shift;
+	float turn_dir, gear_shift, boost;
 	unsigned char palette, model, gear;
 } Racecar;
 
