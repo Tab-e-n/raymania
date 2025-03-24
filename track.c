@@ -206,7 +206,7 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 		if(DEBUG) TraceLog(LOG_INFO, "BLOCK: Is placed because it is empty");
 		return true;
 	}
-	
+
 	if(track->has_start)
 	{
 		for(int i = 0; i < blocks_used; i++)
@@ -465,7 +465,7 @@ bool SaveTrack(Track* track, const char* filename, unsigned char author[PROFILE_
 		TraceLog(LOG_INFO, "MALLOC: save track");
 		file_data = (unsigned char*)_malloc(data_size);
 		TrackSave* savefile = (TrackSave*)file_data;
-	
+
 		savefile->track = *track;
 		savefile->size_block = TRACK_SIZE_BLOCK;
 		savefile->size_max_block = TRACK_SIZE_MAX_BLOCK;
@@ -515,7 +515,11 @@ const char* TrackFileName(unsigned char* track_dir, unsigned char name[TRACK_NAM
 	{
 		filename[i] = track_dir[i];
 	}
+#ifdef WINDOWS
+	filename[track_dir_len] = '\\';
+#else
 	filename[track_dir_len] = '/';
+#endif
 	for(int i = 0; i < size; i++)
 	{
 		filename[i + track_dir_len + 1] = name[i];
@@ -534,7 +538,11 @@ void TrackNameFromFilename(const char* filename, unsigned char name[TRACK_NAME_L
 {
 	ClearString(name, TRACK_NAME_LENGHT);
 	TraceLog(LOG_INFO, "|%s|", filename);
+#ifdef WINDOWS
+	unsigned int len = TextFindLastChar(filename, '\\') + 1;
+#else
 	unsigned int len = TextFindLastChar(filename, '/') + 1;
+#endif // WINDOWS
 	if(TextLength(filename) - len < 4)
 	{
 		return;
@@ -585,10 +593,10 @@ void MoveEditorCursor(PieceInfo* info, int x, int y)
 	info->placement.x += x;
 	info->placement.y += y;
 
-	if(info->placement.x < 0) info->placement.x = 0;	
-	if(info->placement.y < 0) info->placement.y = 0;	
-	if(info->placement.x >= TRACK_GRID_SIZE) info->placement.x = TRACK_GRID_SIZE - 1;	
-	if(info->placement.y >= TRACK_GRID_SIZE) info->placement.y = TRACK_GRID_SIZE - 1;	
+	if(info->placement.x < 0) info->placement.x = 0;
+	if(info->placement.y < 0) info->placement.y = 0;
+	if(info->placement.x >= TRACK_GRID_SIZE) info->placement.x = TRACK_GRID_SIZE - 1;
+	if(info->placement.y >= TRACK_GRID_SIZE) info->placement.y = TRACK_GRID_SIZE - 1;
 }
 
 float CataloguePosition(float initial, unsigned int piece_n)

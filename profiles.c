@@ -109,7 +109,11 @@ const char* ProfileFilename(unsigned char* dir, unsigned char name[PROFILE_NAME_
 	{
 		filename[i] = dir[i];
 	}
+#ifdef WINDOWS
+	filename[dir_len] = '\\';
+#else
 	filename[dir_len] = '/';
+#endif
 	for(int i = 0; i < size; i++)
 	{
 		filename[i + dir_len + 1] = name[i];
@@ -211,7 +215,7 @@ bool SaveProfile(Profile* profile, const char* filename)
 		TraceLog(LOG_INFO, "MALLOC: profile save data");
 		file_data = (unsigned char*)_malloc(data_size);
 		Profile* savefile = (Profile*)file_data;
-	
+
 		*savefile = *profile;
 
 		success = SaveFileData(filename, file_data, data_size);
@@ -227,11 +231,11 @@ void LoadProfileDirectory(FilePathList* fpl, unsigned char* dir)
 	if(fpl->count != 0) UnloadDirectoryFiles(*fpl);
 	*fpl = LoadDirectoryFilesEx(TextFormat("%s", dir), ".prf", false);
 }
- 
+
 void MoveProfileSelectorCursor(unsigned int count, int* current, int move)
 {
 	*current = *current + move;
-	if(*current < 0) 
+	if(*current < 0)
 	{
 		*current = 0;
 	}
@@ -267,7 +271,11 @@ void DrawProfileSelector(FilePathList fpl, int current)
 			break;
 		}
 		unsigned char* filepath = fpl.paths[item];
+#ifdef WINDOWS
+		unsigned int pos = TextFindLastChar(filepath, '\\'), len = TextLength(filepath);
+#else
 		unsigned int pos = TextFindLastChar(filepath, '/'), len = TextLength(filepath);
+#endif
 		//TraceLog(LOG_INFO, "MALLOC: draw profile selector");
 		unsigned char* file = (unsigned char*)_malloc(len - pos);
 		for(int j = 0; j < len - pos - 1; j++)
