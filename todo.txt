@@ -45,9 +45,9 @@ Arrow that points to the start in editor.
 Enviroment Visuals
 
 IN PROGRESS
-duplicating tris in triray
+Y-Junction
+Wiggles
 Actual Blocks
-Booster
 Audio omg
 
 BEFORE PLAYTEST MAYBE

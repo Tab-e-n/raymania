@@ -163,10 +163,15 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 			id[0] = B1x1AJ1;
 			id[1] = DVOID;
 			break;
-		case(24):
+		case(24): // Booster
 			blocks_used = 2;
 			id[0] = B1x1AR0;
 			id[1] = B1x1BR0;
+			break;
+		case(25): // Big T-Junction
+			blocks_used = 1;
+			id[0] = B1x1AJ2;
+			id[1] = DVOID;
 			break;
 		default:
 			blocks_used = 0;
@@ -638,7 +643,7 @@ void PiecesInPage(unsigned int page[9], unsigned int page_num)
 			page[0] = 22;
 			page[1] = 23;
 			page[2] = 0; // 2x3 Y split
-			page[3] = 0; // 2x3 T split
+			page[3] = 25;
 			page[4] = 16;
 			page[5] = 19;
 			page[6] = 20;

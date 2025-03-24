@@ -113,6 +113,10 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 			block.size = (Vector2int){1, 1};
 			block.z = 1;
 			break;
+		case(B1x1AJ2):
+			block.area = (Area){TYPE_ASPHALT, 0, 0, 24*BU, 16*BU};
+			block.size = (Vector2int){3, 2};
+			break;
 		default:
 			block.id = 0;
 			block.area = (Area){TYPE_VOID, 0, 0, 0, 0};
@@ -528,6 +532,41 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 			block_walls.walls[13] = (Wall){7.25*BU, -0.25*BU, 7*BU, 0*BU};
 			block_walls.walls[14] = (Wall){7*BU, 0*BU, 8*BU, 1*BU};
 			block_walls.walls[15] = (Wall){8*BU, 1*BU, 8.25*BU, 0.75*BU};
+			break;
+		case(B1x1AJ2):
+			block_walls.wall_amount = 32;
+			block_walls.walls[0] = (Wall){-0.25*BU, 7.25*BU, 0*BU, 7*BU};
+			block_walls.walls[1] = (Wall){0*BU, 7*BU, 4.25*BU, 8*BU};
+			block_walls.walls[2] = (Wall){4.25*BU, 8*BU, 8*BU, 11.75*BU};
+			block_walls.walls[3] = (Wall){8*BU, 11.75*BU, 9*BU, 16*BU};
+			block_walls.walls[4] = (Wall){9*BU, 16*BU, 8.75*BU, 16.25*BU};
+			block_walls.walls[5] = (Wall){8.75*BU, 16.25*BU, 8.5*BU, 16*BU};
+			block_walls.walls[6] = (Wall){8.5*BU, 16*BU, 7.5*BU, 12*BU};
+			block_walls.walls[7] = (Wall){7.5*BU, 12*BU, 4*BU, 8.5*BU};
+			block_walls.walls[8] = (Wall){4*BU, 8.5*BU, 0*BU, 7.5*BU};
+			block_walls.walls[9] = (Wall){0*BU, 7.5*BU, -0.25*BU, 7.25*BU};
+			block_walls.walls[10] = (Wall){-0.25*BU, 0.75*BU, 0*BU, 0.5*BU};
+			block_walls.walls[11] = (Wall){0*BU, 0.5*BU, 7.25*BU, 2*BU};
+			block_walls.walls[12] = (Wall){7.25*BU, 2*BU, 12*BU, 6.75*BU};
+			block_walls.walls[13] = (Wall){12*BU, 6.75*BU, 16.75*BU, 2*BU};
+			block_walls.walls[14] = (Wall){16.75*BU, 2*BU, 24*BU, 0.5*BU};
+			block_walls.walls[15] = (Wall){24*BU, 0.5*BU, 24.25*BU, 0.75*BU};
+			block_walls.walls[16] = (Wall){24.25*BU, 0.75*BU, 24*BU, 1*BU};
+			block_walls.walls[17] = (Wall){24*BU, 1*BU, 17*BU, 2.5*BU};
+			block_walls.walls[18] = (Wall){17*BU, 2.5*BU, 12*BU, 7.5*BU};
+			block_walls.walls[19] = (Wall){12*BU, 7.5*BU, 7*BU, 2.5*BU};
+			block_walls.walls[20] = (Wall){7*BU, 2.5*BU, 0*BU, 1*BU};
+			block_walls.walls[21] = (Wall){0*BU, 1*BU, -0.25*BU, 0.75*BU};
+			block_walls.walls[22] = (Wall){15.25*BU, 16.25*BU, 15*BU, 16*BU};
+			block_walls.walls[23] = (Wall){15*BU, 16*BU, 16*BU, 11.75*BU};
+			block_walls.walls[24] = (Wall){16*BU, 11.75*BU, 19.75*BU, 8*BU};
+			block_walls.walls[25] = (Wall){19.75*BU, 8*BU, 24*BU, 7*BU};
+			block_walls.walls[26] = (Wall){24*BU, 7*BU, 24.25*BU, 7.25*BU};
+			block_walls.walls[27] = (Wall){24.25*BU, 7.25*BU, 24*BU, 7.5*BU};
+			block_walls.walls[28] = (Wall){24*BU, 7.5*BU, 20*BU, 8.5*BU};
+			block_walls.walls[29] = (Wall){20*BU, 8.5*BU, 16.5*BU, 12*BU};
+			block_walls.walls[30] = (Wall){16.5*BU, 12*BU, 15.5*BU, 16*BU};
+			block_walls.walls[31] = (Wall){15.5*BU, 16*BU, 15.25*BU, 16.25*BU};
 			break;
 		default:
 			block_walls.wall_amount = 0;

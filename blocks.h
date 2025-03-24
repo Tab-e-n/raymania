@@ -15,7 +15,7 @@
 
 #define PLAYER_LAYER 2
 #define Z_LAYERS 4
-#define LOAD_DISTANCE (Vector2){4, 2}
+#define LOAD_DISTANCE (Vector2){4, 3}
 
 #define SURFACE_AMOUNT 5
 

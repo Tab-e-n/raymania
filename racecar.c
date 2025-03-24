@@ -49,7 +49,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.1;
-			stats.boost_acceleration = 0.075;
+			stats.boost_acceleration = 0.15;
 			stats.gear_shift_acceleration_punish = 0.3;
 			stats.friction = 0.05;
 			stats.always_apply_friction = false;
@@ -137,7 +137,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.01;
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.05;
-			stats.boost_acceleration = 0.05;
+			stats.boost_acceleration = 0.1;
 			stats.gear_shift_acceleration_punish = 0.3;
 			stats.friction = 0.03;
 			stats.always_apply_friction = false;
@@ -222,7 +222,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.005;
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.1;
-			stats.boost_acceleration = 0.1;
+			stats.boost_acceleration = 0.2;
 			stats.gear_shift_acceleration_punish = 0.1;
 			stats.friction = 0.001;
 			stats.always_apply_friction = true;
@@ -318,7 +318,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[3] = 0.01;
 			stats.acceleration[4] = 0.001;
 			stats.decceleration = 0.02;
-			stats.boost_acceleration = 0.05;
+			stats.boost_acceleration = 0.1;
 			stats.gear_shift_acceleration_punish = 0.3;
 			stats.friction = 0.01;
 			stats.always_apply_friction = false;
