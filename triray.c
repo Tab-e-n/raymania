@@ -451,6 +451,8 @@ int main(void)
 					if(start != current_tri)
 					{
 						asset->tris[current_tri] = base;
+						edit_points = false;
+						current_point = -1;
 						TraceLog(LOG_INFO, "Duplicated tri");
 					}
 					else

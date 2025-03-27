@@ -170,7 +170,22 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 			break;
 		case(25): // Big T-Junction
 			blocks_used = 1;
-			id[0] = B1x1AJ2;
+			id[0] = B3x2AJ0;
+			id[1] = DVOID;
+			break;
+		case(26): // Wiggle left
+			blocks_used = 1;
+			id[0] = B2x2AR0;
+			id[1] = DVOID;
+			break;
+		case(27): // Wiggle right
+			blocks_used = 1;
+			id[0] = B2x2AR1;
+			id[1] = DVOID;
+			break;
+		case(28): // Big Y-Junction
+			blocks_used = 1;
+			id[0] = B3x2AJ1;
 			id[1] = DVOID;
 			break;
 		default:
@@ -635,14 +650,14 @@ void PiecesInPage(unsigned int page[9], unsigned int page_num)
 			page[3] = 11;
 			page[4] = 12;
 			page[5] = 21;
-			page[6] = 0; // 2x2 Road wiggly
-			page[7] = 0; // mirror of previous
+			page[6] = 26;
+			page[7] = 27;
 			page[8] = 24;
 			break;
 		case(PAGE_ROAD_OBSTACLE):
 			page[0] = 22;
 			page[1] = 23;
-			page[2] = 0; // 2x3 Y split
+			page[2] = 28;
 			page[3] = 25;
 			page[4] = 16;
 			page[5] = 19;

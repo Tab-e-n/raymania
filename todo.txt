@@ -46,7 +46,7 @@ Enviroment Visuals
 
 IN PROGRESS
 Y-Junction
-Wiggles
+Remove INFO: from triray print
 Actual Blocks
 Audio omg
 
