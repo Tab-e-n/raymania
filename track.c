@@ -188,6 +188,94 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 			id[0] = B3x2AJ1;
 			id[1] = DVOID;
 			break;
+		case(29): // Dirt Start
+			blocks_used = 2;
+			id[0] = B1x1DR0;
+			id[1] = B1x1SR0;
+			break;
+		case(30): // Dirt Checkpoint
+			blocks_used = 2;
+			id[0] = B1x1DR0;
+			id[1] = B1x1CR0;
+			break;
+		case(31): // Dirt Finish
+			blocks_used = 2;
+			id[0] = B1x1DR0;
+			id[1] = B1x1FR0;
+			break;
+		case(32): // Dirt Basic Straight
+			blocks_used = 1;
+			id[0] = B1x1DR0;
+			id[1] = DVOID;
+			break;
+		case(33): // Dirt Basic Turn
+			blocks_used = 1;
+			id[0] = B1x1DT0;
+			id[1] = DVOID;
+			break;
+		case(34): // Dirt Big turn
+			blocks_used = 1;
+			id[0] = B2x2DT0;
+			id[1] = DVOID;
+			break;
+		case(35): // Dirt Wiggle left
+			blocks_used = 1;
+			id[0] = B2x2DR0;
+			id[1] = DVOID;
+			break;
+		case(36): // Dirt Wiggle right
+			blocks_used = 1;
+			id[0] = B2x2DR1;
+			id[1] = DVOID;
+			break;
+		case(37): // Dirt 
+			blocks_used = 0;
+			break;
+		case(38): // Dirt T-Junction
+			blocks_used = 1;
+			id[0] = B1x1DJ0;
+			id[1] = DVOID;
+			break;
+		case(39): // Dirt Crossroad
+			blocks_used = 1;
+			id[0] = B1x1DJ1;
+			id[1] = DVOID;
+			break;
+		case(40): // Dirt Big Y-Junction
+			blocks_used = 1;
+			id[0] = B3x2DJ1;
+			id[1] = DVOID;
+			break;
+		case(41): // Dirt Big T-Junction
+			blocks_used = 1;
+			id[0] = B3x2DJ0;
+			id[1] = DVOID;
+			break;
+		case(42): // Dirt Straight with center obstacle
+			blocks_used = 2;
+			id[0] = B1x1DR0;
+			id[1] = B1x1VB0;
+			break;
+		case(43): // Dirt Straight with two diagonal obstacles
+			blocks_used = 2;
+			id[0] = B1x1DR0;
+			id[1] = B1x1VB2;
+			break;
+		case(44): // Dirt Straight with two diagonal obstacles (mirror)
+			blocks_used = 2;
+			id[0] = B1x1DR0;
+			id[1] = B1x1VB3;
+			break;
+		case(45): // Dirt Turn with out obstacle
+			blocks_used = 2;
+			id[0] = B1x1DT0;
+			id[1] = B1x1VB0;
+			break;
+		case(46): // Dirt Turn with inner obstacle
+			blocks_used = 2;
+			id[0] = B1x1DT0;
+			id[1] = B1x1VB1;
+			break;
 		default:
 			blocks_used = 0;
 			break;
@@ -664,6 +752,28 @@ void PiecesInPage(unsigned int page[9], unsigned int page_num)
 			page[6] = 20;
 			page[7] = 17;
 			page[8] = 18;
+			break;
+		case(PAGE_DIRT_BASE):
+			page[0] = 29;
+			page[1] = 30;
+			page[2] = 31;
+			page[3] = 32;
+			page[4] = 33;
+			page[5] = 34;
+			page[6] = 35;
+			page[7] = 36;
+			page[8] = 37;
+			break;
+		case(PAGE_DIRT_OBSTACLE):
+			page[0] = 38;
+			page[1] = 39;
+			page[2] = 40;
+			page[3] = 41;
+			page[4] = 42;
+			page[5] = 43;
+			page[6] = 44;
+			page[7] = 45;
+			page[8] = 46;
 			break;
 	}
 }

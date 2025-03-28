@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <stdio.h>
 #include "rmlib.h"
 #include "asset.h"
 
@@ -175,7 +176,7 @@ void PrintAsset(Asset* asset)
 		Tri tri = asset->tris[i];
 		if(!TriIsPoint(tri))
 		{
-			TraceLog(LOG_INFO, "%i: %f %f %f %f %f %f", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y);
+			printf("%i: %f %f %f %f %f %f\n", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y);
 			id++;
 		}
 	}
@@ -217,7 +218,7 @@ void PrintAssetCentered(Asset* asset)
 		{
 			//TraceLog(LOG_INFO, "%f %f", center.x, center.y);
 			tri = MoveTri(tri, center);
-			TraceLog(LOG_INFO, "asset->tris[%i] = (Tri){%f, %f, %f, %f, %f, %f, %s};", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, rmcname(tri.color));
+			printf("asset->tris[%i] = (Tri){%f, %f, %f, %f, %f, %f, %s};\n", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, rmcname(tri.color));
 			id++;
 		}
 	}
@@ -237,7 +238,7 @@ void PrintAssetBU(Asset* asset)
 			tri.a = Vector2Scale(tri.a, .125);
 			tri.b = Vector2Scale(tri.b, .125);
 			tri.c = Vector2Scale(tri.c, .125);
-			TraceLog(LOG_INFO, "asset->tris[%i] = (Tri){%g*BU, %g*BU, %g*BU, %g*BU, %g*BU, %g*BU, %s};", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, rmcname(tri.color));
+			printf("asset->tris[%i] = (Tri){%g*BU, %g*BU, %g*BU, %g*BU, %g*BU, %g*BU, %s};\n", id, tri.a.x, tri.a.y, tri.b.x, tri.b.y, tri.c.x, tri.c.y, rmcname(tri.color));
 			id++;
 		}
 	}
@@ -245,6 +246,7 @@ void PrintAssetBU(Asset* asset)
 
 bool LoadAsset(Asset* asset, const char* filename)
 {
+	TraceLog(LOG_INFO, "LOADING ASSET");
 	int data_size;
 	unsigned char* file_data = LoadFileData(filename, &data_size);
 
@@ -269,7 +271,7 @@ bool LoadAsset(Asset* asset, const char* filename)
 		}
 
 		UnloadFileData(file_data);
-		PrintAsset(asset);
+		//PrintAsset(asset);
 		return loaded;
 	}
 	return false;
@@ -277,6 +279,7 @@ bool LoadAsset(Asset* asset, const char* filename)
 
 bool SaveAsset(Asset* asset, const char* filename)
 {
+	TraceLog(LOG_INFO, "SAVING ASSET");
 	bool success = false;
 	int data_size;
 	int save_data_size;
@@ -342,7 +345,7 @@ bool SaveAsset(Asset* asset, const char* filename)
 		UnloadFileData(file_data);
 	}
 
-	PrintAsset(asset);
+	//PrintAsset(asset);
 	return success;
 }
 
@@ -357,7 +360,7 @@ int main(void)
 	Color* palette = LoadImagePalette(image, 128, &count);
 	for(int i = 0; i < count; i++)
 	{
-		TraceLog(LOG_INFO, "case(%i): return (Color){%i, %i, %i, 255};", i, palette[i].r, palette[i].g, palette[i].b);
+		printf("case(%s): return (Color){%i, %i, %i, 255};\n", rmcname(i + 25), palette[i].r, palette[i].g, palette[i].b);
 	}
 	UnloadImagePalette(palette);
 	UnloadImage(image);

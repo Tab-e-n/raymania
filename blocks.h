@@ -23,15 +23,15 @@
 typedef enum Surface {SURFACE_ASPHALT = 0, SURFACE_GRASS, SURFACE_DIRT, SURFACE_ICE, SURFACE_WATER} Surface;
 
 typedef enum AreaType {
-	TYPE_VOID,
-	TYPE_ASPHALT, TYPE_GRASS, TYPE_DIRT, TYPE_ICE, TYPE_WATER,
-	TYPE_CHECKPOINT, TYPE_FINISH, TYPE_START, TYPE_BOOSTER
+TYPE_VOID,
+TYPE_ASPHALT, TYPE_GRASS, TYPE_DIRT, TYPE_ICE, TYPE_WATER,
+TYPE_CHECKPOINT, TYPE_FINISH, TYPE_START, TYPE_BOOSTER
 } AreaType;
 
 typedef struct Area 
 {
-	int type;
-	Rectangle rect;
+int type;
+Rectangle rect;
 } Area;
 
 typedef struct Wall 

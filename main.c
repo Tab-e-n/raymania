@@ -2374,11 +2374,11 @@ int main(void)
 		}
 		if(track.env == ENV_MEADOW)
 		{
-			ClearBackground(LIME);
+			ClearBackground(rmc(RM_GREEN5));
 		}
 		if(track.env == ENV_QUARRY)
 		{
-			ClearBackground(BROWN);
+			ClearBackground(rmc(RM_ORANGE6));
 		}
 		if(track.env == ENV_ISLAND)
 		{

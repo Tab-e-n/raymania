@@ -683,6 +683,7 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 	Asset* asset;
 	Vector2 size = (Vector2){BLOCK_SIZE, BLOCK_SIZE};
 	int anim_time = 0;
+	char color1 = RM_WHITE5, color2, color3;
 	switch(asset_id)
 	{
 		case(D1x1GWN):
@@ -783,10 +784,12 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[22] = (Tri){0.500000, -16.000000, -6.500000, -6.000000, 6.500000, -6.000000, CAR_HULL};
 			asset->tris[23] = (Tri){0.500000, -5.000000, -5.500000, 6.000000, 5.500000, 6.000000, CAR_DRIVER};
 			break;
+		case(B1x1DR0):
+			color1 = RM_ORANGE4;
 		case(B1x1AR0):
 			asset = MallocAsset(10);
-			asset->tris[0] = (Tri){0*BU, 0*BU, 0*BU, 8*BU, 8*BU, 8*BU, RM_WHITE5};
-			asset->tris[1] = (Tri){0*BU, 0*BU, 8*BU, 8*BU, 8*BU, 0*BU, RM_WHITE5};
+			asset->tris[0] = (Tri){0*BU, 0*BU, 0*BU, 8*BU, 8*BU, 8*BU, color1};
+			asset->tris[1] = (Tri){0*BU, 0*BU, 8*BU, 8*BU, 8*BU, 0*BU, color1};
 			asset->tris[2] = (Tri){0.5*BU, 0*BU, 1*BU, 0*BU, 0.75*BU, -0.25*BU, RM_WHITE7};
 			asset->tris[3] = (Tri){0.5*BU, 0*BU, 1*BU, 8*BU, 1*BU, 0*BU, RM_WHITE7};
 			asset->tris[4] = (Tri){0.5*BU, 0*BU, 0.5*BU, 8*BU, 1*BU, 8*BU, RM_WHITE7};
@@ -796,10 +799,12 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[8] = (Tri){7*BU, 0*BU, 7*BU, 8*BU, 7.5*BU, 8*BU, RM_WHITE7};
 			asset->tris[9] = (Tri){7*BU, 8*BU, 7.25*BU, 8.25*BU, 7.5*BU, 8*BU, RM_WHITE7};
 			break;
+		case(B1x1DT0):
+			color1 = RM_ORANGE4;
 		case(B1x1AT0):
 			asset = MallocAsset(15);
-			asset->tris[0] = (Tri){0*BU, 0*BU, 0*BU, 8*BU, 8*BU, 8*BU, RM_WHITE5};
-			asset->tris[1] = (Tri){0*BU, 0*BU, 8*BU, 8*BU, 8*BU, 0*BU, RM_WHITE5};
+			asset->tris[0] = (Tri){0*BU, 0*BU, 0*BU, 8*BU, 8*BU, 8*BU, color1};
+			asset->tris[1] = (Tri){0*BU, 0*BU, 8*BU, 8*BU, 8*BU, 0*BU, color1};
 			asset->tris[2] = (Tri){0*BU, 7.5*BU, 0.5*BU, 8*BU, 1*BU, 8*BU, RM_WHITE7};
 			asset->tris[3] = (Tri){1*BU, 8*BU, 0*BU, 7*BU, 0*BU, 7.5*BU, RM_WHITE7};
 			asset->tris[4] = (Tri){7*BU, 8*BU, 7.5*BU, 8*BU, 6.5*BU, 4.5*BU, RM_WHITE7};
@@ -883,11 +888,13 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[10] = (Tri){1.25*BU, 1.75*BU, 1.75*BU, 2.75*BU, 1.75*BU, 1.25*BU, RM_WHITE7};
 			asset->tris[11] = (Tri){1.75*BU, 1.25*BU, 1.75*BU, 2.75*BU, 2.25*BU, 1.25*BU, RM_WHITE7};
 			break;
+		case(B2x2DT0):
+			color1 = RM_ORANGE4;
 		case(B2x2AT0):
 			size = (Vector2){BLOCK_SIZE * 2, BLOCK_SIZE * 2};
 			asset = MallocAsset(18);
-			asset->tris[0] = (Tri){0*BU, 16*BU, 16*BU, 16*BU, 16*BU, 0*BU, RM_WHITE5};
-			asset->tris[1] = (Tri){0*BU, 0*BU, 0*BU, 16*BU, 16*BU, 0*BU, RM_WHITE5};
+			asset->tris[0] = (Tri){0*BU, 16*BU, 16*BU, 16*BU, 16*BU, 0*BU, color1};
+			asset->tris[1] = (Tri){0*BU, 0*BU, 0*BU, 16*BU, 16*BU, 0*BU, color1};
 			asset->tris[2] = (Tri){8.5*BU, 16*BU, 9*BU, 16*BU, 7.5*BU, 12*BU, RM_WHITE7};
 			asset->tris[3] = (Tri){0*BU, 7*BU, 0*BU, 7.5*BU, 4*BU, 8.5*BU, RM_WHITE7};
 			asset->tris[4] = (Tri){0*BU, 7*BU, 4*BU, 8.5*BU, 4.25*BU, 8*BU, RM_WHITE7};
@@ -906,10 +913,12 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[16] = (Tri){8.5*BU, 16*BU, 8.75*BU, 16.25*BU, 9*BU, 16*BU, RM_WHITE7};
 			asset->tris[17] = (Tri){15*BU, 16*BU, 15.25*BU, 16.25*BU, 15.5*BU, 16*BU, RM_WHITE7};
 			break;
+		case(B1x1DJ0):
+			color1 = RM_ORANGE4;
 		case(B1x1AJ0):
 			asset = MallocAsset(10);
-			asset->tris[0] = (Tri){0*BU, 0*BU, 0*BU, 8*BU, 8*BU, 8*BU, RM_WHITE5};
-			asset->tris[1] = (Tri){0*BU, 0*BU, 8*BU, 8*BU, 8*BU, 0*BU, RM_WHITE5};
+			asset->tris[0] = (Tri){0*BU, 0*BU, 0*BU, 8*BU, 8*BU, 8*BU, color1};
+			asset->tris[1] = (Tri){0*BU, 0*BU, 8*BU, 8*BU, 8*BU, 0*BU, color1};
 			asset->tris[2] = (Tri){-0.25*BU, 7.25*BU, 0.75*BU, 8.25*BU, 1*BU, 8*BU, RM_WHITE7};
 			asset->tris[3] = (Tri){1*BU, 8*BU, 0*BU, 7*BU, -0.25*BU, 7.25*BU, RM_WHITE7};
 			asset->tris[4] = (Tri){-0.25*BU, 0.75*BU, 1*BU, 0*BU, 0.75*BU, -0.25*BU, RM_WHITE7};
@@ -919,10 +928,12 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[8] = (Tri){7*BU, 0*BU, 7*BU, 8*BU, 7.5*BU, 8*BU, RM_WHITE7};
 			asset->tris[9] = (Tri){7*BU, 8*BU, 7.25*BU, 8.25*BU, 7.5*BU, 8*BU, RM_WHITE7};
 			break;
+		case(B1x1DJ1):
+			color1 = RM_ORANGE4;
 		case(B1x1AJ1):
 			asset = MallocAsset(10);
-			asset->tris[0] = (Tri){0*BU, 0*BU, 0*BU, 8*BU, 8*BU, 8*BU, RM_WHITE5};
-			asset->tris[1] = (Tri){0*BU, 0*BU, 8*BU, 8*BU, 8*BU, 0*BU, RM_WHITE5};
+			asset->tris[0] = (Tri){0*BU, 0*BU, 0*BU, 8*BU, 8*BU, 8*BU, color1};
+			asset->tris[1] = (Tri){0*BU, 0*BU, 8*BU, 8*BU, 8*BU, 0*BU, color1};
 			asset->tris[2] = (Tri){-0.25*BU, 7.25*BU, 0.75*BU, 8.25*BU, 1*BU, 8*BU, RM_WHITE7};
 			asset->tris[3] = (Tri){1*BU, 8*BU, 0*BU, 7*BU, -0.25*BU, 7.25*BU, RM_WHITE7};
 			asset->tris[4] = (Tri){-0.25*BU, 0.75*BU, 1*BU, 0*BU, 0.75*BU, -0.25*BU, RM_WHITE7};
@@ -934,7 +945,9 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			break;
 		case(B1x1BR0):
 			anim_time = (int)Wrap((float)game_time, 0.0, 3.0);
-			char color1 = RM_CYAN0, color2 = RM_BLUE1, color3 = RM_MAGENTA2;
+			color1 = RM_CYAN0;
+			color2 = RM_BLUE1;
+			color3 = RM_MAGENTA2;
 			if(anim_time == 1)
 			{
 				color1 = RM_MAGENTA2;
@@ -965,11 +978,13 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[14] = (Tri){1*BU, 1*BU, 7*BU, 1*BU, 7*BU, 0*BU, color2};
 			asset->tris[15] = (Tri){1*BU, 1*BU, 7*BU, 0*BU, 1*BU, 0*BU, color3};
 			break;
+		case(B3x2DJ0):
+			color1 = RM_ORANGE4;
 		case(B3x2AJ0):
 			size = (Vector2){BLOCK_SIZE * 3, BLOCK_SIZE * 2};
 			asset = MallocAsset(28);
-			asset->tris[0] = (Tri){24*BU, 0*BU, 0*BU, 16*BU, 24*BU, 16*BU, RM_WHITE5};
-			asset->tris[1] = (Tri){0*BU, 0*BU, 0*BU, 16*BU, 24*BU, 0*BU, RM_WHITE5};
+			asset->tris[0] = (Tri){24*BU, 0*BU, 0*BU, 16*BU, 24*BU, 16*BU, color1};
+			asset->tris[1] = (Tri){0*BU, 0*BU, 0*BU, 16*BU, 24*BU, 0*BU, color1};
 			asset->tris[2] = (Tri){8.5*BU, 16*BU, 9*BU, 16*BU, 7.5*BU, 12*BU, RM_WHITE7};
 			asset->tris[3] = (Tri){0*BU, 7*BU, 0*BU, 7.5*BU, 4*BU, 8.5*BU, RM_WHITE7};
 			asset->tris[4] = (Tri){0*BU, 7*BU, 4*BU, 8.5*BU, 4.25*BU, 8*BU, RM_WHITE7};
@@ -997,11 +1012,13 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[26] = (Tri){15.5*BU, 16*BU, 15*BU, 16*BU, 15.25*BU, 16.25*BU, RM_WHITE7};
 			asset->tris[27] = (Tri){9*BU, 16*BU, 8.5*BU, 16*BU, 8.75*BU, 16.25*BU, RM_WHITE7};
 			break;
+		case(B2x2DR0):
+			color1 = RM_ORANGE4;
 		case(B2x2AR0):
 			size = (Vector2){BLOCK_SIZE * 2, BLOCK_SIZE * 2};
 			asset = MallocAsset(18);
-			asset->tris[0] = (Tri){16*BU, 0*BU, 0*BU, 16*BU, 16*BU, 16*BU, RM_WHITE5};
-			asset->tris[1] = (Tri){0*BU, 0*BU, 0*BU, 16*BU, 16*BU, 0*BU, RM_WHITE5};
+			asset->tris[0] = (Tri){16*BU, 0*BU, 0*BU, 16*BU, 16*BU, 16*BU, color1};
+			asset->tris[1] = (Tri){0*BU, 0*BU, 0*BU, 16*BU, 16*BU, 0*BU, color1};
 			asset->tris[2] = (Tri){8.5*BU, 16*BU, 9*BU, 16*BU, 7.25*BU, 12.125*BU, RM_WHITE7};
 			asset->tris[3] = (Tri){9*BU, 16*BU, 7.75*BU, 11.875*BU, 7.25*BU, 12.125*BU, RM_WHITE7};
 			asset->tris[4] = (Tri){15*BU, 16*BU, 15.5*BU, 16*BU, 13.75*BU, 8.875*BU, RM_WHITE7};
@@ -1019,11 +1036,13 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[16] = (Tri){0.5*BU, 0*BU, 1*BU, 0*BU, 0.75*BU, -0.25*BU, RM_WHITE7};
 			asset->tris[17] = (Tri){7*BU, 0*BU, 7.5*BU, 0*BU, 7.25*BU, -0.25*BU, RM_WHITE7};
 			break;
+		case(B2x2DR1):
+			color1 = RM_ORANGE4;
 		case(B2x2AR1):
 			size = (Vector2){BLOCK_SIZE * 2, BLOCK_SIZE * 2};
 			asset = MallocAsset(18);
-			asset->tris[0] = (Tri){16*BU, 16*BU, 0*BU, 0*BU, 0*BU, 16*BU, RM_WHITE5};
-			asset->tris[1] = (Tri){16*BU, 16*BU, 16*BU, 0*BU, 0*BU, 0*BU, RM_WHITE5};
+			asset->tris[0] = (Tri){16*BU, 16*BU, 0*BU, 0*BU, 0*BU, 16*BU, color1};
+			asset->tris[1] = (Tri){16*BU, 16*BU, 16*BU, 0*BU, 0*BU, 0*BU, color1};
 			asset->tris[2] = (Tri){7*BU, 16*BU, 7.5*BU, 16*BU, 8.75*BU, 12.125*BU, RM_WHITE7};
 			asset->tris[3] = (Tri){8.25*BU, 11.875*BU, 7*BU, 16*BU, 8.75*BU, 12.125*BU, RM_WHITE7};
 			asset->tris[4] = (Tri){0.5*BU, 16*BU, 1*BU, 16*BU, 2.25*BU, 8.875*BU, RM_WHITE7};
@@ -1041,11 +1060,13 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 			asset->tris[16] = (Tri){15*BU, 0*BU, 15.5*BU, 0*BU, 15.25*BU, -0.25*BU, RM_WHITE7};
 			asset->tris[17] = (Tri){8.5*BU, 0*BU, 9*BU, 0*BU, 8.75*BU, -0.25*BU, RM_WHITE7};
 			break;
+		case(B3x2DJ1):
+			color1 = RM_ORANGE4;
 		case(B3x2AJ1):
 			size = (Vector2){BLOCK_SIZE * 3, BLOCK_SIZE * 2};
 			asset = MallocAsset(28);
-			asset->tris[0] = (Tri){24*BU, 0*BU, 0*BU, 16*BU, 24*BU, 16*BU, RM_WHITE5};
-			asset->tris[1] = (Tri){0*BU, 0*BU, 0*BU, 16*BU, 24*BU, 0*BU, RM_WHITE5};
+			asset->tris[0] = (Tri){24*BU, 0*BU, 0*BU, 16*BU, 24*BU, 16*BU, color1};
+			asset->tris[1] = (Tri){0*BU, 0*BU, 0*BU, 16*BU, 24*BU, 0*BU, color1};
 			asset->tris[2] = (Tri){8.5*BU, 16*BU, 9*BU, 16*BU, 7.25*BU, 12.125*BU, RM_WHITE7};
 			asset->tris[3] = (Tri){9*BU, 16*BU, 7.75*BU, 11.875*BU, 7.25*BU, 12.125*BU, RM_WHITE7};
 			asset->tris[4] = (Tri){15*BU, 16*BU, 15.5*BU, 16*BU, 16.75*BU, 12.125*BU, RM_WHITE7};
