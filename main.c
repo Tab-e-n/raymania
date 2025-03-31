@@ -487,6 +487,16 @@ int main(void)
 			demo = InitDemo();
 			ClearDemo(ghost_demo);
 			ghost_demo = InitDemo();
+			if(menu_option == MENU_RACE)
+			{
+				file_list_active = FL_TRACK;
+				load_file_list = true;
+			}
+			else if(menu_option == MENU_DEMO)
+			{
+				file_list_active = FL_DEMO;
+				load_file_list = true;
+			}
 		}
 
 		ZoomCameraSmooth(&camera, 0.5, CAM_ZOOM_SPEED);
@@ -1245,8 +1255,8 @@ int main(void)
 		{
 			if(InputPressed(input, INPUT_ESC))
 			{
-				paused = true;
-				pause_option = 0;
+				current_game_screen = MENU;
+				reset_menu = true;
 			}
 			if(InputPressed(input, INPUT_ENTER))
 			{
@@ -2492,7 +2502,10 @@ int main(void)
 			{
 				DrawText("RAYMANIA", 258, 56, 96, BLACK);
 
-				if(party_mode && party_current_menu == 0)
+				if(reset_menu)
+				{
+				}
+				else if(party_mode && party_current_menu == 0)
 				{
 					DrawPartyMenu(party_current_opt, party_count, party_profiles);
 				}
@@ -2735,9 +2748,9 @@ int main(void)
 			{
 				if(DEBUG)
 				{
-					DrawText(TextFormat("pos %i %i", load_placement.x, load_placement.y), 8, 16, 32, BLACK);
-					DrawText(TextFormat("velocity %.3f %.3f", car.velocity.x, car.velocity.y), 8, 48, 32, BLACK);
-					DrawText(TextFormat("shake_time %.3f", shake_time), 8, 80, 32, BLACK);
+					DrawText(TextFormat("pos %i %i", load_placement.x, load_placement.y), 8, 96, 32, BLACK);
+					DrawText(TextFormat("velocity %.3f %.3f", car.velocity.x, car.velocity.y), 8, 128, 32, BLACK);
+					DrawText(TextFormat("shake_time %.3f", shake_time), 8, 160, 32, BLACK);
 				}
 				if(finished)
 				{

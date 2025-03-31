@@ -229,7 +229,9 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 			id[1] = DVOID;
 			break;
 		case(37): // Dirt 
-			blocks_used = 0;
+			blocks_used = 1;
+			id[0] = B1x1DR1;
+			id[1] = DVOID;
 			break;
 		case(38): // Dirt T-Junction
 			blocks_used = 1;

@@ -434,36 +434,37 @@ int main(void)
 		}
 		if(IsKeyPressed(KEY_T))
 		{
-			if(current_tri != 0)
+			if(IsKeyDown(KEY_LEFT_CONTROL))
 			{
-				if(IsKeyDown(KEY_LEFT_CONTROL))
+				Tri base = asset->tris[current_tri];
+				Tri tri;
+				int start = current_tri;
+				do
 				{
-					Tri base = asset->tris[current_tri];
-					Tri tri;
-					int start = current_tri;
-					do
+					current_tri++;
+					if(current_tri == TRI_AMOUNT)
 					{
-						current_tri++;
-						if(current_tri == TRI_AMOUNT)
-						{
-							current_tri = 0;
-						}
-						tri = asset->tris[current_tri];
+						current_tri = 0;
 					}
-					while(!TriIsPoint(tri) && !(start == current_tri));
-					if(start != current_tri)
-					{
-						asset->tris[current_tri] = base;
-						edit_points = false;
-						current_point = -1;
-						TraceLog(LOG_INFO, "Duplicated tri");
-					}
-					else
-					{
-						TraceLog(LOG_WARNING, "Cannot duplicate tri");
-					}
+					tri = asset->tris[current_tri];
 				}
-				else if(IsKeyDown(KEY_LEFT_SHIFT))
+				while(!TriIsPoint(tri) && !(start == current_tri));
+				if(start != current_tri)
+				{
+					asset->tris[current_tri] = base;
+					edit_points = false;
+					current_point = -1;
+					TraceLog(LOG_INFO, "Duplicated tri");
+				}
+				else
+				{
+					TraceLog(LOG_WARNING, "Cannot duplicate tri");
+				}
+			}
+			else if(current_tri != 0)
+			{
+				
+				if(IsKeyDown(KEY_LEFT_SHIFT))
 				{
 					Tri zero = asset->tris[0];
 					asset->tris[0] = asset->tris[current_tri];

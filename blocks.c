@@ -97,6 +97,7 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 		case(B1x1DT0):
 		case(B1x1DJ0):
 		case(B1x1DJ1):
+		case(B1x1DR1):
 			block.area = (Area){TYPE_DIRT, 0, 0, 8*BU, 8*BU};
 			block.size = (Vector2int){1, 1};
 			break;

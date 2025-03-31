@@ -50,7 +50,7 @@ typedef enum BlockID {
 	B1x1VB3, B2x2AT0, B1x1AJ0, B1x1AJ1, B1x1BR0, B3x2AJ0, B2x2AR0, B2x2AR1,
 	B3x2AJ1,
 	B1x1DR0, B1x1DT0, B2x2DT0, B1x1DJ0, B1x1DJ1, B3x2DJ0, B2x2DR0, B2x2DR1,
-	B3x2DJ1,
+	B3x2DJ1, B1x1DR1
 } BlockID;
 
 typedef struct Palette
