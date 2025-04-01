@@ -48,6 +48,11 @@ void CarSetVis(Racecar* car, Profile* profile, DefaultCar type)
 int main(void)
 {
 	InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "RAYMANIA");
+	InitAudioDevice();
+
+	SetMasterVolume(4.0);
+
+	TraceLog(LOG_INFO, "Master: %f", GetMasterVolume());
 
 	//TraceLog(LOG_INFO, "Size of %i.", sizeof(Asset));
 	//TraceLog(LOG_INFO, "Size of Blocks in Track %i.", sizeof(Block) * MAX_BLOCK_AMOUNT);
@@ -212,6 +217,8 @@ int main(void)
 	unsigned char playing_demo = DEMO_OFF;
 
 	bool race_showcase = false;
+
+	Sound sfx_engine, sfx_crash;
 
 	// EDITOR VAR
 
@@ -1166,6 +1173,23 @@ int main(void)
 				StartDemo(ghost_demo);
 				playing_demo = DEMO_GHOST_INIT;
 			}
+			sfx_crash = LoadSound(SFX_CRASH);
+			if(track.car == CAR_ROAD)
+			{
+				sfx_engine = LoadSound(SFX_ENGINE_ROAD);
+			}
+			if(track.car == CAR_DRIFT)
+			{
+				sfx_engine = LoadSound(SFX_ENGINE_DRIFT);
+			}
+			if(track.car == CAR_GRIP)
+			{
+				sfx_engine = LoadSound(SFX_ENGINE_GRIP);
+			}
+			if(track.car == CAR_TERRAIN)
+			{
+				sfx_engine = LoadSound(SFX_ENGINE_TERRA);
+			}
 		}
 
 		bool cp_reset = false;
@@ -1363,6 +1387,43 @@ int main(void)
 			{
 				shake_time += (speed_change - car_stats.camera_shake_threshold) * car_stats.speed_to_shake_ratio;
 			}
+			if(speed_change > car_stats.camera_shake_threshold) // TODO: Own value, not tied to cam
+			{
+				PlaySound(sfx_crash);
+			}
+
+			bool car_still = zero(car.velocity.x) && zero(car.velocity.y);
+			bool car_was_still = zero(previous_speed);
+			if(car_still != car_was_still)
+			{
+				if(car_still)
+				{
+					StopSound(sfx_engine);
+				}
+				else
+				{
+					PlaySound(sfx_engine);
+				}
+			}
+			if(IsSoundPlaying(sfx_engine))
+			{
+				float engine_pitch = (previous_speed - car.gear) * 0.3;
+				SetSoundPitch(sfx_engine, engine_pitch);
+				float engine_volume = 1.0;
+				if(car.gear == 0 && car.gear_shift <= 0.0)
+				{
+					engine_volume = .2 + .8 * (previous_speed / car_stats.gears[0]);
+				}
+				SetSoundVolume(sfx_engine, engine_volume);
+			}
+			else
+			{
+				if(!car_still)
+				{
+					PlaySound(sfx_engine);
+				}
+			}
+
 
 			if(meta.checkpoint && checkpoints_gotten != track.checkpoint_amount)
 			{
@@ -1578,6 +1639,13 @@ int main(void)
 			ResetRacecar(&car, check_pos, check_rot, car_stats.size);
 			MoveCameraInstant(&camera, car.position);
 			ClearSkidLine(skid_line);
+		}
+		if(current_game_screen != RACE)
+		{
+			StopSound(sfx_crash);
+			UnloadSound(sfx_crash);
+			StopSound(sfx_engine);
+			UnloadSound(sfx_engine);
 		}
 
 		break;
@@ -3044,6 +3112,7 @@ int main(void)
 	EndDrawing();
 	}
 
+	CloseAudioDevice();
 	CloseWindow();
 
 	return 0;
