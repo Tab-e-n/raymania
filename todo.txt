@@ -45,10 +45,12 @@ Arrow that points to the start in editor.
 Enviroment Visuals
 
 IN PROGRESS
-Actual Blocks
 Audio omg
 
 BEFORE PLAYTEST MAYBE
+Big blocks go outside of map fix
+Held piece in editor is transparent
+When holding down enter, blocks dont place when moving instantly
 angular velocity?
 Start draws a racecar in editor
 Different zoom for different cars?
