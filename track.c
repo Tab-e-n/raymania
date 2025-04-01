@@ -278,6 +278,51 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 			id[0] = B1x1DT0;
 			id[1] = B1x1VB1;
 			break;
+		case(47): // Platform
+			blocks_used = 1;
+			id[0] = B1x1AR1;
+			id[1] = DVOID;
+			break;
+		case(48): // Platform edge
+			blocks_used = 1;
+			id[0] = B1x1AR2;
+			id[1] = DVOID;
+			break;
+		case(49): // Platform turn
+			blocks_used = 1;
+			id[0] = B1x1AT1;
+			id[1] = DVOID;
+			break;
+		case(50): // Platform big turn
+			blocks_used = 1;
+			id[0] = B2x2AT1;
+			id[1] = DVOID;
+			break;
+		case(51): // Platform corner .
+			blocks_used = 1;
+			id[0] = B1x1AT2;
+			id[1] = DVOID;
+			break;
+		case(52): // Platform enter :
+			blocks_used = 1;
+			id[0] = B1x1AR3;
+			id[1] = DVOID;
+			break;
+		case(53): // Platform booster
+			blocks_used = 1;
+			id[0] = B1x1BR1;
+			id[1] = DVOID;
+			break;
+		case(54): // Grass 
+			blocks_used = 1;
+			id[0] = B1x1GR0;
+			id[1] = DVOID;
+			break;
+		case(55): // Water 
+			blocks_used = 1;
+			id[0] = B1x1WR0;
+			id[1] = DVOID;
+			break;
 		default:
 			blocks_used = 0;
 			break;
@@ -776,6 +821,17 @@ void PiecesInPage(unsigned int page[9], unsigned int page_num)
 			page[6] = 44;
 			page[7] = 45;
 			page[8] = 46;
+			break;
+		case(PAGE_PLATFORM_BASE):
+			page[0] = 47;
+			page[1] = 48;
+			page[2] = 49;
+			page[3] = 50;
+			page[4] = 51;
+			page[5] = 52;
+			page[6] = 53;
+			page[7] = 54;
+			page[8] = 55;
 			break;
 	}
 }

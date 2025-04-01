@@ -73,7 +73,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[2] = 0.001;
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
-			stats.friction = 0.2;
+			stats.friction = 0.02;
 			stats.always_apply_friction = true;
 			stats.redirect_angle = PI*0.007;
 			stats.redirect_angle_loss = 0.014;
@@ -101,7 +101,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[2] = 0.03;
 			stats.acceleration[3] = 0.02;
 			stats.acceleration[4] = 0.01;
-			stats.friction = 0.01;
+			stats.friction = 0.005;
 			stats.always_apply_friction = false;
 			stats.turn_speed = PI*0.0075;
 			stats.turn_speed_fix_threshold = 3;
@@ -170,7 +170,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[2] = 0.003;
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
-			stats.friction = 0.03;
+			stats.friction = 0.025;
 			stats.always_apply_friction = true;
 			stats.redirect_angle = PI*0.002;
 			stats.redirect_angle_loss = 0.0008;
@@ -209,7 +209,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[2] = 0.022;
 			stats.acceleration[3] = 0.021;
 			stats.acceleration[4] = 0.0021;
-			stats.friction = 0.03;
+			stats.friction = 0.02;
 			stats.always_apply_friction = true;
 			stats.flip_turning_when_backwards = false;
 			stats.flip_turning_when_going_backwards = false;
@@ -263,7 +263,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[2] = 0.001;
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
-			stats.friction = 0.04;
+			stats.friction = 0.008;
 			stats.turn_speed = PI*0.0125;
 			stats.turn_speed_fix_threshold = 14;
 			stats.redirect_angle = PI*0.02;
@@ -305,7 +305,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[2] = 0.001;
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
-			stats.friction = 0.08;
+			stats.friction = 0.04;
 			stats.always_apply_friction = true;
 			stats.flip_turning_when_backwards = false;
 			stats.flip_turning_when_going_backwards = false;
@@ -359,7 +359,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[2] = 0.001;
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
-			stats.friction = 0.01;
+			stats.friction = 0.015;
 			stats.redirect_angle = PI*0.002;
 			stats.redirect_angle_loss = 0.005;
 			stats.redirect_speed_loss = 0.01;
@@ -399,7 +399,7 @@ CarStats DefaultStats(DefaultCar car)
 			stats.acceleration[2] = 0.001;
 			stats.acceleration[3] = 0.001;
 			stats.acceleration[4] = 0.001;
-			stats.friction = 0.03;
+			stats.friction = 0.02;
 			stats.always_apply_friction = true;
 			stats.flip_turning_when_backwards = false;
 			stats.flip_turning_when_going_backwards = false;
@@ -835,6 +835,9 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 	{
 		switch(env)
 		{
+			case(ENV_VOID):
+				type = TYPE_ICE;
+				break;
 			case(ENV_MEADOW):
 				type = TYPE_GRASS;
 				break;
@@ -994,7 +997,7 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 			float angle = absf(Vector2Angle(car->velocity, car->rotation));
 			facing_foward = angle < PI * 0.5;
 		}
-		if(stats->always_apply_friction)
+		if(stats->always_apply_friction && car->gear_shift <= 0.0)
 		{
 			ApplyFrictionRacecar(car, stats->friction);
 		}

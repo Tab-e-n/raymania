@@ -38,59 +38,33 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 	
 	switch(id)
 	{
-		case(D1x1GWN):
-			block.area = (Area){TYPE_GRASS, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
+		case(D1x1A):
+		case(B1x1AR0):
+		case(B1x1AT0):
+		case(B1x1AJ0):
+		case(B1x1AJ1):
+		case(B1x1AR1):
+		case(B1x1AT1):
+		case(B1x1AR2):
+		case(B1x1AT2):
+		case(B1x1AR3):
+			block.area = (Area){TYPE_ASPHALT, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
 			block.size = (Vector2int){1, 1};
 			break;
 		case(D2x1AIO):
 			block.area = (Area){TYPE_ASPHALT, 0, 0, BLOCK_SIZE * 2, BLOCK_SIZE};
 			block.size = (Vector2int){2, 1};
 			break;
-		case(D2x2DIO):
-			block.area = (Area){TYPE_DIRT, 0, 0, BLOCK_SIZE * 2, BLOCK_SIZE * 2};
-			block.size = (Vector2int){2, 2};
-			break;
-		case(D1x1GWS):
-			block.area = (Area){TYPE_GRASS, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
-			block.size = (Vector2int){1, 1};
-			break;
-		case(D1x1I):
-			block.area = (Area){TYPE_ICE, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
-			block.size = (Vector2int){1, 1};
-			break;
-		case(D1x1C):
-			block.area = (Area){TYPE_CHECKPOINT, 0, BU * 3.5, BLOCK_SIZE, BU};
-			block.size = (Vector2int){1, 1};
-			break;
-		case(D1x1F):
-			block.area = (Area){TYPE_FINISH, 0, BU * 3.5, BLOCK_SIZE, BU};
-			block.size = (Vector2int){1, 1};
-			break;
-		case(D1x1S):
-			block.area = (Area){TYPE_START, 0, BU * 3.5, BLOCK_SIZE, BU};
-			block.size = (Vector2int){1, 1};
-			block.z = 2;
-			break;
-		case(D1x1A):
-			block.area = (Area){TYPE_ASPHALT, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
-			block.size = (Vector2int){1, 1};
-			break;
-		case(B1x1AR0):
-		case(B1x1AT0):
-		case(B1x1AJ0):
-		case(B1x1AJ1):
-			block.area = (Area){TYPE_ASPHALT, 0, 0, 8*BU, 8*BU};
-			block.size = (Vector2int){1, 1};
-			break;
 		case(B2x2AT0):
 		case(B2x2AR0):
 		case(B2x2AR1):
-			block.area = (Area){TYPE_ASPHALT, 0, 0, 16*BU, 16*BU};
+		case(B2x2AT1):
+			block.area = (Area){TYPE_ASPHALT, 0, 0, 2*BLOCK_SIZE, 2*BLOCK_SIZE};
 			block.size = (Vector2int){2, 2};
 			break;
 		case(B3x2AJ0):
 		case(B3x2AJ1):
-			block.area = (Area){TYPE_ASPHALT, 0, 0, 24*BU, 16*BU};
+			block.area = (Area){TYPE_ASPHALT, 0, 0, 3*BLOCK_SIZE, 2*BLOCK_SIZE};
 			block.size = (Vector2int){3, 2};
 			break;
 		case(B1x1DR0):
@@ -98,25 +72,49 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 		case(B1x1DJ0):
 		case(B1x1DJ1):
 		case(B1x1DR1):
-			block.area = (Area){TYPE_DIRT, 0, 0, 8*BU, 8*BU};
+			block.area = (Area){TYPE_DIRT, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
 			block.size = (Vector2int){1, 1};
 			break;
+		case(D2x2DIO):
 		case(B2x2DT0):
 		case(B2x2DR0):
 		case(B2x2DR1):
-			block.area = (Area){TYPE_DIRT, 0, 0, 16*BU, 16*BU};
+			block.area = (Area){TYPE_DIRT, 0, 0, 2*BLOCK_SIZE, 2*BLOCK_SIZE};
 			block.size = (Vector2int){2, 2};
 			break;
 		case(B3x2DJ0):
 		case(B3x2DJ1):
-			block.area = (Area){TYPE_DIRT, 0, 0, 24*BU, 16*BU};
+			block.area = (Area){TYPE_DIRT, 0, 0, 3*BLOCK_SIZE, 2*BLOCK_SIZE};
 			block.size = (Vector2int){3, 2};
+			break;
+		case(D1x1GWN):
+		case(D1x1GWS):
+		case(B1x1GR0):
+			block.area = (Area){TYPE_GRASS, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
+			block.size = (Vector2int){1, 1};
+			break;
+		case(B1x1WR0):
+			block.area = (Area){TYPE_WATER, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
+			block.size = (Vector2int){1, 1};
 			break;
 		case(B1x1VB0):
 		case(B1x1VB1):
 		case(B1x1VB2):
 		case(B1x1VB3):
 			block.area = (Area){TYPE_VOID, 0, 0, 0, 0};
+			block.size = (Vector2int){1, 1};
+			break;
+		case(D1x1C):
+			block.area = (Area){TYPE_CHECKPOINT, 0, BU * 3.5, BLOCK_SIZE, BU};
+			block.size = (Vector2int){1, 1};
+			break;
+		case(D1x1S):
+			block.area = (Area){TYPE_START, 0, BU * 3.5, BLOCK_SIZE, BU};
+			block.size = (Vector2int){1, 1};
+			block.z = 2;
+			break;
+		case(D1x1F):
+			block.area = (Area){TYPE_FINISH, 0, BU * 3.5, BLOCK_SIZE, BU};
 			block.size = (Vector2int){1, 1};
 			break;
 		case(B1x1CR0):
@@ -134,10 +132,18 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 			block.size = (Vector2int){1, 1};
 			block.z = 2;
 			break;
+		case(B1x1BR1):
+			block.area = (Area){TYPE_BOOSTER, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
+			block.size = (Vector2int){1, 1};
+			break;
 		case(B1x1BR0):
 			block.area = (Area){TYPE_BOOSTER, 1*BU, 0*BU, 6*BU, 8*BU};
 			block.size = (Vector2int){1, 1};
 			block.z = 1;
+			break;
+		case(D1x1I):
+			block.area = (Area){TYPE_ICE, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
+			block.size = (Vector2int){1, 1};
 			break;
 		default:
 			block.id = 0;
@@ -200,11 +206,11 @@ void ClearPlacedBlocks(Block blocks[MAX_BLOCK_AMOUNT])
 	ClearBlocks(MAX_BLOCK_AMOUNT, blocks);
 }
 
-void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], int layers[Z_LAYERS][ASSET_AMOUNT], Vector2int placement)
+void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], int layers[Z_LAYERS][MAX_LOADED_BLOCKS], Vector2int placement)
 {
 	for(int j = 0; j < Z_LAYERS; j++)
 	{
-		for(int i = 0; i < ASSET_AMOUNT; i++)
+		for(int i = 0; i < MAX_LOADED_BLOCKS; i++)
 		{
 			layers[j][i] = -1;
 		}
@@ -221,7 +227,7 @@ void LoadNearbyBlocks(Block blocks[MAX_BLOCK_AMOUNT], int layers[Z_LAYERS][ASSET
 		{
 			continue;
 		}
-		if(i_a[z] == ASSET_AMOUNT)
+		if(i_a[z] == MAX_LOADED_BLOCKS)
 		{
 			continue;
 		}
@@ -287,9 +293,9 @@ void DrawBlockAdv(Block block, float scale, Vector2 position, double game_time)
 	FreeAsset(asset);
 }
 
-void DrawLoadedBlocks(Block blocks[MAX_BLOCK_AMOUNT], int layer[ASSET_AMOUNT], double game_time)
+void DrawLoadedBlocks(Block blocks[MAX_BLOCK_AMOUNT], int layer[MAX_LOADED_BLOCKS], double game_time)
 {
-	for(int i = 0; i < ASSET_AMOUNT; i++)
+	for(int i = 0; i < MAX_LOADED_BLOCKS; i++)
 	{
 		if(layer[i] < 0)
 		{
@@ -362,9 +368,9 @@ void DrawBlockDebugAdv(Block block, float scale, Vector2 position)
 	DrawRectangleRec(rect, c_area);
 }
 
-void DrawPlacedBlocksDebug(Block blocks[MAX_BLOCK_AMOUNT], int layer[ASSET_AMOUNT])
+void DrawPlacedBlocksDebug(Block blocks[MAX_BLOCK_AMOUNT], int layer[MAX_LOADED_BLOCKS])
 {
-	for(int i = 0; i < ASSET_AMOUNT; i++)
+	for(int i = 0; i < MAX_LOADED_BLOCKS; i++)
 	{
 		if(layer[i] < 0)
 		{
@@ -682,6 +688,60 @@ BlockWallArray MakeBlockWalls(int block_id, Block block)
 			block_walls.walls[29] = (Wall){23.5*BU, 0*BU, 21.75*BU, 7.125*BU};
 			block_walls.walls[30] = (Wall){21.75*BU, 7.125*BU, 16.75*BU, 12.125*BU};
 			block_walls.walls[31] = (Wall){16.75*BU, 12.125*BU, 15.5*BU, 16*BU};
+			break;
+		case(B1x1AT1):
+			block_walls.wall_amount = 11;
+			block_walls.walls[0] = (Wall){-0.25*BU, 0.75*BU, 0*BU, 1*BU};
+			block_walls.walls[1] = (Wall){0*BU, 1*BU, 3.5*BU, 1.5*BU};
+			block_walls.walls[2] = (Wall){3.5*BU, 1.5*BU, 6.5*BU, 4.5*BU};
+			block_walls.walls[3] = (Wall){6.5*BU, 4.5*BU, 7*BU, 8*BU};
+			block_walls.walls[4] = (Wall){7*BU, 8*BU, 7.25*BU, 8.25*BU};
+			block_walls.walls[5] = (Wall){-0.25*BU, 0.75*BU, 0*BU, 0.5*BU};
+			block_walls.walls[6] = (Wall){0*BU, 0.5*BU, 3.75*BU, 1*BU};
+			block_walls.walls[7] = (Wall){3.75*BU, 1*BU, 5.375*BU, 2.625*BU};
+			block_walls.walls[8] = (Wall){5.375*BU, 2.625*BU, 7*BU, 4.25*BU};
+			block_walls.walls[9] = (Wall){7*BU, 4.25*BU, 7.5*BU, 8*BU};
+			block_walls.walls[10] = (Wall){7.5*BU, 8*BU, 7.25*BU, 8.25*BU};
+			break;
+		case(B1x1AR2):
+			block_walls.wall_amount = 6;
+			block_walls.walls[0] = (Wall){0.5*BU, 0, 0.5*BU, 8*BU};
+			block_walls.walls[1] = (Wall){1*BU, 0, 1*BU, 8*BU};
+			block_walls.walls[2] = (Wall){0.5*BU, 0, .75*BU, -0.25*BU};
+			block_walls.walls[3] = (Wall){1*BU, 0, .75*BU, -0.25*BU};
+			block_walls.walls[4] = (Wall){0.5*BU, 8*BU, .75*BU, 8.25*BU};
+			block_walls.walls[5] = (Wall){1*BU, 8*BU, .75*BU, 8.25*BU};
+			break;
+		case(B2x2AT1):
+			block_walls.wall_amount = 10;
+			block_walls.walls[0] = (Wall){0*BU, 1*BU, 7*BU, 2.5*BU};
+			block_walls.walls[1] = (Wall){7*BU, 2.5*BU, 13.5*BU, 9*BU};
+			block_walls.walls[2] = (Wall){13.5*BU, 9*BU, 15*BU, 16*BU};
+			block_walls.walls[3] = (Wall){15*BU, 16*BU, 15.25*BU, 16.25*BU};
+			block_walls.walls[4] = (Wall){15.25*BU, 16.25*BU, 15.5*BU, 16*BU};
+			block_walls.walls[5] = (Wall){15.5*BU, 16*BU, 14*BU, 8.75*BU};
+			block_walls.walls[6] = (Wall){14*BU, 8.75*BU, 7.25*BU, 2*BU};
+			block_walls.walls[7] = (Wall){7.25*BU, 2*BU, 0*BU, 0.5*BU};
+			block_walls.walls[8] = (Wall){0*BU, 0.5*BU, -0.25*BU, 0.75*BU};
+			block_walls.walls[9] = (Wall){-0.25*BU, 0.75*BU, 0*BU, 1*BU};
+			break;
+		case(B1x1AT2):
+			block_walls.wall_amount = 4;
+			block_walls.walls[0] = (Wall){-0.25*BU, 7.25*BU, 0.75*BU, 8.25*BU};
+			block_walls.walls[1] = (Wall){0.75*BU, 8.25*BU, 1*BU, 8*BU};
+			block_walls.walls[2] = (Wall){1*BU, 8*BU, 0*BU, 7*BU};
+			block_walls.walls[3] = (Wall){0*BU, 7*BU, -0.25*BU, 7.25*BU};
+			break;
+		case(B1x1AR3):
+			block_walls.wall_amount = 8;
+			block_walls.walls[0] = (Wall){-0.25*BU, 7.25*BU, 0.75*BU, 8.25*BU};
+			block_walls.walls[1] = (Wall){0.75*BU, 8.25*BU, 1*BU, 8*BU};
+			block_walls.walls[2] = (Wall){1*BU, 8*BU, 0*BU, 7*BU};
+			block_walls.walls[3] = (Wall){0*BU, 7*BU, -0.25*BU, 7.25*BU};
+			block_walls.walls[4] = (Wall){-0.25*BU, 0.75*BU, 0.75*BU, -0.25*BU};
+			block_walls.walls[5] = (Wall){0.75*BU, -0.25*BU, 1*BU, 0*BU};
+			block_walls.walls[6] = (Wall){1*BU, 0*BU, 0*BU, 1*BU};
+			block_walls.walls[7] = (Wall){0*BU, 1*BU, -0.25*BU, 0.75*BU};
 			break;
 		default:
 			block_walls.wall_amount = 0;

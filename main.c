@@ -2409,7 +2409,7 @@ int main(void)
 			}
 		}
 
-		int layers[Z_LAYERS][ASSET_AMOUNT];
+		int layers[Z_LAYERS][MAX_LOADED_BLOCKS];
 
 		LoadNearbyBlocks(blocks, layers, load_placement);
 
