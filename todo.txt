@@ -45,7 +45,8 @@ Arrow that points to the start in editor.
 Enviroment Visuals
 
 IN PROGRESS
-Audio omg
+Crash sound effect
+Random loud noise fix
 
 BEFORE PLAYTEST MAYBE
 Big blocks go outside of map fix

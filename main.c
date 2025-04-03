@@ -13,6 +13,12 @@
 
 
 #define VALIDATE_DEMO_FILE "Demos/validation.dm\0"
+#define SFX_START_BLEEP "Sounds/start_bleep_0.wav\0"
+#define SFX_CRASH "Sounds/start_bleep_1.wav\0"
+#define SFX_ENGINE_ROAD "Sounds/car_road.wav\0"
+#define SFX_ENGINE_DRIFT "Sounds/car_drift.wav\0"
+#define SFX_ENGINE_GRIP "Sounds/car_grip.wav\0"
+#define SFX_ENGINE_TERRA "Sounds/car_terra.wav\0"
 
 
 typedef enum GameScreen {PROFILES, MENU, EDITOR, RACE, OPTIONS} GameScreen;
@@ -182,6 +188,7 @@ int main(void)
 	// RACE VAR
 
 	bool reset_race = false;
+	bool partial_reset_race = false;
 
 	CarStats car_stats = DefaultStats(track.car);
 
@@ -206,6 +213,7 @@ int main(void)
 	Vector2 dcheck_rot = UP_VECTOR;
 
 	const double COUNTDOWN_TIME = 1.5;
+	int countdown_digit = 0;
 	double game_time = 0.0;
 	double timer = 0.0;
 	double start_time = 0.0;
@@ -218,7 +226,8 @@ int main(void)
 
 	bool race_showcase = false;
 
-	Sound sfx_engine, sfx_crash;
+	Sound sfx_crash, sfx_start_bleep;
+	Music sfx_engine;
 
 	// EDITOR VAR
 
@@ -267,6 +276,8 @@ int main(void)
 	double* party_best_times = PNULL;
 
 	bool reset_party = false;
+	bool party_draw = false;
+	bool dnf = false;
 
 	// TRACKS SELECTOR
 
@@ -1097,14 +1108,8 @@ int main(void)
 		if(reset_party)
 		{
 			reset_party = false;
-			if(party_timers == PNULL)
-			{
-				party_timers = _malloc(sizeof(double) * party_count);
-			}
-			if(party_best_times == PNULL)
-			{
-				party_best_times = _malloc(sizeof(double) * party_count);
-			}
+			party_timers = _malloc(sizeof(double) * party_count);
+			party_best_times = _malloc(sizeof(double) * party_count);
 			for(int i = 0; i < party_count; i++)
 			{
 				party_timers[i] = (double)party_timer_base * 30.0;
@@ -1112,17 +1117,47 @@ int main(void)
 			}
 			current_profile = 0;
 		}
-		Profile* playing_profile = &profile;
+		Profile* playing_profile;
 		if(party_mode)
 		{
 			playing_profile = &party_profiles[current_profile];
 		}
+		else
+		{
+			playing_profile = &profile;
+		}
 		if(reset_race)
 		{
-			TraceLog(LOG_INFO, "%s", playing_profile->name);
+			if(party_mode) TraceLog(LOG_INFO, "%s", playing_profile->name);
+			partial_reset_race = true;
 			reset_race = false;
 
 			car_stats = DefaultStats(track.car);
+
+			sfx_crash = LoadSound(SFX_CRASH);
+			sfx_start_bleep = LoadSound(SFX_START_BLEEP);
+			if(track.car == CAR_ROAD)
+			{
+				sfx_engine = LoadMusicStream(SFX_ENGINE_ROAD);
+			}
+			if(track.car == CAR_DRIFT)
+			{
+				sfx_engine = LoadMusicStream(SFX_ENGINE_DRIFT);
+			}
+			if(track.car == CAR_GRIP)
+			{
+				sfx_engine = LoadMusicStream(SFX_ENGINE_GRIP);
+			}
+			if(track.car == CAR_TERRAIN)
+			{
+				sfx_engine = LoadMusicStream(SFX_ENGINE_TERRA);
+			}
+			PlayMusicStream(sfx_engine);
+		}
+		if(partial_reset_race)
+		{
+			partial_reset_race = false;
+
 			ResetRacecar(&car, track.start_pos, track.start_rot, car_stats.size);
 			ResetRacecar(&dcar, track.start_pos, track.start_rot, car_stats.size);
 			CarSetVis(&car, &profile, track.car);
@@ -1140,6 +1175,7 @@ int main(void)
 
 			timer = 0.0;
 			start_time = game_time;
+			countdown_digit = -1;
 
 			start_countdown = true;
 			paused = false;
@@ -1172,23 +1208,6 @@ int main(void)
 				CopyNameToDemo(demo, playing_profile->name);
 				StartDemo(ghost_demo);
 				playing_demo = DEMO_GHOST_INIT;
-			}
-			sfx_crash = LoadSound(SFX_CRASH);
-			if(track.car == CAR_ROAD)
-			{
-				sfx_engine = LoadSound(SFX_ENGINE_ROAD);
-			}
-			if(track.car == CAR_DRIFT)
-			{
-				sfx_engine = LoadSound(SFX_ENGINE_DRIFT);
-			}
-			if(track.car == CAR_GRIP)
-			{
-				sfx_engine = LoadSound(SFX_ENGINE_GRIP);
-			}
-			if(track.car == CAR_TERRAIN)
-			{
-				sfx_engine = LoadSound(SFX_ENGINE_TERRA);
 			}
 		}
 
@@ -1243,7 +1262,7 @@ int main(void)
 				}
 				if(pause_option == 2)
 				{
-					reset_race = true;
+					partial_reset_race = true;
 					paused = false;
 				}
 				if(pause_option == 3)
@@ -1257,11 +1276,6 @@ int main(void)
 			}
 			if(pause_exit)
 			{
-				if(party_mode)
-				{
-					_free(party_timers);
-					_free(party_best_times);
-				}
 				if(validating_track)
 				{
 					current_game_screen = EDITOR;
@@ -1322,6 +1336,7 @@ int main(void)
 
 			MoveCameraSmooth(&camera, car.position, 0.10);
 
+			int time = (int)((game_time - start_time) / COUNTDOWN_TIME * 3);
 			if(start_time + COUNTDOWN_TIME <= game_time)
 			{
 				start_countdown = false;
@@ -1334,6 +1349,14 @@ int main(void)
 					playing_demo = DEMO_GHOST_PLAY;
 					demo_input = (RMInput){0};
 				}
+				SetSoundPitch(sfx_start_bleep, 1.5);
+				PlaySound(sfx_start_bleep);
+			}
+			else if(countdown_digit != time)
+			{
+				countdown_digit = time;
+				SetSoundPitch(sfx_start_bleep, 1.0);
+				PlaySound(sfx_start_bleep);
 			}
 		}
 		else
@@ -1344,7 +1367,10 @@ int main(void)
 				pause_option = 0;
 			}
 
-			bool dnf = false;
+			if(!finished)
+			{
+				dnf = false;
+			}
 
 			if(!stop_inputs)
 			{
@@ -1392,38 +1418,31 @@ int main(void)
 				PlaySound(sfx_crash);
 			}
 
+			UpdateMusicStream(sfx_engine);
 			bool car_still = zero(car.velocity.x) && zero(car.velocity.y);
 			bool car_was_still = zero(previous_speed);
 			if(car_still != car_was_still)
 			{
 				if(car_still)
 				{
-					StopSound(sfx_engine);
+					PauseMusicStream(sfx_engine);
 				}
 				else
 				{
-					PlaySound(sfx_engine);
+					ResumeMusicStream(sfx_engine);
 				}
 			}
-			if(IsSoundPlaying(sfx_engine))
+			if(IsMusicStreamPlaying(sfx_engine))
 			{
 				float engine_pitch = (previous_speed - car.gear) * 0.3;
-				SetSoundPitch(sfx_engine, engine_pitch);
+				SetMusicPitch(sfx_engine, engine_pitch);
 				float engine_volume = 1.0;
 				if(car.gear == 0 && car.gear_shift <= 0.0)
 				{
 					engine_volume = .2 + .8 * (previous_speed / car_stats.gears[0]);
 				}
-				SetSoundVolume(sfx_engine, engine_volume);
+				SetMusicVolume(sfx_engine, engine_volume);
 			}
-			else
-			{
-				if(!car_still)
-				{
-					PlaySound(sfx_engine);
-				}
-			}
-
 
 			if(meta.checkpoint && checkpoints_gotten != track.checkpoint_amount)
 			{
@@ -1448,54 +1467,82 @@ int main(void)
 			bool did_finish = meta.finish && !finished && checkpoints_gotten == track.checkpoint_amount;
 			if(party_mode && (did_finish || dnf))
 			{
+				stop_inputs = true;
+				finished = true;
+				if(dnf)
+				{
+				}
+				else if(timer < party_best_times[current_profile] || party_best_times[current_profile] == 0.0)
+				{
+					party_best_times[current_profile] = timer;
+				}
 				int profs_left = 0;
+				double best_time = 0.0;
 				for(int i = 0; i < party_count; i++)
 				{
 					if(party_timers[i] > 0.0)
 					{
 						profs_left++;
+						if(best_time == 0.0 || party_best_times[i] < best_time)
+						{
+							best_time = party_best_times[i];
+						}
 					}
 				}
-				if(profs_left <= 1)
+				if(profs_left <= 1 && best_time != 0.0)
 				{
 					current_game_screen = MENU;
 					reset_menu = true;
 					party_current_menu = 2;
-					_free(party_timers);
-					_free(party_best_times);
-				}
-				stop_inputs = true;
-				finished = true;
-				if(timer < party_best_times[current_profile] || party_best_times[current_profile] == 0.0)
-				{
-					party_best_times[current_profile] = timer;
-				}
-				double worst_time = 0.0;
-				int worst_prof = -1;
-				for(int i = party_count - 1; i >= 0; i--)
-				{
-					if(party_timers[i] > 0.0 && party_best_times[i] == 0.0)
+					best_time = 0.0;
+					party_draw = true;
+					for(int i = 0; i < party_count; i++)
 					{
-						worst_prof = i;
+						if(party_best_times[i] != 0.0)
+						{
+							if(best_time == 0.0 || party_best_times[i] < best_time)
+							{
+								best_time = party_best_times[i];
+								current_profile = i;
+								party_draw = false;
+							}
+							else if(party_best_times[i] == best_time)
+							{
+								party_draw = true;
+							}
+						}
 					}
-				}
-				if(worst_prof == -1) for(int i = 0; i < party_count; i++)
-				{
-					if(party_timers[i] > 0.0 && party_best_times[i] > worst_time)
-					{
-						worst_time = party_best_times[i];
-						worst_prof = i;
-					}
-				}
-				if(worst_prof >= 0)
-				{
-					current_profile = worst_prof;
 				}
 				else
 				{
-					// Temporary, replace with showing who won and then going to track select
-					reset_race = true;
-					reset_party = true;
+					double worst_time = 0.0;
+					int worst_prof = -1;
+					for(int i = party_count - 1; i >= 0; i--)
+					{
+						if(party_timers[i] > 0.0 && party_best_times[i] == 0.0)
+						{
+							worst_prof = i;
+						}
+					}
+					if(worst_prof == -1) for(int i = 0; i < party_count; i++)
+					{
+						if(party_timers[i] > 0.0 && party_best_times[i] > worst_time)
+						{
+							worst_time = party_best_times[i];
+							worst_prof = i;
+						}
+					}
+					if(worst_prof >= 0)
+					{
+						current_profile = worst_prof;
+					}
+					else
+					{
+						current_game_screen = MENU;
+						reset_menu = true;
+						party_current_menu = 2;
+						party_draw = true;
+					}
 				}
 			}
 			else if(did_finish)
@@ -1564,7 +1611,7 @@ int main(void)
 			{
 				if(checkpoints_gotten == 0 || (stop_inputs && playing_demo != DEMO_PLAY))
 				{
-					reset_race = true;
+					partial_reset_race = true;
 				}
 				else
 				{
@@ -1573,7 +1620,7 @@ int main(void)
 			}
 			if(InputPressed(input, INPUT_BACK))
 			{
-				reset_race = true;
+				partial_reset_race = true;
 			}
 			if(InputPressed(input, INPUT_R))
 			{
@@ -1644,8 +1691,15 @@ int main(void)
 		{
 			StopSound(sfx_crash);
 			UnloadSound(sfx_crash);
-			StopSound(sfx_engine);
-			UnloadSound(sfx_engine);
+			StopSound(sfx_start_bleep);
+			UnloadSound(sfx_start_bleep);
+			StopMusicStream(sfx_engine);
+			UnloadMusicStream(sfx_engine);
+			if(party_mode)
+			{
+				_free(party_timers);
+				_free(party_best_times);
+			}
 		}
 
 		break;
@@ -2613,8 +2667,15 @@ int main(void)
 				}
 				else if(party_mode && party_current_menu == 2)
 				{
-					DrawText(TextFormat("%s", party_profiles[current_profile].name), 256, 192, 64, BLACK);
-					DrawText("IS THE WINNER!!!", 256, 256, 64, BLACK);
+					if(party_draw)
+					{
+						DrawText("DRAW...", 256, 256, 64, BLACK);
+					}
+					else
+					{
+						DrawText(TextFormat("%s", party_profiles[current_profile].name), 256, 192, 64, BLACK);
+						DrawText("IS THE WINNER!!!", 256, 256, 64, BLACK);
+					}
 				}
 				else if(menu_option >= MENU_RACE) for(int i = 0; i < 3; i++)
 				{
@@ -2822,7 +2883,7 @@ int main(void)
 				}
 				if(finished)
 				{
-					if(validating_track)
+					if(dnf || validating_track)
 					{
 					}
 					else if(timer < track.medal_author)
@@ -2841,7 +2902,14 @@ int main(void)
 					{
 						DrawText("Bronz medal.", 192, 88, 96, BLACK);
 					}
-					DrawText(TextFormat("%.3f", timer), 384, 192, 96, BLACK);
+					if(dnf)
+					{
+						DrawText("DNF", 384, 192, 96, BLACK);
+					}
+					else
+					{
+						DrawText(TextFormat("%.3f", timer), 384, 192, 96, BLACK);
+					}
 					int replay_pos = 352;
 					if(party_mode)
 					{
@@ -2907,7 +2975,7 @@ int main(void)
 				}
 				else if(start_countdown)
 				{
-					DrawText(TextFormat("%i", 3 - (int)((game_time - start_time) / COUNTDOWN_TIME * 3)), 576, 256, 128, BLACK);
+					DrawText(TextFormat("%i", 3 - countdown_digit), 576, 256, 128, BLACK);
 				}
 				if(paused)
 				{
@@ -2947,6 +3015,10 @@ int main(void)
 				{
 					Color ctext = BLACK, btext = VIOLET;
 					bool render_timers = true;
+					if(race_showcase)
+					{
+						render_timers = false;
+					}
 					if(!GetProfileBool(&profile, PRF_BOOL_HIDE_PARTY_TIME) || timer == 0.0 || stop_inputs)
 					{
 						ctext.a = 255;

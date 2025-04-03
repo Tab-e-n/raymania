@@ -11,12 +11,6 @@
 #define GEAR_AMOUNT 5
 #define SKID_LINE_COUNT 60
 
-#define SFX_CRASH "Sounds/start_bleep_0.wav\0"
-#define SFX_ENGINE_ROAD "Sounds/car_road.wav\0"
-#define SFX_ENGINE_DRIFT "Sounds/car_drift.wav\0"
-#define SFX_ENGINE_GRIP "Sounds/car_grip.wav\0"
-#define SFX_ENGINE_TERRA "Sounds/car_terra.wav\0"
-
 
 typedef enum DefaultCar {CAR_ROAD = 0, CAR_DRIFT, CAR_GRIP, CAR_TERRAIN} DefaultCar;
 typedef enum DefaultEnviroment {ENV_VOID, ENV_MEADOW, ENV_QUARRY, ENV_ISLAND} DefaultEnviroment;
