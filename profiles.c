@@ -41,7 +41,7 @@ void FillProfile(Profile* out_profile, int done)
 	profile.sfx_volume = 0;
 	profile.music_volume = 0;
 
-	profile.camera_zoom = 1.4;
+	profile.camera_zoom = 1.2;
 
 	if(done == 0)
 	{

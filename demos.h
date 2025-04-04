@@ -12,7 +12,7 @@
 #define DEMO_INPUT_ALLOC_SIZE 512
 #define DEMO_CHECKSUM_SIZE 32
 
-#define DEMO_DIRECTORY "Demos\0"
+#define DEMO_DIRECTORY "demos\0"
 
 
 typedef struct Demo {

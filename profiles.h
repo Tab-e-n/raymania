@@ -6,7 +6,7 @@
 #include "racecar.h"
 
 
-#define PROFILE_DIRECTORY "Profiles\0"
+#define PROFILE_DIRECTORY "profiles\0"
 #define PROFILE_NAME_LENGHT 32
 #define PROFILE_SELECTOR_PAGE_ITEMS 16
 #define PROFILE_SIZE sizeof(Profile)

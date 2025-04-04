@@ -12,13 +12,27 @@
 #include "ui.h"
 
 
-#define VALIDATE_DEMO_FILE "Demos/validation.dm\0"
-#define SFX_START_BLEEP "Sounds/start_bleep_0.wav\0"
-#define SFX_CRASH "Sounds/start_bleep_1.wav\0"
-#define SFX_ENGINE_ROAD "Sounds/car_road.wav\0"
-#define SFX_ENGINE_DRIFT "Sounds/car_drift.wav\0"
-#define SFX_ENGINE_GRIP "Sounds/car_grip.wav\0"
-#define SFX_ENGINE_TERRA "Sounds/car_terra.wav\0"
+#ifdef WINDOWS
+
+#define VALIDATE_DEMO_FILE "demos\\validation.dm\0"
+#define SFX_START_BLEEP "sounds\\start_bleep_0.wav\0"
+#define SFX_CRASH "sounds\\start_bleep_1.wav\0"
+#define SFX_ENGINE_ROAD "sounds\\car_road.wav\0"
+#define SFX_ENGINE_DRIFT "sounds\\car_drift.wav\0"
+#define SFX_ENGINE_GRIP "sounds\\car_grip.wav\0"
+#define SFX_ENGINE_TERRA "sounds\\car_terra.wav\0"
+
+#else
+
+#define VALIDATE_DEMO_FILE "demos/validation.dm\0"
+#define SFX_START_BLEEP "sounds/start_bleep_0.wav\0"
+#define SFX_CRASH "sounds/start_bleep_1.wav\0"
+#define SFX_ENGINE_ROAD "sounds/car_road.wav\0"
+#define SFX_ENGINE_DRIFT "sounds/car_drift.wav\0"
+#define SFX_ENGINE_GRIP "sounds/car_grip.wav\0"
+#define SFX_ENGINE_TERRA "sounds/car_terra.wav\0"
+
+#endif
 
 
 typedef enum GameScreen {PROFILES, MENU, EDITOR, RACE, OPTIONS} GameScreen;

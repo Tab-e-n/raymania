@@ -17,7 +17,9 @@
 
 #if defined(_WIN32) || defined(WIN32)
 #define WINDOWS
-#elifdef __unix__
+#endif
+
+#ifdef __unix__
 #define LINUX
 #endif
 

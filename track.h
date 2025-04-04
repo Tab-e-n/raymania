@@ -13,7 +13,7 @@
 #define TRACK_NAME_LENGHT 32
 #define TRACK_GRID_SIZE 32
 
-#define TRACK_DIRECTORY "Tracks\0"
+#define TRACK_DIRECTORY "tracks\0"
 
 #define TRACK_SIZE_BLOCK sizeof(PieceInfo)
 #define TRACK_SIZE_MAX_BLOCK sizeof(PieceInfo)*MAX_PIECES
