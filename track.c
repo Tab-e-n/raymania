@@ -772,12 +772,6 @@ void PiecesInPage(unsigned int page[9], unsigned int page_num)
 				page[i] = i + 1;
 			}
 			break;
-		case(PAGE_DEBUG_2):
-			for(int i = 0; i < 9; i++)
-			{
-				page[i] = 10;
-			}
-			break;
 		case(PAGE_ROAD_BASE):
 			page[0] = 14;
 			page[1] = 13;

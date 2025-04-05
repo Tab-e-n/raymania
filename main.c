@@ -38,7 +38,7 @@
 typedef enum GameScreen {PROFILES, MENU, EDITOR, RACE, OPTIONS} GameScreen;
 typedef enum MenuOption {MENU_PLAY, MENU_EDITOR, MENU_PARTY, MENU_OPTIONS, MENU_EXIT, MENU_RACE = 10, MENU_DEMO, MENU_PLAY_EXIT} MenuOption;
 typedef enum EditorOption {EDITOR_EXIT = 9, EDITOR_LOAD, EDITOR_SAVE, EDITOR_CLEAR, EDITOR_ENVIROMENT, EDITOR_CAR, EDITOR_PAGE_JUMP, EDITOR_MEDALS, EDITOR_VALIDATE,} EditorOption;
-typedef enum PopupType {POPUP_OFF, POPUP_EDITOR_EXIT, POPUP_EDITOR_CLEAR, POPUP_VALIDATE, POPUP_NO_START, POPUP_RESET_MEDALS} PopupType;
+typedef enum PopupType {POPUP_OFF, POPUP_EDITOR_EXIT, POPUP_EDITOR_CLEAR, POPUP_VALIDATE, POPUP_NO_START, POPUP_RESET_MEDALS, POPUP_OVERRIDE_TRACK} PopupType;
 typedef enum FileListType {FL_OFF, FL_TRACK, FL_DEMO} FileListType;
 typedef enum DemoPlay {DEMO_OFF, DEMO_INIT, DEMO_PLAY, DEMO_GHOST_INIT, DEMO_GHOST_PLAY} DemoPlay;
 
@@ -391,6 +391,10 @@ int main(void)
 			if(popup == POPUP_RESET_MEDALS)
 			{
 				ResetMedalTimes(&track);
+			}
+			if(popup == POPUP_OVERRIDE_TRACK)
+			{
+				SaveTrack(&track, TrackFileName(track_dir, track_name), profile.name);
 			}
 		}
 	}
@@ -983,7 +987,7 @@ int main(void)
 				{
 					if(piece_catalogue_item == 0)
 					{
-						if(piece_catalogue_page_num > 0)
+						if(piece_catalogue_page_num > 1)
 						{
 							piece_catalogue_page_num--;
 							PiecesInPage(piece_catalogue_page, piece_catalogue_page_num);
@@ -1453,7 +1457,7 @@ int main(void)
 				float engine_volume = 1.0;
 				if(car.gear == 0 && car.gear_shift <= 0.0)
 				{
-					engine_volume = .2 + .8 * (previous_speed / car_stats.gears[0]);
+					engine_volume = min(.2 + .8 * (previous_speed / car_stats.gears[0]), 1.0);
 				}
 				SetMusicVolume(sfx_engine, engine_volume);
 			}
@@ -2302,7 +2306,15 @@ int main(void)
 			inputing_name = 0;
 			if(saving_track)
 			{
-				SaveTrack(&track, TrackFileName(track_dir, track_name), profile.name);
+				const char* track_filename = TrackFileName(track_dir, track_name);
+				if(FileExists(track_filename))
+				{
+					popup = POPUP_OVERRIDE_TRACK;
+				}
+				else
+				{
+					SaveTrack(&track, track_filename, profile.name);
+				}
 			}
 			if(entering_profile_name)
 			{
@@ -2422,9 +2434,9 @@ int main(void)
 			if(in_type == 2)
 			{
 				piece_catalogue_page_num = in_num;
-				if(piece_catalogue_page_num < 0)
+				if(piece_catalogue_page_num < 1)
 				{
-					piece_catalogue_page_num = 0;
+					piece_catalogue_page_num = 1;
 				}
 				if(piece_catalogue_page_num >= PIECE_CATALOGUE_PAGE_AMOUNT)
 				{
@@ -3186,6 +3198,10 @@ int main(void)
 					break;
 				case(POPUP_RESET_MEDALS):
 					DrawText("Clear medals?", 416, 272, 32, BLACK);
+					break;
+				case(POPUP_OVERRIDE_TRACK):
+					DrawText("Override the", 416, 248, 32, BLACK);
+					DrawText("existing track?", 400, 280, 32, BLACK);
 					break;
 			}
 		}

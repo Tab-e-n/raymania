@@ -58,6 +58,7 @@ Different zoom for different cars?
 Deleting bigger size blocks when not at their origin (might be too slow with current track structure)
 
 LATER
+Collisions take into account multiple lines
 Custom asset rotation
 Block area rotation (same equation as racecar rot)
 Blocks have more pieces

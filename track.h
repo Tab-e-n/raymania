@@ -31,11 +31,11 @@
 
 
 typedef enum PieceCataloguePage {
+	PAGE_DEBUG,
 	PAGE_ROAD_BASE, PAGE_ROAD_OBSTACLE,
 	PAGE_DIRT_BASE, PAGE_DIRT_OBSTACLE,
 	PAGE_PLATFORM_BASE,
 	PIECE_CATALOGUE_PAGE_AMOUNT,
-	PAGE_DEBUG, PAGE_DEBUG_2,
 } PieceCataloguePage; 
 
 typedef struct PieceInfo

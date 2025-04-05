@@ -36,6 +36,7 @@ typedef struct SurfaceStats
 	bool flip_turning_when_backwards, // When car is going backwards, turn speed is flipped. Feels more natural this way.
 		flip_turning_when_going_backwards, // Same as previous, but only when the player is holding down.
 		do_vel_redirection, // Activates vel redirection. see redirect_angle for explanation.
+		redirect_towards_held_dir, // Instead of redirecting towards the closer dir, redirect towards the dir the player is holding.
 		always_apply_friction; // Friction is applied even when holding a direction.
 } SurfaceStats;
 
@@ -106,7 +107,12 @@ void AccelerateRacecar(Racecar* car, float amount);
 void ApplyFrictionRacecar(Racecar* car, float amount);
 void CapRacecarVelocity(Racecar* car, float max);
 void CapRacecarVelocityBiDir(Racecar* car, float max, float min);
-void RedirectRacecarVelocity(Vector2* velocity, Vector2 direction, float angle_change, float angle_loss, float vel_percent);
+
+void RacecarRedirect(Vector2* velocity, Vector2 direction, float abs_angle, float angle_change, float vel_percent);
+void RacecarRedirectCollision(Vector2* velocity, Vector2 direction, float angle_change);
+float RacecarAngleChange(float base, float vel_angle, float abs_angle, float loss);
+void RacecarRedirectClosest(Racecar* car, float angle_change, float angle_loss, float vel_percent);
+void RacecarRedirectHeld(Racecar* car, bool flip, float angle_change, float angle_loss, float vel_percent);
 
 bool RacecarMaxVelocity(Racecar* car, float max);
 bool CheckRacecarWallColliding(Wall racecar_wall, BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS], WallCollision* collision);
