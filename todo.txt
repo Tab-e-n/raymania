@@ -45,8 +45,8 @@ Arrow that points to the start in editor.
 Enviroment Visuals
 
 IN PROGRESS
-Crash sound effect
 Random loud noise fix
+Example Tracks
 
 BEFORE PLAYTEST MAYBE
 Big blocks go outside of map fix
@@ -59,6 +59,7 @@ Deleting bigger size blocks when not at their origin (might be too slow with cur
 
 LATER
 Collisions take into account multiple lines
+Collisions still suck ass so fix them
 Custom asset rotation
 Block area rotation (same equation as racecar rot)
 Blocks have more pieces

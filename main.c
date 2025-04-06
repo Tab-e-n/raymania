@@ -16,7 +16,8 @@
 
 #define VALIDATE_DEMO_FILE "demos\\validation.dm\0"
 #define SFX_START_BLEEP "sounds\\start_bleep_0.wav\0"
-#define SFX_CRASH "sounds\\start_bleep_1.wav\0"
+#define SFX_CRASH_SMALL "sounds\\crash_small.wav\0"
+#define SFX_CRASH "sounds\\crash_big.wav\0"
 #define SFX_ENGINE_ROAD "sounds\\car_road.wav\0"
 #define SFX_ENGINE_DRIFT "sounds\\car_drift.wav\0"
 #define SFX_ENGINE_GRIP "sounds\\car_grip.wav\0"
@@ -26,7 +27,8 @@
 
 #define VALIDATE_DEMO_FILE "demos/validation.dm\0"
 #define SFX_START_BLEEP "sounds/start_bleep_0.wav\0"
-#define SFX_CRASH "sounds/start_bleep_1.wav\0"
+#define SFX_CRASH_SMALL "sounds/crash_small.wav\0"
+#define SFX_CRASH "sounds/crash_big.wav\0"
 #define SFX_ENGINE_ROAD "sounds/car_road.wav\0"
 #define SFX_ENGINE_DRIFT "sounds/car_drift.wav\0"
 #define SFX_ENGINE_GRIP "sounds/car_grip.wav\0"
@@ -240,7 +242,7 @@ int main(void)
 
 	bool race_showcase = false;
 
-	Sound sfx_crash, sfx_start_bleep;
+	Sound sfx_crash, sfx_crash_small, sfx_start_bleep;
 	Music sfx_engine;
 
 	// EDITOR VAR
@@ -1153,6 +1155,7 @@ int main(void)
 			car_stats = DefaultStats(track.car);
 
 			sfx_crash = LoadSound(SFX_CRASH);
+			sfx_crash_small = LoadSound(SFX_CRASH_SMALL);
 			sfx_start_bleep = LoadSound(SFX_START_BLEEP);
 			if(track.car == CAR_ROAD)
 			{
@@ -1431,9 +1434,15 @@ int main(void)
 			{
 				shake_time += (speed_change - car_stats.camera_shake_threshold) * car_stats.speed_to_shake_ratio;
 			}
-			if(speed_change > car_stats.camera_shake_threshold) // TODO: Own value, not tied to cam
+			if(speed_change > car_stats.camera_shake_threshold * 1.4) // TODO: Own value, not tied to cam
 			{
+				SetSoundPitch(sfx_crash, AirQuotesNoise(game_time, false) + 0.5);
 				PlaySound(sfx_crash);
+			}
+			else if(speed_change > car_stats.camera_shake_threshold) // TODO: Own value, not tied to cam
+			{
+				SetSoundPitch(sfx_crash_small, AirQuotesNoise(game_time, false) + 0.5);
+				PlaySound(sfx_crash_small);
 			}
 
 			UpdateMusicStream(sfx_engine);
@@ -1709,6 +1718,8 @@ int main(void)
 		{
 			StopSound(sfx_crash);
 			UnloadSound(sfx_crash);
+			StopSound(sfx_crash_small);
+			UnloadSound(sfx_crash_small);
 			StopSound(sfx_start_bleep);
 			UnloadSound(sfx_start_bleep);
 			StopMusicStream(sfx_engine);
