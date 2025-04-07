@@ -865,18 +865,16 @@ int main(void)
 			bool end_efos = false;
 			if(InputHeld(menu_input, INPUT_LEFT))
 			{
-				efos_opt -= 1;
-				if(efos_opt < 0)
+				if(efos_opt > 0)
 				{
-					efos_opt = 0;
+					efos_opt -= 1;
 				}
 			}
 			if(InputHeld(menu_input, INPUT_RIGHT))
 			{
-				efos_opt += 1;
-				if(efos_opt > 3)
+				if(efos_opt < 3)
 				{
-					efos_opt = 3;
+					efos_opt += 1;
 				}
 			}
 			if(InputPressed(input, INPUT_ESC) || InputPressed(input, INPUT_BACK))
@@ -1090,9 +1088,11 @@ int main(void)
 							break;
 						case(EDITOR_ENVIROMENT):
 							editor_four_option_selector = 2;
+							efos_opt = track.env;
 							break;
 						case(EDITOR_CAR):
 							editor_four_option_selector = 1;
+							efos_opt = track.car;
 							break;
 						case(EDITOR_PAGE_JUMP):
 							inputing_number = 1;
@@ -1101,6 +1101,7 @@ int main(void)
 							break;
 						case(EDITOR_MEDALS):
 							editor_four_option_selector = 3;
+							efos_opt = 0;
 							break;
 						case(EDITOR_VALIDATE):
 							if(track.has_start)
@@ -1594,6 +1595,7 @@ int main(void)
 			{
 				stop_inputs = true;
 				finished = true;
+				bool save_new = false;
 				if(validating_track && track.has_start)
 				{
 					if(!track.validated)
@@ -1601,20 +1603,22 @@ int main(void)
 						TraceLog(LOG_INFO, "TRACK VALIDATED.");
 						track.validated = true;
 						track.medal_author = timer;
+						CalculateMedalTimes(&track);
+						save_new = true;
 					}
 					else if(timer < track.medal_author)
 					{
 						TraceLog(LOG_INFO, "NEW AUTHOR TIME!");
 						track.medal_author = timer;
+						CalculateMedalTimes(&track);
+						save_new = true;
 					}
-					CalculateMedalTimes(&track);
 				}
 				if(ghost_demo != PNULL)
 				{
 					TraceLog(LOG_INFO, "Times: player %.3f, ghost %.3f", timer, ghost_demo->time);
 				}
 				demo->time = timer;
-				bool save_new = false;
 				if(playing_demo == DEMO_PLAY || playing_demo == DEMO_INIT)
 				{
 					save_new = false;
