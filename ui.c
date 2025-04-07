@@ -291,15 +291,36 @@ void DrawOptions(int current, int page, int max, Profile* profile)
 			Vector2 pos = (Vector2){POSITION.x + 8, POSITION.y + 32 * i};
 			if(i == 0)
 			{
-				DrawText(TextFormat("Master: %i", profile->master_volume), pos.x, pos.y, 32, text_color);
+				if(profile->master_volume == -11)
+				{
+					DrawText("Master: OFF", pos.x, pos.y, 32, text_color);
+				}
+				else
+				{
+					DrawText(TextFormat("Master: %i", profile->master_volume), pos.x, pos.y, 32, text_color);
+				}
 			}
 			else if(i == 1)
 			{
-				DrawText(TextFormat("SFX: %i", profile->sfx_volume), pos.x, pos.y, 32, text_color);
+				if(profile->sfx_volume == -11)
+				{
+					DrawText("SFX: OFF", pos.x, pos.y, 32, text_color);
+				}
+				else
+				{
+					DrawText(TextFormat("SFX: %i", profile->sfx_volume), pos.x, pos.y, 32, text_color);
+				}
 			}
 			else
 			{
-				DrawText(TextFormat("Music: %i", profile->music_volume), pos.x, pos.y, 32, text_color);
+				if(profile->music_volume == -11)
+				{
+					DrawText("Music: OFF", pos.x, pos.y, 32, text_color);
+				}
+				else
+				{
+					DrawText(TextFormat("Music: %i", profile->music_volume), pos.x, pos.y, 32, text_color);
+				}
 			}
 		}
 	}

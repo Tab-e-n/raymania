@@ -165,20 +165,20 @@ bool InputPressed(RMInput input, int key)
 
 bool DirectionMenuInput(RMInput* menu, RMInput input, float* block, int key)
 {
-	bool success = false;
+	bool held = false;
 	if(InputPressed(input, key))
 	{
 		menu->current += (0b1 << key);
 		*block = INPUT_BLOCK_START;
-		success = true;
+		held = true;
 	}
 	else if(InputHeld(input, key) && *block <= 0.0)
 	{
 		menu->current += (0b1 << key);
 		*block = INPUT_BLOCK;
-		success = true;
+		held = true;
 	}
-	return success;
+	return held;
 }
 
 void ActionMenuInput(RMInput* menu, RMInput input, bool direction_pressed, int key)
@@ -227,6 +227,31 @@ unsigned int TextFindLastChar(const char* text, unsigned char ch)
 		i++;
 	}
 	return pos;
+}
+
+float AudioVolume(char value)
+{
+	if(value <= -11)
+	{
+		return 0.0;
+	}
+	float volume = 1.0;
+	if(value < 0)
+	{
+		value = -value;
+		for(int i = 0; i < value; i++)
+		{
+			volume *= 0.8;
+		}
+	}
+	else
+	{
+		for(int i = 0; i < value; i++)
+		{
+			volume *= 1.25;
+		}
+	}
+	return volume;
 }
 
 Color rmc(char i)

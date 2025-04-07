@@ -67,6 +67,15 @@ void CarSetVis(Racecar* car, Profile* profile, DefaultCar type)
 	}
 }
 
+void UpdateVolume(Profile* profile, float* sfx, float* music)
+{
+	float master = AudioVolume(profile->master_volume);
+	*sfx = AudioVolume(profile->sfx_volume) * master;
+	*music = AudioVolume(profile->music_volume) * master;
+	TraceLog(LOG_INFO, "sfx: %g", *sfx);
+	TraceLog(LOG_INFO, "music: %g", *music);
+}
+
 int main(void)
 {
 	InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "RAYMANIA");
@@ -242,9 +251,6 @@ int main(void)
 
 	bool race_showcase = false;
 
-	Sound sfx_crash, sfx_crash_small, sfx_start_bleep;
-	Music sfx_engine;
-
 	// EDITOR VAR
 
 	bool reset_editor = false;
@@ -316,6 +322,12 @@ int main(void)
 	track = LoadTrack(TrackFileName(track_dir, track_name));
 	TrackBlockmixed(&track, GetProfileBool(&profile, PRF_BOOL_BLOCKMIXING));
 	MakeTrackBlocks(&track, blocks);
+
+	// AUDIO VAR
+
+	float sfx = AudioVolume(0), music = AudioVolume(0);
+	Sound sfx_crash, sfx_crash_small, sfx_start_bleep;
+	Music sfx_engine;
 
 
 	// GAME LOOP
@@ -457,6 +469,7 @@ int main(void)
 					else
 					{
 						profile = LoadProfile(path);
+						UpdateVolume(&profile, &sfx, &music);
 						if(back_to_opt)
 						{
 							reset_options = true;
@@ -481,6 +494,7 @@ int main(void)
 				else
 				{
 					profile = DefaultProfile();
+					UpdateVolume(&profile, &sfx, &music);
 					if(back_to_opt)
 					{
 						reset_options = true;
@@ -918,6 +932,19 @@ int main(void)
 				}
 				GetPiece(&cursor_info, held_piece);
 			}
+
+			if(InputHeld(menu_input, INPUT_ENTER))
+			{
+				AddPiece(&track, blocks, &cursor_info);
+				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
+				ResetMedalTimes(&track);
+			}
+			if(InputHeld(menu_input, INPUT_BACK))
+			{
+				DeletePiece(&track, blocks, cursor_info.placement);
+				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
+				ResetMedalTimes(&track);
+			}
 			if(InputHeld(menu_input, INPUT_LEFT))
 			{
 				MoveEditorCursor(&cursor_info, -1, 0);
@@ -941,19 +968,6 @@ int main(void)
 				MoveEditorCursor(&cursor_info, 0, 1);
 				GetPiece(&cursor_info, held_piece);
 				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
-			}
-
-			if(InputHeld(menu_input, INPUT_ENTER))
-			{
-				AddPiece(&track, blocks, &cursor_info);
-				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
-				ResetMedalTimes(&track);
-			}
-			if(InputHeld(menu_input, INPUT_BACK))
-			{
-				DeletePiece(&track, blocks, cursor_info.placement);
-				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
-				ResetMedalTimes(&track);
 			}
 
 			if(InputPressed(input, INPUT_ESC))
@@ -1155,24 +1169,28 @@ int main(void)
 			car_stats = DefaultStats(track.car);
 
 			sfx_crash = LoadSound(SFX_CRASH);
+			SetSoundVolume(sfx_crash, sfx);
 			sfx_crash_small = LoadSound(SFX_CRASH_SMALL);
+			SetSoundVolume(sfx_crash_small, sfx);
 			sfx_start_bleep = LoadSound(SFX_START_BLEEP);
+			SetSoundVolume(sfx_start_bleep, sfx);
 			if(track.car == CAR_ROAD)
 			{
 				sfx_engine = LoadMusicStream(SFX_ENGINE_ROAD);
 			}
-			if(track.car == CAR_DRIFT)
+			else if(track.car == CAR_DRIFT)
 			{
 				sfx_engine = LoadMusicStream(SFX_ENGINE_DRIFT);
 			}
-			if(track.car == CAR_GRIP)
+			else if(track.car == CAR_GRIP)
 			{
 				sfx_engine = LoadMusicStream(SFX_ENGINE_GRIP);
 			}
-			if(track.car == CAR_TERRAIN)
+			else
 			{
 				sfx_engine = LoadMusicStream(SFX_ENGINE_TERRA);
 			}
+			SetMusicVolume(sfx_engine, sfx);
 			PlayMusicStream(sfx_engine);
 		}
 		if(partial_reset_race)
@@ -1468,7 +1486,7 @@ int main(void)
 				{
 					engine_volume = min(.2 + .8 * (previous_speed / car_stats.gears[0]), 1.0);
 				}
-				SetMusicVolume(sfx_engine, engine_volume);
+				SetMusicVolume(sfx_engine, engine_volume * sfx);
 			}
 
 			if(meta.checkpoint && checkpoints_gotten != track.checkpoint_amount)
@@ -1738,7 +1756,7 @@ int main(void)
 			reset_options = false;
 			options_current = 0;
 			options_max = 3;
-			options_page = 0;
+			options_page = OPTPAGE_MAIN;
 			options_current_car = 0;
 			options_customization = 0;
 		}
@@ -1836,7 +1854,7 @@ int main(void)
 				if(options_current_car == 4)
 				{
 					options_customization = 0;
-					options_page = 1;
+					options_page = OPTPAGE_PROFILES;
 					options_current = 0;
 				}
 				else
@@ -1849,7 +1867,7 @@ int main(void)
 				if(options_current_car == 4)
 				{
 					options_customization = 0;
-					options_page = 1;
+					options_page = OPTPAGE_PROFILES;
 					options_current = 0;
 				}
 				else if(options_customization == 1)
@@ -1928,7 +1946,7 @@ int main(void)
 			// OPTIONS SELECT
 			if(InputHeld(menu_input, INPUT_RIGHT))
 			{
-				if(options_page == 2)
+				if(options_page == OPTPAGE_GAMEPLAY)
 				{
 					if(options_current == 3)
 					{
@@ -1936,7 +1954,7 @@ int main(void)
 						if(profile.camera_zoom > 2.0) profile.camera_zoom = 2.0;
 					}
 				}
-				if(options_page == 3)
+				if(options_page == OPTPAGE_AUDIO)
 				{
 					if(options_current == 0)
 					{
@@ -1954,7 +1972,7 @@ int main(void)
 			}
 			if(InputHeld(menu_input, INPUT_LEFT))
 			{
-				if(options_page == 2)
+				if(options_page == OPTPAGE_GAMEPLAY)
 				{
 					if(options_current == 3)
 					{
@@ -1962,19 +1980,19 @@ int main(void)
 						if(profile.camera_zoom < 1.0) profile.camera_zoom = 1.0;
 					}
 				}
-				else if(options_page == 3)
+				else if(options_page == OPTPAGE_AUDIO)
 				{
 					if(options_current == 0)
 					{
-						if(profile.master_volume > -10) profile.master_volume -= 1;
+						if(profile.master_volume > -11) profile.master_volume -= 1;
 					}
 					else if(options_current == 1)
 					{
-						if(profile.sfx_volume > -10) profile.sfx_volume -= 1;
+						if(profile.sfx_volume > -11) profile.sfx_volume -= 1;
 					}
 					else if(options_current == 2)
 					{
-						if(profile.music_volume > -10) profile.music_volume -= 1;
+						if(profile.music_volume > -11) profile.music_volume -= 1;
 					}
 				}
 			}
@@ -1982,13 +2000,13 @@ int main(void)
 			{
 				if(options_current == options_max)
 				{
-					if(options_page == 0)
+					if(options_page == OPTPAGE_MAIN)
 					{
 						exit_options = true;
 					}
 					else
 					{
-						options_page = 0;
+						options_page = OPTPAGE_MAIN;
 						options_current = 0;
 					}
 				}
@@ -2111,6 +2129,7 @@ int main(void)
 				const char* fname = ProfileFilename(PROFILE_DIRECTORY, profile.name);
 				SaveProfile(&profile, fname);
 			}
+			UpdateVolume(&profile, &sfx, &music);
 		}
 		break;
 	}
@@ -2359,6 +2378,7 @@ int main(void)
 							current_game_screen = MENU;
 							reset_menu = true;
 						}
+						UpdateVolume(&profile, &sfx, &music);
 					}
 				}
 				else

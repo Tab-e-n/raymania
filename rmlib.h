@@ -99,6 +99,8 @@ void DrawUnitVector(Vector2 position, Vector2 magnitude, Color color);
 
 unsigned int TextFindLastChar(const char* text, unsigned char ch);
 
+float AudioVolume(char value);
+
 Color rmc(char i);
 
 #endif
