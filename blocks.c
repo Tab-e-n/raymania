@@ -97,6 +97,7 @@ Block MakeBlock(int id, Vector2int pos, int rot)
 			block.area = (Area){TYPE_WATER, 0, 0, BLOCK_SIZE, BLOCK_SIZE};
 			block.size = (Vector2int){1, 1};
 			break;
+		case(DCONTROLS):
 		case(B1x1VB0):
 		case(B1x1VB1):
 		case(B1x1VB2):

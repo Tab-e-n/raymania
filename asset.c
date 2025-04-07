@@ -757,6 +757,45 @@ Asset* AllocAsset(int asset_id, BlockRotation rot, double game_time)
 				asset->tris[i] = (Tri){0, 0.5*i*BU, 0, 0.5*BU + 0.5*i*BU, BU, 0.5*i*BU};
 			}
 			break;
+		case(DCONTROLS):
+			asset = MallocAsset(36);
+			asset->tris[0] = (Tri){4.5*BU, 2.875*BU, 4*BU, 1.875*BU, 3.5*BU, 2.875*BU, RM_WHITE5};
+			asset->tris[1] = (Tri){3*BU, 1.125*BU, 5*BU, 1.375*BU, 5*BU, 1.125*BU, RM_WHITE5};
+			asset->tris[2] = (Tri){5*BU, 1.375*BU, 3*BU, 1.125*BU, 3*BU, 1.375*BU, RM_WHITE5};
+			asset->tris[3] = (Tri){5*BU, 3.625*BU, 3*BU, 3.375*BU, 3*BU, 3.625*BU, RM_WHITE5};
+			asset->tris[4] = (Tri){3*BU, 3.375*BU, 5*BU, 3.625*BU, 5*BU, 3.375*BU, RM_WHITE5};
+			asset->tris[5] = (Tri){5.25*BU, 3.375*BU, 5.25*BU, 1.375*BU, 5*BU, 3.375*BU, RM_WHITE5};
+			asset->tris[6] = (Tri){5*BU, 3.375*BU, 5.25*BU, 1.375*BU, 5*BU, 1.375*BU, RM_WHITE5};
+			asset->tris[7] = (Tri){2.75*BU, 3.375*BU, 3*BU, 1.375*BU, 2.75*BU, 1.375*BU, RM_WHITE5};
+			asset->tris[8] = (Tri){3*BU, 3.375*BU, 3*BU, 1.375*BU, 2.75*BU, 3.375*BU, RM_WHITE5};
+			asset->tris[9] = (Tri){3*BU, 3.875*BU, 5*BU, 4.125*BU, 5*BU, 3.875*BU, RM_WHITE5};
+			asset->tris[10] = (Tri){5*BU, 4.125*BU, 3*BU, 3.875*BU, 3*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[11] = (Tri){5*BU, 6.375*BU, 3*BU, 6.125*BU, 3*BU, 6.375*BU, RM_WHITE5};
+			asset->tris[12] = (Tri){3*BU, 6.125*BU, 5*BU, 6.375*BU, 5*BU, 6.125*BU, RM_WHITE5};
+			asset->tris[13] = (Tri){5.25*BU, 6.125*BU, 5.25*BU, 4.125*BU, 5*BU, 6.125*BU, RM_WHITE5};
+			asset->tris[14] = (Tri){3*BU, 6.125*BU, 3*BU, 4.125*BU, 2.75*BU, 6.125*BU, RM_WHITE5};
+			asset->tris[15] = (Tri){2.75*BU, 6.125*BU, 3*BU, 4.125*BU, 2.75*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[16] = (Tri){5*BU, 6.125*BU, 5.25*BU, 4.125*BU, 5*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[17] = (Tri){5.5*BU, 6.125*BU, 5.75*BU, 4.125*BU, 5.5*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[18] = (Tri){7.75*BU, 6.125*BU, 8*BU, 4.125*BU, 7.75*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[19] = (Tri){2.25*BU, 6.125*BU, 2.5*BU, 4.125*BU, 2.25*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[20] = (Tri){0*BU, 6.125*BU, 0.25*BU, 4.125*BU, 0*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[21] = (Tri){0.25*BU, 6.125*BU, 2.25*BU, 6.375*BU, 2.25*BU, 6.125*BU, RM_WHITE5};
+			asset->tris[22] = (Tri){5.75*BU, 6.125*BU, 7.75*BU, 6.375*BU, 7.75*BU, 6.125*BU, RM_WHITE5};
+			asset->tris[23] = (Tri){5.75*BU, 3.875*BU, 7.75*BU, 4.125*BU, 7.75*BU, 3.875*BU, RM_WHITE5};
+			asset->tris[24] = (Tri){0.25*BU, 3.875*BU, 2.25*BU, 4.125*BU, 2.25*BU, 3.875*BU, RM_WHITE5};
+			asset->tris[25] = (Tri){0.25*BU, 3.875*BU, 0.25*BU, 4.125*BU, 2.25*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[26] = (Tri){0*BU, 6.125*BU, 0.25*BU, 6.125*BU, 0.25*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[27] = (Tri){0.25*BU, 6.375*BU, 2.25*BU, 6.375*BU, 0.25*BU, 6.125*BU, RM_WHITE5};
+			asset->tris[28] = (Tri){2.25*BU, 6.125*BU, 2.5*BU, 6.125*BU, 2.5*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[29] = (Tri){5.5*BU, 6.125*BU, 5.75*BU, 6.125*BU, 5.75*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[30] = (Tri){7.75*BU, 6.125*BU, 8*BU, 6.125*BU, 8*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[31] = (Tri){5.75*BU, 6.125*BU, 5.75*BU, 6.375*BU, 7.75*BU, 6.375*BU, RM_WHITE5};
+			asset->tris[32] = (Tri){7.75*BU, 4.125*BU, 5.75*BU, 3.875*BU, 5.75*BU, 4.125*BU, RM_WHITE5};
+			asset->tris[33] = (Tri){4*BU, 5.625*BU, 4.5*BU, 4.625*BU, 3.5*BU, 4.625*BU, RM_WHITE5};
+			asset->tris[34] = (Tri){1.75*BU, 5.625*BU, 1.75*BU, 4.625*BU, 0.75*BU, 5.125*BU, RM_WHITE5};
+			asset->tris[35] = (Tri){7.25*BU, 5.125*BU, 6.25*BU, 4.625*BU, 6.25*BU, 5.625*BU, RM_WHITE5};
+			break;
 		case(DRACECAR):
 			asset = MallocAsset(24);
 			asset->tris[0] = (Tri){-20.500000, -21.000000, -27.500000, 23.000000, 20.500000, -21.000000, CAR_ACCENT0};

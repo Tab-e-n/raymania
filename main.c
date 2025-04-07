@@ -1255,7 +1255,7 @@ int main(void)
 
 		if(race_showcase)
 		{
-			ZoomCameraSmooth(&camera, 0.75, CAM_ZOOM_SPEED);
+			ZoomCameraSmooth(&camera, 0.70, CAM_ZOOM_SPEED);
 		}
 		else
 		{
@@ -1981,7 +1981,7 @@ int main(void)
 					if(options_current == 3)
 					{
 						profile.camera_zoom -= .1;
-						if(profile.camera_zoom < 1.0) profile.camera_zoom = 1.0;
+						if(profile.camera_zoom < 0.7) profile.camera_zoom = 0.7;
 					}
 				}
 				else if(options_page == OPTPAGE_AUDIO)
@@ -2355,7 +2355,15 @@ int main(void)
 				const char* fname = ProfileFilename(PROFILE_DIRECTORY, profile_name);
 				if(!FileExists(fname))
 				{
-					Profile new_prof = DefaultProfile();
+					Profile new_prof;
+					if(current_game_screen == OPTIONS)
+					{
+						new_prof = profile;
+					}
+					else
+					{
+						new_prof = DefaultProfile();
+					}
 					for(int i = 0; i < PROFILE_NAME_LENGHT; i++)
 					{
 						new_prof.name[i] = profile_name[i];
@@ -3016,22 +3024,25 @@ int main(void)
 				}
 				if(race_showcase || paused)
 				{
+					DrawRectangle(0, 0, 172, 144, RAYWHITE);
 					DrawText(TextFormat("%s", track_name), 8, 8, 16, BLACK);
 					DrawText(TextFormat("By: %s", track.author), 8, 24, 16, BLACK);
 					DrawText(TextFormat("Bronz: %.3f", track.medal_bronz), 8, 40, 16, BLACK);
 					DrawText(TextFormat("Silver: %.3f", track.medal_silver), 8, 56, 16, BLACK);
 					DrawText(TextFormat("Gold: %.3f", track.medal_gold), 8, 72, 16, BLACK);
-					if(validating_track)
+					float pb = track.medal_bronz;
+					if(ghost_demo != PNULL)
+					{
+						DrawText(TextFormat("PB: %.3f", ghost_demo->time), 8, 104, 16, BLACK);
+						pb = ghost_demo->time;
+					}
+					if(validating_track || pb < track.medal_gold)
 					{
 						DrawText(TextFormat("Author: %.3f", track.medal_author), 8, 88, 16, BLACK);
 					}
-					else if(ghost_demo != PNULL)
-					{
-						DrawText(TextFormat("PB: %.3f", ghost_demo->time), 8, 88, 16, BLACK);
-					}
 					if(race_showcase)
 					{
-						DrawText("Press enter to play", 8, 104, 16, BLACK);
+						DrawText("Press enter to play", 8, 120, 16, BLACK);
 					}
 				}
 				else if(start_countdown)

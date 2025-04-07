@@ -323,6 +323,11 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 			id[0] = B1x1WR0;
 			id[1] = DVOID;
 			break;
+		case(56): // Controls
+			blocks_used = 1;
+			id[0] = DCONTROLS;
+			id[1] = DVOID;
+			break;
 		default:
 			blocks_used = 0;
 			break;
@@ -826,6 +831,17 @@ void PiecesInPage(unsigned int page[9], unsigned int page_num)
 			page[6] = 53;
 			page[7] = 54;
 			page[8] = 55;
+			break;
+		case(PAGE_BONUS):
+			page[0] = 56;
+			page[1] = 0;
+			page[2] = 0;
+			page[3] = 0;
+			page[4] = 0;
+			page[5] = 0;
+			page[6] = 0;
+			page[7] = 0;
+			page[8] = 0;
 			break;
 	}
 }
