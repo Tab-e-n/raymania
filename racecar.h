@@ -45,6 +45,7 @@ typedef struct CarStats
 	SurfaceStats surface[SURFACE_AMOUNT];
 	float gears[GEAR_AMOUNT],
 		gear_shift_speed,
+		gear_shift_turn_penalty,
 		camera_shake_threshold,
 		speed_to_shake_ratio,
 		shake_amplitude,

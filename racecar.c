@@ -37,6 +37,7 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.gears[3] = 14;
 			car_stats.gears[4] = 20;
 			car_stats.gear_shift_speed = FRAME * 4;
+			car_stats.gear_shift_turn_penalty = FRAME * 1;
 
 			stats.min_speed = 4;
 			stats.acceleration[0] = 0.075;
@@ -135,6 +136,7 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.gears[3] = 14;
 			car_stats.gears[4] = 18;
 			car_stats.gear_shift_speed = FRAME * 8;
+			car_stats.gear_shift_turn_penalty = 0;
 
 			stats.min_speed = 4;
 			stats.acceleration[0] = 0.05;
@@ -231,6 +233,7 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.gears[3] = 21;
 			car_stats.gears[4] = 24;
 			car_stats.gear_shift_speed = FRAME * 4;
+			car_stats.gear_shift_turn_penalty = 0;
 
 			stats.min_speed = 5;
 			stats.acceleration[0] = 0.1;
@@ -328,6 +331,7 @@ CarStats DefaultStats(DefaultCar car)
 			car_stats.gears[3] = 12;
 			car_stats.gears[4] = 16;
 			car_stats.gear_shift_speed = FRAME;
+			car_stats.gear_shift_turn_penalty = FRAME * 0.25;
 
 			stats.min_speed = 4;
 			stats.acceleration[0] = 0.05;
@@ -1000,7 +1004,12 @@ MetaInfo ProcessRacecar(Racecar* car, CarStats* car_stats, Block blocks[MAX_BLOC
 	//TraceLog(LOG_INFO, "prev vel %.3f %.3f", car->velocity.x, car->velocity.y);
 	if(car->gear_shift > 0.0)
 	{
-		car->gear_shift -= car_stats->gear_shift_speed;
+		float shift = car_stats->gear_shift_speed;
+		if(car->turn_dir != 0.0)
+		{
+			shift *= 1.0 - (car_stats->gear_shift_turn_penalty * absf(car->turn_dir));
+		}
+		car->gear_shift -= shift;
 	}
 	else
 	{
