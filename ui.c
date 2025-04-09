@@ -4,8 +4,9 @@
 #include "asset.h"
 #include "ui.h"
 
-void MoveFileListCursor(unsigned int count, int* current, int move)
+bool MoveFileListCursor(unsigned int count, int* current, int move)
 {
+	int previous = *current;
 	*current = *current + move;
 	if(*current < 0)
 	{
@@ -15,6 +16,7 @@ void MoveFileListCursor(unsigned int count, int* current, int move)
 	{
 		*current = count - 1;
 	}
+	return previous != *current;
 }
 
 void DrawFileList(FilePathList fpl, int current, Color bg1, Color bg2)

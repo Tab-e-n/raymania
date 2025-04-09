@@ -48,6 +48,17 @@ IN PROGRESS
 Random loud noise fix
 Example Tracks
 
+Menu Back sfx
+Pause sfx
+Place Block sfx
+Remove Block sfx
+Move Block sfx
+Pullup Editor sfx
+Pulldown Editor sfx
+
+Start Race sfx
+Typing Sound sfx
+
 BEFORE PLAYTEST MAYBE
 Big blocks go outside of map fix
 Held piece in editor is transparent

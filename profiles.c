@@ -232,8 +232,9 @@ void LoadProfileDirectory(FilePathList* fpl, unsigned char* dir)
 	*fpl = LoadDirectoryFilesEx(TextFormat("%s", dir), ".prf", false);
 }
 
-void MoveProfileSelectorCursor(unsigned int count, int* current, int move)
+bool MoveProfileSelectorCursor(unsigned int count, int* current, int move)
 {
+	bool previous = *current;
 	*current = *current + move;
 	if(*current < 0)
 	{
@@ -243,6 +244,7 @@ void MoveProfileSelectorCursor(unsigned int count, int* current, int move)
 	{
 		*current = count;
 	}
+	return previous != *current;
 }
 
 void DrawProfileSelector(FilePathList fpl, int current)

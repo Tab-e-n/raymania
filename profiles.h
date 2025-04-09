@@ -40,7 +40,7 @@ Profile LoadProfile(const char* filename);
 bool SaveProfile(Profile* profile, const char* filename);
 
 void LoadProfileDirectory(FilePathList* fpl, unsigned char* dir);
-void MoveProfileSelectorCursor(unsigned int count, int* current, int move);
+bool MoveProfileSelectorCursor(unsigned int count, int* current, int move);
 void DrawProfileSelector(FilePathList fpl, int current);
 
 bool GetProfileBool(Profile* profile, ProfileBoolean n);
