@@ -1180,6 +1180,7 @@ int main(void)
 						}
 					}
 					PlaySound(sfx_click);
+					PlaySound(sfx_pull_down);
 				}
 			}
 			else
