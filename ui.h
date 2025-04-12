@@ -24,7 +24,7 @@ typedef enum OptionPages
 } OptionPages;
 
 
-void MoveFileListCursor(unsigned int count, int* current, int move);
+bool MoveFileListCursor(unsigned int count, int* current, int move);
 void DrawFileList(FilePathList fpl, int current, Color bg1, Color bg2);
 void ChangeToDirectory(unsigned char* dir, unsigned char* new_dir, bool overwrite);
 void ReturnToParentDirectory(unsigned char* dir);

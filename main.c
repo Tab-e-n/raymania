@@ -15,6 +15,7 @@
 #ifdef WINDOWS
 
 #define VALIDATE_DEMO_FILE "demos\\validation.dm\0"
+
 #define SFX_START_BLEEP "sounds\\start_bleep_0.wav\0"
 #define SFX_CRASH_SMALL "sounds\\crash_small.wav\0"
 #define SFX_CRASH "sounds\\crash_big.wav\0"
@@ -22,10 +23,15 @@
 #define SFX_ENGINE_DRIFT "sounds\\car_drift.wav\0"
 #define SFX_ENGINE_GRIP "sounds\\car_grip.wav\0"
 #define SFX_ENGINE_TERRA "sounds\\car_terra.wav\0"
+#define SFX_CHECKPOINT "sounds\\checkpoint.wav\0"
+#define SFX_TICK "sounds\\tick.wav\0"
+#define SFX_CLICK "sounds\\click.wav\0"
+#define SFX_ROTATE "sounds\\rotate.wav\0"
 
 #else
 
 #define VALIDATE_DEMO_FILE "demos/validation.dm\0"
+
 #define SFX_START_BLEEP "sounds/start_bleep_0.wav\0"
 #define SFX_CRASH_SMALL "sounds/crash_small.wav\0"
 #define SFX_CRASH "sounds/crash_big.wav\0"
@@ -33,6 +39,10 @@
 #define SFX_ENGINE_DRIFT "sounds/car_drift.wav\0"
 #define SFX_ENGINE_GRIP "sounds/car_grip.wav\0"
 #define SFX_ENGINE_TERRA "sounds/car_terra.wav\0"
+#define SFX_CHECKPOINT "sounds/checkpoint.wav\0"
+#define SFX_TICK "sounds/tick.wav\0"
+#define SFX_CLICK "sounds/click.wav\0"
+#define SFX_ROTATE "sounds/rotate.wav\0"
 
 #endif
 
@@ -74,6 +84,12 @@ void UpdateVolume(Profile* profile, float* sfx, float* music)
 	*music = AudioVolume(profile->music_volume) * master;
 	TraceLog(LOG_INFO, "sfx: %g", *sfx);
 	TraceLog(LOG_INFO, "music: %g", *music);
+}
+
+void UpdateMenuSFX(float sfx, Sound tick, Sound click)
+{
+	SetSoundVolume(tick, sfx);
+	SetSoundVolume(click, sfx);
 }
 
 int main(void)
@@ -326,9 +342,17 @@ int main(void)
 	// AUDIO VAR
 
 	float sfx = AudioVolume(0), music = AudioVolume(0);
-	Sound sfx_crash, sfx_crash_small, sfx_start_bleep;
+	// MENU
+	Sound sfx_tick, sfx_click;
+	// EDITOR
+	Sound sfx_rotate;
+	// RACE
+	Sound sfx_crash, sfx_crash_small, sfx_start_bleep, sfx_checkpoint;
 	Music sfx_engine;
 
+	sfx_tick = LoadSound(SFX_TICK);
+	sfx_click = LoadSound(SFX_CLICK);
+	UpdateMenuSFX(sfx, sfx_tick, sfx_click);
 
 	// GAME LOOP
 
@@ -353,26 +377,39 @@ int main(void)
 
 	if(popup)
 	{
-		if(InputPressed(input, INPUT_BACK) && popup_opt == 0)
+		if(InputPressed(input, INPUT_BACK))
 		{
-			popup_confirmed = true;
+			if(popup_opt == 0)
+			{
+				popup_confirmed = true;
+				PlaySound(sfx_click);
+			}
+			else
+			{
+				popup_opt = 0;
+				PlaySound(sfx_tick);
+			}
 		}
-		if(InputHeld(input, INPUT_LEFT))
-		{
-			popup_opt = 1;
-		}
-		if(InputHeld(input, INPUT_RIGHT) || InputPressed(input, INPUT_BACK))
+		if(InputPressed(input, INPUT_RIGHT))
 		{
 			popup_opt = 0;
+			PlaySound(sfx_tick);
+		}
+		if(InputPressed(input, INPUT_LEFT))
+		{
+			popup_opt = 1;
+			PlaySound(sfx_tick);
 		}
 		if(InputPressed(input, INPUT_ENTER))
 		{
 			popup_confirmed = true;
+			PlaySound(sfx_click);
 		}
 		if(InputPressed(input, INPUT_ESC))
 		{
 			popup_opt = 0;
 			popup = POPUP_OFF;
+			PlaySound(sfx_click);
 		}
 		if(popup_confirmed && popup_opt)
 		{
@@ -431,19 +468,31 @@ int main(void)
 		{
 			if(InputHeld(menu_input, INPUT_UP))
 			{
-				MoveProfileSelectorCursor(fpl.count, &current_profile, -1);
+				if(MoveProfileSelectorCursor(fpl.count, &current_profile, -1))
+				{
+					PlaySound(sfx_tick);
+				}
 			}
 			if(InputHeld(menu_input, INPUT_DOWN))
 			{
-				MoveProfileSelectorCursor(fpl.count, &current_profile, 1);
+				if(MoveProfileSelectorCursor(fpl.count, &current_profile, 1))
+				{
+					PlaySound(sfx_tick);
+				}
 			}
 			if(InputHeld(menu_input, INPUT_LEFT))
 			{
-				MoveProfileSelectorCursor(fpl.count, &current_profile, -PROFILE_SELECTOR_PAGE_ITEMS);
+				if(MoveProfileSelectorCursor(fpl.count, &current_profile, -PROFILE_SELECTOR_PAGE_ITEMS))
+				{
+					PlaySound(sfx_tick);
+				}
 			}
 			if(InputHeld(menu_input, INPUT_RIGHT))
 			{
-				MoveProfileSelectorCursor(fpl.count, &current_profile, PROFILE_SELECTOR_PAGE_ITEMS);
+				if(MoveProfileSelectorCursor(fpl.count, &current_profile, PROFILE_SELECTOR_PAGE_ITEMS))
+				{
+					PlaySound(sfx_tick);
+				}
 			}
 			if(InputPressed(input, INPUT_ENTER))
 			{
@@ -470,6 +519,7 @@ int main(void)
 					{
 						profile = LoadProfile(path);
 						UpdateVolume(&profile, &sfx, &music);
+						UpdateMenuSFX(sfx, sfx_tick, sfx_click);
 						if(back_to_opt)
 						{
 							reset_options = true;
@@ -484,6 +534,7 @@ int main(void)
 					fpl.count = 0;
 					//PrintProfile(profile);
 				}
+				PlaySound(sfx_click);
 			}
 			if(InputPressed(input, INPUT_BACK))
 			{
@@ -495,6 +546,7 @@ int main(void)
 				{
 					profile = DefaultProfile();
 					UpdateVolume(&profile, &sfx, &music);
+					UpdateMenuSFX(sfx, sfx_tick, sfx_click);
 					if(back_to_opt)
 					{
 						reset_options = true;
@@ -512,6 +564,7 @@ int main(void)
 				}
 				UnloadDirectoryFiles(fpl);
 				fpl.count = 0;
+				PlaySound(sfx_click);
 			}
 			if(party_mode)
 			{
@@ -520,6 +573,7 @@ int main(void)
 					current_game_screen = MENU;
 					UnloadDirectoryFiles(fpl);
 					fpl.count = 0;
+					PlaySound(sfx_click);
 				}
 			}
 		}
@@ -600,10 +654,12 @@ int main(void)
 				if(party_current_opt == MAX_PARTY_PROFILES + 1)
 				{
 					party_current_opt = party_count;
+					PlaySound(sfx_tick);
 				}
 				else if(party_current_opt > 0)
 				{
 					party_current_opt--;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputHeld(menu_input, INPUT_DOWN))
@@ -615,6 +671,7 @@ int main(void)
 					{
 						party_current_opt = MAX_PARTY_PROFILES + 1;
 					}
+					PlaySound(sfx_tick);
 				}
 			}
 			if(party_current_opt == 0)
@@ -626,6 +683,7 @@ int main(void)
 						party_count++;
 						party_profiles = _realloc(party_profiles, sizeof(Profile) * party_count);
 						party_profiles[party_count - 1] = DefaultProfile();
+						PlaySound(sfx_tick);
 					}
 				}
 				if(InputHeld(menu_input, INPUT_LEFT))
@@ -634,6 +692,7 @@ int main(void)
 					{
 						party_count--;
 						party_profiles = _realloc(party_profiles, sizeof(Profile) * party_count);
+						PlaySound(sfx_tick);
 					}
 				}
 			}
@@ -642,10 +701,12 @@ int main(void)
 				if(party_current_opt == MAX_PARTY_PROFILES + 2)
 				{
 					party_mode = false;
+					PlaySound(sfx_click);
 				}
 				else
 				{
 					party_current_opt = MAX_PARTY_PROFILES + 2;
+					PlaySound(sfx_tick);
 				}
 			}
 			else if(InputPressed(input, INPUT_ENTER))
@@ -662,20 +723,24 @@ int main(void)
 					{
 						party_profiles[party_count - 1] = DefaultProfile();
 					}
+					PlaySound(sfx_tick);
 				}
 				else if(party_current_opt == MAX_PARTY_PROFILES + 1)
 				{
 					party_current_menu = 1;
 					party_current_opt = 0;
+					PlaySound(sfx_click);
 				}
 				else if(party_current_opt == MAX_PARTY_PROFILES + 2)
 				{
 					party_mode = false;
+					PlaySound(sfx_click);
 				}
 				else
 				{
 					current_game_screen = PROFILES;
 					load_profiles = true;
+					PlaySound(sfx_click);
 				}
 			}
 			if(!party_mode)
@@ -692,6 +757,7 @@ int main(void)
 					if(party_timer_base < MAX_PARTY_TIMER)
 					{
 						party_timer_base++;
+						PlaySound(sfx_tick);
 					}
 				}
 				if(InputHeld(menu_input, INPUT_LEFT))
@@ -699,6 +765,7 @@ int main(void)
 					if(party_timer_base > MIN_PARTY_TIMER)
 					{
 						party_timer_base--;
+						PlaySound(sfx_tick);
 					}
 				}
 			}
@@ -707,6 +774,7 @@ int main(void)
 				if(party_current_opt > 0)
 				{
 					party_current_opt--;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputHeld(menu_input, INPUT_DOWN))
@@ -714,6 +782,7 @@ int main(void)
 				if(party_current_opt < 3)
 				{
 					party_current_opt++;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputPressed(input, INPUT_BACK))
@@ -722,10 +791,12 @@ int main(void)
 				{
 					party_current_menu = 0;
 					party_current_opt = 0;
+					PlaySound(sfx_click);
 				}
 				else
 				{
 					party_current_opt = 3;
+					PlaySound(sfx_tick);
 				}
 			}
 			else if(InputPressed(input, INPUT_ENTER))
@@ -737,23 +808,27 @@ int main(void)
 					{
 						party_timer_base = MIN_PARTY_TIMER;
 					}
+					PlaySound(sfx_tick);
 				}
 				if(party_current_opt == 1)
 				{
 					file_list_active = FL_TRACK;
 					load_file_list = true;
 					reset_party = true;
+					PlaySound(sfx_click);
 				}
 				else if(party_current_opt == 2)
 				{
 					current_game_screen = EDITOR;
 					reset_editor = true;
 					reset_party = true;
+					PlaySound(sfx_click);
 				}
 				else if(party_current_opt == 3)
 				{
 					party_current_menu = 0;
 					party_current_opt = 0;
+					PlaySound(sfx_click);
 				}
 			}
 		}
@@ -763,35 +838,65 @@ int main(void)
 			{
 				party_current_menu = 1;
 				party_current_opt = 0;
+				PlaySound(sfx_click);
 			}
 		}
 		else
 		{
 			if(InputHeld(menu_input, INPUT_UP))
 			{
-				if(menu_option > MENU_PLAY && menu_option != MENU_RACE) menu_option -= 1;
+				if(menu_option > MENU_PLAY && menu_option != MENU_RACE)
+				{
+					menu_option -= 1;
+					PlaySound(sfx_tick);
+				}
 			}
 			if(InputHeld(menu_input, INPUT_DOWN))
 			{
-				if(menu_option < MENU_EXIT) menu_option += 1;
-				else if(menu_option >= MENU_RACE && menu_option < MENU_PLAY_EXIT) menu_option += 1;
+				if(menu_option < MENU_EXIT)
+				{
+					menu_option += 1;
+					PlaySound(sfx_tick);
+				}
+				else if(menu_option >= MENU_RACE && menu_option < MENU_PLAY_EXIT)
+				{
+					menu_option += 1;
+					PlaySound(sfx_tick);
+				}
 			}
 
 			if(InputPressed(input, INPUT_BACK))
 			{
 				if(menu_option >= MENU_RACE)
 				{
-					if(menu_option == MENU_PLAY_EXIT) menu_option = MENU_PLAY;
-					else menu_option = MENU_PLAY_EXIT;
+					if(menu_option == MENU_PLAY_EXIT)
+					{
+						menu_option = MENU_PLAY;
+						PlaySound(sfx_click);
+					}
+					else
+					{
+						menu_option = MENU_PLAY_EXIT;
+						PlaySound(sfx_tick);
+					}
 				}
 				else
 				{
-					if(menu_option == MENU_EXIT) exit = true;
-					else menu_option = MENU_EXIT;
+					if(menu_option == MENU_EXIT)
+					{
+						exit = true;
+						PlaySound(sfx_click);
+					}
+					else
+					{
+						menu_option = MENU_EXIT;
+						PlaySound(sfx_tick);
+					}
 				}
 			}
 			if(InputPressed(input, INPUT_ENTER))
 			{
+				PlaySound(sfx_click);
 				switch(menu_option)
 				{
 					case(MENU_PLAY):
@@ -850,6 +955,9 @@ int main(void)
 			MoveEditorCursor(&cursor_info, 0, 0);
 			GetPiece(&cursor_info, held_piece);
 			holding_start = false;
+
+			sfx_rotate = LoadSound(SFX_ROTATE);
+			SetSoundVolume(sfx_rotate, sfx);
 		}
 
 		ZoomCameraSmooth(&camera, 0.5, CAM_ZOOM_SPEED);
@@ -868,6 +976,7 @@ int main(void)
 				if(efos_opt > 0)
 				{
 					efos_opt -= 1;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputHeld(menu_input, INPUT_RIGHT))
@@ -875,11 +984,13 @@ int main(void)
 				if(efos_opt < 3)
 				{
 					efos_opt += 1;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputPressed(input, INPUT_ESC) || InputPressed(input, INPUT_BACK))
 			{
 				end_efos = true;
+				PlaySound(sfx_click);
 			}
 			else if(InputPressed(input, INPUT_ENTER))
 			{
@@ -910,6 +1021,7 @@ int main(void)
 						end_efos = false;
 					break;
 				}
+				PlaySound(sfx_click);
 			}
 			if(end_efos)
 			{
@@ -929,6 +1041,7 @@ int main(void)
 					cursor_info.rot += 1;
 				}
 				GetPiece(&cursor_info, held_piece);
+				PlaySound(sfx_rotate);
 			}
 
 			if(InputHeld(menu_input, INPUT_ENTER))
@@ -971,6 +1084,7 @@ int main(void)
 			if(InputPressed(input, INPUT_ESC))
 			{
 				placing_pieces = false;
+				PlaySound(sfx_tick);
 			}
 
 			if(piece_catalogue_pulled > 0.0)
@@ -985,15 +1099,18 @@ int main(void)
 				if(piece_catalogue_item == 9)
 				{
 					popup = POPUP_EDITOR_EXIT;
+					PlaySound(sfx_click);
 				}
 				else
 				{
 					piece_catalogue_item = 9;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputPressed(input, INPUT_ESC))
 			{
 				placing_pieces = true;
+				PlaySound(sfx_tick);
 			}
 			if(piece_catalogue_item >= 0 && piece_catalogue_item < 9)
 			{
@@ -1007,9 +1124,14 @@ int main(void)
 							PiecesInPage(piece_catalogue_page, piece_catalogue_page_num);
 							LoadPieceCataloguePage(piece_catalogue, piece_catalogue_page);
 							piece_catalogue_item = 8;
+							PlaySound(sfx_tick);
 						}
 					}
-					else piece_catalogue_item--;
+					else 
+					{
+						piece_catalogue_item--;
+						PlaySound(sfx_tick);
+					}
 				}
 				if(InputHeld(menu_input, INPUT_RIGHT))
 				{
@@ -1021,13 +1143,19 @@ int main(void)
 							PiecesInPage(piece_catalogue_page, piece_catalogue_page_num);
 							LoadPieceCataloguePage(piece_catalogue, piece_catalogue_page);
 							piece_catalogue_item = 0;
+							PlaySound(sfx_tick);
 						}
 					}
-					else piece_catalogue_item++;
+					else 
+					{
+						piece_catalogue_item++;
+						PlaySound(sfx_tick);
+					}
 				}
 				if(InputHeld(menu_input, INPUT_DOWN))
 				{
 					piece_catalogue_item += 9;
+					PlaySound(sfx_tick);
 				}
 
 				if(InputPressed(input, INPUT_ENTER))
@@ -1043,6 +1171,7 @@ int main(void)
 							holding_start = true;
 						}
 					}
+					PlaySound(sfx_click);
 				}
 			}
 			else
@@ -1052,6 +1181,7 @@ int main(void)
 					if(piece_catalogue_item > 9)
 					{
 						piece_catalogue_item--;
+						PlaySound(sfx_tick);
 					}
 				}
 				if(InputHeld(menu_input, INPUT_RIGHT))
@@ -1059,11 +1189,13 @@ int main(void)
 					if(piece_catalogue_item < 17)
 					{
 						piece_catalogue_item++;
+						PlaySound(sfx_tick);
 					}
 				}
 				if(InputHeld(menu_input, INPUT_UP))
 				{
 					piece_catalogue_item -= 9;
+					PlaySound(sfx_tick);
 				}
 
 				if(InputPressed(input, INPUT_ENTER))
@@ -1120,6 +1252,7 @@ int main(void)
 							}
 							break;
 					}
+					PlaySound(sfx_click);
 				}
 			}
 
@@ -1137,6 +1270,11 @@ int main(void)
 			piece_catalogue_pulled += 0.10 * pcp_dir * dif;
 			if(piece_catalogue_pulled < 0.005) piece_catalogue_pulled = 0.0;
 			if(piece_catalogue_pulled > 1.0) piece_catalogue_pulled = 1.0;
+		}
+		if(current_game_screen != EDITOR)
+		{
+			StopSound(sfx_rotate);
+			UnloadSound(sfx_rotate);
 		}
 		break;
 	case RACE:
@@ -1175,6 +1313,8 @@ int main(void)
 			SetSoundVolume(sfx_crash_small, sfx);
 			sfx_start_bleep = LoadSound(SFX_START_BLEEP);
 			SetSoundVolume(sfx_start_bleep, sfx);
+			sfx_checkpoint = LoadSound(SFX_CHECKPOINT);
+			SetSoundVolume(sfx_checkpoint, sfx);
 			if(track.car == CAR_ROAD)
 			{
 				sfx_engine = LoadMusicStream(SFX_ENGINE_ROAD);
@@ -1268,6 +1408,7 @@ int main(void)
 				if(pause_option > 0)
 				{
 					pause_option--;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputHeld(menu_input, INPUT_DOWN))
@@ -1275,6 +1416,7 @@ int main(void)
 				if(pause_option < 3)
 				{
 					pause_option++;
+					PlaySound(sfx_tick);
 				}
 			}
 			bool pause_exit = false;
@@ -1283,10 +1425,12 @@ int main(void)
 				if(pause_option == 3)
 				{
 					pause_exit = true;
+					PlaySound(sfx_click);
 				}
 				else
 				{
 					pause_option = 3;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputPressed(input, INPUT_ENTER))
@@ -1309,10 +1453,12 @@ int main(void)
 				{
 					pause_exit = true;
 				}
+				PlaySound(sfx_click);
 			}
 			if(InputPressed(input, INPUT_ESC))
 			{
 				paused = false;
+				PlaySound(sfx_click);
 			}
 			if(pause_exit)
 			{
@@ -1453,7 +1599,7 @@ int main(void)
 			{
 				shake_time += (speed_change - car_stats.camera_shake_threshold) * car_stats.speed_to_shake_ratio;
 			}
-			if(speed_change > car_stats.camera_shake_threshold * 1.4) // TODO: Own value, not tied to cam
+			if(speed_change > car_stats.camera_shake_threshold * 1.6) // TODO: Own value, not tied to cam
 			{
 				SetSoundPitch(sfx_crash, AirQuotesNoise(game_time, false) + 0.5);
 				PlaySound(sfx_crash);
@@ -1508,6 +1654,7 @@ int main(void)
 					checkpoints_gotten++;
 					check_pos = meta.check_pos;
 					check_rot = meta.check_rot;
+					PlaySound(sfx_checkpoint);
 				}
 			}
 			bool did_finish = meta.finish && !finished && checkpoints_gotten == track.checkpoint_amount;
@@ -1744,6 +1891,10 @@ int main(void)
 			UnloadSound(sfx_crash_small);
 			StopSound(sfx_start_bleep);
 			UnloadSound(sfx_start_bleep);
+			StopSound(sfx_checkpoint);
+			UnloadSound(sfx_checkpoint);
+
+			TraceLog(LOG_INFO, "Unloading Engine Sound");
 			StopMusicStream(sfx_engine);
 			UnloadMusicStream(sfx_engine);
 			if(party_mode)
@@ -1768,6 +1919,7 @@ int main(void)
 		if(InputPressed(input, INPUT_ESC))
 		{
 			exit_options = true;
+			PlaySound(sfx_click);
 		}
 
 		if(options_customization)
@@ -1788,6 +1940,7 @@ int main(void)
 				{
 					options_current_car++;
 					reset_opt_curr = true;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputHeld(menu_input, INPUT_UP))
@@ -1796,6 +1949,7 @@ int main(void)
 				{
 					options_current_car--;
 					reset_opt_curr = true;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(reset_opt_curr || options_current == -1)
@@ -1844,6 +1998,7 @@ int main(void)
 				if(options_current < hori_limit - 1)
 				{
 					options_current++;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputHeld(menu_input, INPUT_LEFT))
@@ -1851,6 +2006,7 @@ int main(void)
 				if(options_current > 0)
 				{
 					options_current--;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputPressed(input, INPUT_BACK))
@@ -1860,10 +2016,12 @@ int main(void)
 					options_customization = 0;
 					options_page = OPTPAGE_PROFILES;
 					options_current = 0;
+					PlaySound(sfx_click);
 				}
 				else
 				{
 					options_current_car = 4;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputPressed(input, INPUT_ENTER))
@@ -1912,6 +2070,7 @@ int main(void)
 						profile.car_terrain_palette = options_current;
 					}
 				}
+				PlaySound(sfx_click);
 			}
 		}
 		else if(!entering_profile_name)
@@ -1938,6 +2097,7 @@ int main(void)
 				if(options_current < options_max)
 				{
 					options_current++;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputHeld(menu_input, INPUT_UP))
@@ -1945,6 +2105,7 @@ int main(void)
 				if(options_current > 0)
 				{
 					options_current--;
+					PlaySound(sfx_tick);
 				}
 			}
 			// OPTIONS SELECT
@@ -1954,24 +2115,42 @@ int main(void)
 				{
 					if(options_current == 3)
 					{
-						profile.camera_zoom += .1;
-						if(profile.camera_zoom > 2.0) profile.camera_zoom = 2.0;
+						if(profile.camera_zoom < 2.0)
+						{
+							profile.camera_zoom += .1;
+							PlaySound(sfx_tick);
+						}
+						else profile.camera_zoom = 2.0;
 					}
 				}
 				if(options_page == OPTPAGE_AUDIO)
 				{
 					if(options_current == 0)
 					{
-						if(profile.master_volume < 10) profile.master_volume += 1;
+						if(profile.master_volume < 10)
+						{
+							profile.master_volume += 1;
+							PlaySound(sfx_tick);
+						}
 					}
 					else if(options_current == 1)
 					{
-						if(profile.sfx_volume < 10) profile.sfx_volume += 1;
+						if(profile.sfx_volume < 10)
+						{
+							profile.sfx_volume += 1;
+							PlaySound(sfx_tick);
+						}
 					}
 					else if(options_current == 2)
 					{
-						if(profile.music_volume < 10) profile.music_volume += 1;
+						if(profile.music_volume < 10)
+						{
+							profile.music_volume += 1;
+							PlaySound(sfx_tick);
+						}
 					}
+					UpdateVolume(&profile, &sfx, &music);
+					UpdateMenuSFX(sfx, sfx_tick, sfx_click);
 				}
 			}
 			if(InputHeld(menu_input, INPUT_LEFT))
@@ -1980,24 +2159,42 @@ int main(void)
 				{
 					if(options_current == 3)
 					{
-						profile.camera_zoom -= .1;
-						if(profile.camera_zoom < 0.7) profile.camera_zoom = 0.7;
+						if(profile.camera_zoom > 0.7)
+						{
+							profile.camera_zoom -= .1;
+							PlaySound(sfx_tick);
+						}
+						else profile.camera_zoom = 0.7;
 					}
 				}
 				else if(options_page == OPTPAGE_AUDIO)
 				{
 					if(options_current == 0)
 					{
-						if(profile.master_volume > -11) profile.master_volume -= 1;
+						if(profile.master_volume > -11)
+						{
+							profile.master_volume -= 1;
+							PlaySound(sfx_tick);
+						}
 					}
 					else if(options_current == 1)
 					{
-						if(profile.sfx_volume > -11) profile.sfx_volume -= 1;
+						if(profile.sfx_volume > -11)
+						{
+							profile.sfx_volume -= 1;
+							PlaySound(sfx_tick);
+						}
 					}
 					else if(options_current == 2)
 					{
-						if(profile.music_volume > -11) profile.music_volume -= 1;
+						if(profile.music_volume > -11)
+						{
+							profile.music_volume -= 1;
+							PlaySound(sfx_tick);
+						}
 					}
+					UpdateVolume(&profile, &sfx, &music);
+					UpdateMenuSFX(sfx, sfx_tick, sfx_click);
 				}
 			}
 			if(InputPressed(input, INPUT_BACK))
@@ -2013,10 +2210,12 @@ int main(void)
 						options_page = OPTPAGE_MAIN;
 						options_current = 0;
 					}
+					PlaySound(sfx_click);
 				}
 				else
 				{
 					options_current = options_max;
+					PlaySound(sfx_tick);
 				}
 			}
 			if(InputPressed(input, INPUT_ENTER))
@@ -2026,11 +2225,13 @@ int main(void)
 					if(options_page == OPTPAGE_MAIN)
 					{
 						exit_options = true;
+						PlaySound(sfx_click);
 					}
 					else
 					{
 						options_page = OPTPAGE_MAIN;
 						options_current = 0;
+						PlaySound(sfx_tick);
 					}
 				}
 				else if(options_page == OPTPAGE_MAIN)
@@ -2060,6 +2261,7 @@ int main(void)
 						options_page = OPTPAGE_PARTY;
 						options_current = 0;
 					}
+					PlaySound(sfx_click);
 				}
 				else if(options_page == OPTPAGE_PROFILES)
 				{
@@ -2068,24 +2270,28 @@ int main(void)
 						current_game_screen = PROFILES;
 						load_profiles = true;
 						back_to_opt = true;
+						PlaySound(sfx_click);
 					}
 					else if(options_current == 1)
 					{
 						entering_profile_name = true;
 						inputing_name = 1;
 						name_lenght = PROFILE_NAME_LENGHT - 1;
+						PlaySound(sfx_click);
 					}
 					else if(options_current == 2)
 					{
 						options_current_car = 0;
 						options_customization = 1;
 						options_current = -1;
+						PlaySound(sfx_click);
 					}
 					else
 					{
 						options_current_car = 0;
 						options_customization = 2;
 						options_current = -1;
+						PlaySound(sfx_click);
 					}
 				}
 				else if(options_page == OPTPAGE_GAMEPLAY)
@@ -2094,16 +2300,19 @@ int main(void)
 					{
 						bool b = GetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE);
 						SetProfileBool(&profile, PRF_BOOL_SCREEN_SHAKE, !b);
+						PlaySound(sfx_click);
 					}
 					else if(options_current == 1)
 					{
 						bool b = GetProfileBool(&profile, PRF_BOOL_CAM_CENTERED);
 						SetProfileBool(&profile, PRF_BOOL_CAM_CENTERED, !b);
+						PlaySound(sfx_click);
 					}
 					else
 					{
 						bool b = GetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED);
 						SetProfileBool(&profile, PRF_BOOL_GHOST_ENABLED, !b);
+						PlaySound(sfx_click);
 					}
 				}
 				else if(options_page == OPTPAGE_EDITOR)
@@ -2112,6 +2321,7 @@ int main(void)
 					{
 						bool b = GetProfileBool(&profile, PRF_BOOL_BLOCKMIXING);
 						SetProfileBool(&profile, PRF_BOOL_BLOCKMIXING, !b);
+						PlaySound(sfx_click);
 					}
 				}
 				else if(options_page == OPTPAGE_PARTY)
@@ -2120,6 +2330,7 @@ int main(void)
 					{
 						bool b = GetProfileBool(&profile, PRF_BOOL_HIDE_PARTY_TIME);
 						SetProfileBool(&profile, PRF_BOOL_HIDE_PARTY_TIME, !b);
+						PlaySound(sfx_click);
 					}
 				}
 			}
@@ -2134,6 +2345,7 @@ int main(void)
 				SaveProfile(&profile, fname);
 			}
 			UpdateVolume(&profile, &sfx, &music);
+			UpdateMenuSFX(sfx, sfx_tick, sfx_click);
 		}
 		break;
 	}
@@ -2164,19 +2376,31 @@ int main(void)
 		bool file_list_exit = false;
 		if(InputHeld(menu_input, INPUT_UP))
 		{
-			MoveFileListCursor(fpl.count, &selected_file, -1);
+			if(MoveFileListCursor(fpl.count, &selected_file, -1))
+			{
+				PlaySound(sfx_tick);
+			}
 		}
 		if(InputHeld(menu_input, INPUT_DOWN))
 		{
-			MoveFileListCursor(fpl.count, &selected_file, 1);
+			if(MoveFileListCursor(fpl.count, &selected_file, 1))
+			{
+				PlaySound(sfx_tick);
+			}
 		}
 		if(InputHeld(menu_input, INPUT_LEFT))
 		{
-			MoveFileListCursor(fpl.count, &selected_file, -FILE_LIST_PAGE_ITEMS);
+			if(MoveFileListCursor(fpl.count, &selected_file, -FILE_LIST_PAGE_ITEMS))
+			{
+				PlaySound(sfx_tick);
+			}
 		}
 		if(InputHeld(menu_input, INPUT_RIGHT))
 		{
-			MoveFileListCursor(fpl.count, &selected_file, FILE_LIST_PAGE_ITEMS);
+			if(MoveFileListCursor(fpl.count, &selected_file, FILE_LIST_PAGE_ITEMS))
+			{
+				PlaySound(sfx_tick);
+			}
 		}
 		if(InputPressed(input, INPUT_BACK))
 		{
@@ -2199,10 +2423,12 @@ int main(void)
 			{
 				ReturnToParentDirectory(file_dir);
 				load_file_list = true;
+				PlaySound(sfx_click);
 			}
 			else
 			{
 				file_list_exit = true;
+				PlaySound(sfx_click);
 			}
 		}
 
@@ -2306,6 +2532,7 @@ int main(void)
 		else if(InputPressed(input, INPUT_ESC))
 		{
 			file_list_exit = true;
+			PlaySound(sfx_click);
 		}
 		if(file_list_exit)
 		{
@@ -2334,6 +2561,7 @@ int main(void)
 		if(InputPressed(input, INPUT_ESC))
 		{
 			inputing_name = 0;
+			PlaySound(sfx_click);
 		}
 		else if(InputPressed(input, INPUT_ENTER))
 		{
@@ -2391,6 +2619,7 @@ int main(void)
 							reset_menu = true;
 						}
 						UpdateVolume(&profile, &sfx, &music);
+						UpdateMenuSFX(sfx, sfx_tick, sfx_click);
 					}
 				}
 				else
@@ -2398,12 +2627,14 @@ int main(void)
 					inputing_name = 2;
 				}
 			}
+			PlaySound(sfx_click);
 		}
 		else if(InputPressed(input, INPUT_BACK))
 		{
 			if(name[0] == 0)
 			{
 				inputing_name = 0;
+				PlaySound(sfx_click);
 			}
 			else
 			{
@@ -2420,6 +2651,7 @@ int main(void)
 					}
 				}
 				name[del] = 0;
+				PlaySound(sfx_tick);
 			}
 		}
 		else
@@ -2435,6 +2667,7 @@ int main(void)
 						break;
 					}
 				}
+				PlaySound(sfx_tick);
 			}
 		}
 
@@ -2454,6 +2687,7 @@ int main(void)
 		if(InputPressed(input, INPUT_ESC))
 		{
 			inputing_number = 0;
+			PlaySound(sfx_click);
 		}
 		else if(InputPressed(input, INPUT_ENTER))
 		{
@@ -2488,20 +2722,24 @@ int main(void)
 				PiecesInPage(piece_catalogue_page, piece_catalogue_page_num);
 				LoadPieceCataloguePage(piece_catalogue, piece_catalogue_page);
 			}
+			PlaySound(sfx_click);
 		}
 		else if(InputPressed(input, INPUT_BACK))
 		{
 			if(in_num >= 10)
 			{
 				in_num *= 0.1;
+				PlaySound(sfx_tick);
 			}
 			else if(in_num == 0)
 			{
 				inputing_number = 0;
+				PlaySound(sfx_click);
 			}
 			else
 			{
 				in_num = 0;
+				PlaySound(sfx_tick);
 			}
 		}
 		else
@@ -2540,6 +2778,7 @@ int main(void)
 						in_num += 9;
 						break;
 				}
+				PlaySound(sfx_tick);
 			}
 		}
 
@@ -3259,6 +3498,11 @@ int main(void)
 
 	EndDrawing();
 	}
+
+	StopSound(sfx_tick);
+	UnloadSound(sfx_tick);
+	StopSound(sfx_click);
+	UnloadSound(sfx_click);
 
 	CloseAudioDevice();
 	CloseWindow();
