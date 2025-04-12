@@ -27,6 +27,8 @@
 #define SFX_TICK "sounds\\tick.wav\0"
 #define SFX_CLICK "sounds\\click.wav\0"
 #define SFX_ROTATE "sounds\\rotate.wav\0"
+#define SFX_PULL_DOWN "sounds\\pull_down.wav\0"
+#define SFX_PULL_UP "sounds\\pull_up.wav\0"
 
 #else
 
@@ -43,6 +45,8 @@
 #define SFX_TICK "sounds/tick.wav\0"
 #define SFX_CLICK "sounds/click.wav\0"
 #define SFX_ROTATE "sounds/rotate.wav\0"
+#define SFX_PULL_DOWN "sounds/pull_down.wav\0"
+#define SFX_PULL_UP "sounds/pull_up.wav\0"
 
 #endif
 
@@ -345,7 +349,7 @@ int main(void)
 	// MENU
 	Sound sfx_tick, sfx_click;
 	// EDITOR
-	Sound sfx_rotate;
+	Sound sfx_rotate, sfx_pull_down, sfx_pull_up;
 	// RACE
 	Sound sfx_crash, sfx_crash_small, sfx_start_bleep, sfx_checkpoint;
 	Music sfx_engine;
@@ -958,6 +962,10 @@ int main(void)
 
 			sfx_rotate = LoadSound(SFX_ROTATE);
 			SetSoundVolume(sfx_rotate, sfx);
+			sfx_pull_down = LoadSound(SFX_PULL_DOWN);
+			SetSoundVolume(sfx_pull_down, sfx);
+			sfx_pull_up = LoadSound(SFX_PULL_UP);
+			SetSoundVolume(sfx_pull_up, sfx);
 		}
 
 		ZoomCameraSmooth(&camera, 0.5, CAM_ZOOM_SPEED);
@@ -1084,7 +1092,7 @@ int main(void)
 			if(InputPressed(input, INPUT_ESC))
 			{
 				placing_pieces = false;
-				PlaySound(sfx_tick);
+				PlaySound(sfx_pull_up);
 			}
 
 			if(piece_catalogue_pulled > 0.0)
@@ -1110,7 +1118,7 @@ int main(void)
 			if(InputPressed(input, INPUT_ESC))
 			{
 				placing_pieces = true;
-				PlaySound(sfx_tick);
+				PlaySound(sfx_pull_down);
 			}
 			if(piece_catalogue_item >= 0 && piece_catalogue_item < 9)
 			{
@@ -1275,6 +1283,10 @@ int main(void)
 		{
 			StopSound(sfx_rotate);
 			UnloadSound(sfx_rotate);
+			StopSound(sfx_pull_down);
+			UnloadSound(sfx_pull_down);
+			StopSound(sfx_pull_up);
+			UnloadSound(sfx_pull_up);
 		}
 		break;
 	case RACE:
