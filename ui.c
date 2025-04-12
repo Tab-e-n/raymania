@@ -28,9 +28,9 @@ void DrawFileList(FilePathList fpl, int current, Color bg1, Color bg2)
 	DrawRectangle(POSITION.x, POSITION.y, SIZE.x, SIZE.y, bg1); // GREEN
 	DrawRectangle(POSITION.x + 24, POSITION.y + 24, SIZE.x - 48, SIZE.y - 80, bg2); // LIME
 
-	//DrawText("Exit - Backspace", POSITION.x + SIZE.x - 182, POSITION.y + SIZE.y - 44, 32, BLACK);
 	int page = current / FILE_LIST_PAGE_ITEMS;
 	DrawText(TextFormat("%i/%i", page + 1, (fpl.count - 1) / FILE_LIST_PAGE_ITEMS + 1), POSITION.x + 24, POSITION.y + SIZE.y - 44, 32, BLACK);
+	DrawText("Esc to close.", POSITION.x + 280, POSITION.y + SIZE.y - 44, 32, BLACK);
 
 	for(int i = 0; i < FILE_LIST_PAGE_ITEMS; i++)
 	{

@@ -92,6 +92,7 @@ void DrawAssetPixels(Asset* asset, float scale, Vector2 position, Color color);
 
 Color WaterColor(Vector2 pos, double game_time, Color wave, Color water);
 void DrawBackgroundWater(Vector2 position, float zoom, double game_time);
+void DrawBackgroundTris(Vector2 position, float zoom, double game_time, char wave, char base);
 void DrawBackgroundVoid(Vector2 position, float zoom, double game_time);
 
 #endif

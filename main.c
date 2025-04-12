@@ -86,8 +86,8 @@ void UpdateVolume(Profile* profile, float* sfx, float* music)
 	float master = AudioVolume(profile->master_volume);
 	*sfx = AudioVolume(profile->sfx_volume) * master;
 	*music = AudioVolume(profile->music_volume) * master;
-	TraceLog(LOG_INFO, "sfx: %g", *sfx);
-	TraceLog(LOG_INFO, "music: %g", *music);
+	if(DEBUG) TraceLog(LOG_INFO, "sfx: %g", *sfx);
+	if(DEBUG) TraceLog(LOG_INFO, "music: %g", *music);
 }
 
 void UpdateMenuSFX(float sfx, Sound tick, Sound click)
@@ -103,7 +103,7 @@ int main(void)
 
 	SetMasterVolume(4.0);
 
-	TraceLog(LOG_INFO, "Master: %f", GetMasterVolume());
+	if(DEBUG) TraceLog(LOG_INFO, "Master: %f", GetMasterVolume());
 
 	//TraceLog(LOG_INFO, "Size of %i.", sizeof(Asset));
 	//TraceLog(LOG_INFO, "Size of Blocks in Track %i.", sizeof(Block) * MAX_BLOCK_AMOUNT);
@@ -125,6 +125,7 @@ int main(void)
 		RaylibLogo();
 		TabinLogo();
 	}
+	bool intro = false;
 
 #ifdef _IO_H_
 	if(!DirectoryExists(DEMO_DIRECTORY))
@@ -142,7 +143,7 @@ int main(void)
 	if(!DirectoryExists(PROFILE_DIRECTORY))
 	{
 		mkdir(PROFILE_DIRECTORY);
-
+		intro = true;
 	}
 #else
 	if(!DirectoryExists(DEMO_DIRECTORY))
@@ -160,6 +161,7 @@ int main(void)
 	if(!DirectoryExists(PROFILE_DIRECTORY))
 	{
 		mkdir(PROFILE_DIRECTORY, 0b111111111);
+		intro = true;
 	}
 #endif
 
@@ -357,6 +359,139 @@ int main(void)
 	sfx_tick = LoadSound(SFX_TICK);
 	sfx_click = LoadSound(SFX_CLICK);
 	UpdateMenuSFX(sfx, sfx_tick, sfx_click);
+
+	// CONTROLS INTRO
+
+	//TraceLog(LOG_INFO, "INTRO: %i", intro);
+	bool intro_loop = intro;
+	float intro_fade = 1.0;
+
+	while(intro_loop && !WindowShouldClose())
+	{
+		game_time = GetTime();
+		RMInput menu_input = (RMInput){0};
+		CheckKeyboardInput(&input);
+		CheckMenuInput(&menu_input, input, &input_block);
+
+		if(InputHeld(menu_input, INPUT_UP))
+		{
+			if(options_current > 0)
+			{
+				options_current--;
+				PlaySound(sfx_tick);
+			}
+		}
+		if(InputHeld(menu_input, INPUT_DOWN))
+		{
+			if(options_current < 2)
+			{
+				options_current++;
+				PlaySound(sfx_tick);
+			}
+		}
+		char* volume;
+		if(options_current == 0)
+		{
+			volume = &profile.master_volume;
+		}
+		if(options_current == 1)
+		{
+			volume = &profile.sfx_volume;
+		}
+		if(options_current == 2)
+		{
+			volume = &profile.music_volume;
+		}
+		if(InputHeld(menu_input, INPUT_RIGHT))
+		{
+			if(*volume < 10)
+			{
+				*volume += 1;
+				PlaySound(sfx_tick);
+			}
+			UpdateVolume(&profile, &sfx, &music);
+			UpdateMenuSFX(sfx, sfx_tick, sfx_click);
+		}
+		if(InputHeld(menu_input, INPUT_LEFT))
+		{
+			if(*volume > -11)
+			{
+				*volume -= 1;
+				PlaySound(sfx_tick);
+			}
+			UpdateVolume(&profile, &sfx, &music);
+			UpdateMenuSFX(sfx, sfx_tick, sfx_click);
+		}
+		if(InputPressed(input, INPUT_ENTER))
+		{
+			intro_fade = -FRAME;
+			PlaySound(sfx_click);
+		}
+
+		if(intro_fade > 0.0)
+		{
+			intro_fade -= FRAME;
+			if(intro_fade < 0.0)
+			{
+				intro_fade = 0.0;
+			}
+		}
+		if(intro_fade < 0.0)
+		{
+			if(intro_fade <= -1.0)
+			{
+				intro_loop = false;
+			}
+			else
+			{
+				intro_fade -= FRAME;
+				if(intro_fade < -1.0)
+				{
+					intro_fade = -1.0;
+				}
+			}
+		}
+
+		BeginDrawing();
+
+		if(intro_loop)
+		{
+			Vector2 pos = (Vector2){0, 0};
+			DrawBackgroundTris(pos, 1.0, game_time * 0.25, RM_WHITE0, RM_WHITE1);
+			DrawText("VOLUME SETTINGS", 96, 56, 80, BLACK);
+
+			if(profile.master_volume == -11) DrawText("MASTER: OFF", 160, 160, 32, BLACK);
+			else DrawText(TextFormat("MASTER: %i", profile.master_volume), 160, 160, 32, BLACK);
+			if(profile.sfx_volume == -11) DrawText("SFX: OFF", 160, 192, 32, BLACK);
+			else DrawText(TextFormat("SFX: %i", profile.sfx_volume), 160, 192, 32, BLACK);
+			if(profile.music_volume == -11) DrawText("MUSIC: OFF", 160, 224, 32, BLACK);
+			else DrawText(TextFormat("MUSIC: %i", profile.music_volume), 160, 224, 32, BLACK);
+
+			DrawText(">", 128, 160 + options_current * 32, 32, BLACK);
+			DrawText("Up and down arrow to move cursor.", 160, 288, 32, BLACK);
+			DrawText("Left and right arrow to change volume.", 160, 320, 32, BLACK);
+			DrawText("Enter to confirm.", 160, 352, 32, BLACK);
+
+			if(intro_fade > 0.0)
+			{
+				Color col = rmc(RM_WHITE0);
+				col.a = (int){intro_fade * 255.0};
+				DrawRectangle(0, 0, SCREEN_SIZE.x, SCREEN_SIZE.y, col);
+			}
+			if(intro_fade < 0.0)
+			{
+				Color col = rmc(RM_WHITE0);
+				col.a = (int){-intro_fade * 255.0};
+				DrawRectangle(0, 0, SCREEN_SIZE.x, SCREEN_SIZE.y, col);
+			}
+		}
+		else
+		{
+			ClearBackground(rmc(RM_WHITE0));
+		}
+
+		EndDrawing();
+	}
 
 	// GAME LOOP
 
@@ -2597,8 +2732,9 @@ int main(void)
 				if(!FileExists(fname))
 				{
 					Profile new_prof;
-					if(current_game_screen == OPTIONS)
+					if(current_game_screen == OPTIONS || intro)
 					{
+						intro = false;
 						new_prof = profile;
 					}
 					else
@@ -2820,7 +2956,7 @@ int main(void)
 
 	BeginDrawing();
 
-		ClearBackground(RAYWHITE);
+		ClearBackground(rmc(RM_WHITE0));
 		if(track.env == ENV_VOID)
 		{
 			DrawBackgroundVoid(camera.data.target, camera.data.zoom, game_time);
@@ -2964,7 +3100,7 @@ int main(void)
 					for(int i = 0; i < 4; i++)
 					{
 						Color text_color = BLACK;
-						if(party_current_opt == i) text_color = RAYWHITE;
+						if(party_current_opt == i) text_color = rmc(RM_WHITE0);
 						Vector2 pos = POSITION;
 						pos.y += 8 + i * 32;
 						pos.x += 8;
@@ -3003,7 +3139,7 @@ int main(void)
 					int y_pos = 192 + 80 * i;
 					if(i + MENU_RACE == menu_option)
 					{
-						DrawRectangle(316, y_pos - 4, 392, 72, RAYWHITE);
+						DrawRectangle(316, y_pos - 4, 392, 72, rmc(RM_WHITE0));
 					}
 					else
 					{
@@ -3031,7 +3167,7 @@ int main(void)
 					int y_pos = 192 + 80 * i;
 					if(i == menu_option)
 					{
-						DrawRectangle(316, y_pos - 4, 392, 72, RAYWHITE);
+						DrawRectangle(316, y_pos - 4, 392, 72, rmc(RM_WHITE0));
 					}
 					else
 					{
@@ -3106,7 +3242,7 @@ int main(void)
 					const int TEXT_SIZE = 24;
 					for(int i = 9; i < 18; i ++)
 					{
-						DrawRectangle(pos.x - 8, pos.y - 8, 80, 80, RAYWHITE);
+						DrawRectangle(pos.x - 8, pos.y - 8, 80, 80, rmc(RM_WHITE0));
 						switch(i)
 						{
 							case(EDITOR_EXIT):
@@ -3162,7 +3298,7 @@ int main(void)
 					DrawRectangle(312, 240, 400, 112, LIGHTGRAY);
 					for(int i = 0; i < 4; i++)
 					{
-						DrawRectangle(328 + i * 96, 256, 80, 80, RAYWHITE);
+						DrawRectangle(328 + i * 96, 256, 80, 80, rmc(RM_WHITE0));
 						if(efos_opt == i)
 						{
 							Vector2 pos = (Vector2){328 + i * 96, 256};
@@ -3276,7 +3412,7 @@ int main(void)
 				}
 				if(race_showcase || paused)
 				{
-					DrawRectangle(0, 0, 172, 144, RAYWHITE);
+					DrawRectangle(0, 0, 172, 144, rmc(RM_WHITE0));
 					DrawText(TextFormat("%s", track_name), 8, 8, 16, BLACK);
 					DrawText(TextFormat("By: %s", track.author), 8, 24, 16, BLACK);
 					DrawText(TextFormat("Bronz: %.3f", track.medal_bronz), 8, 40, 16, BLACK);
@@ -3310,7 +3446,7 @@ int main(void)
 					{
 						if(i == pause_option)
 						{
-							DrawRectangle(276, pos_y, 472, 48, RAYWHITE);
+							DrawRectangle(276, pos_y, 472, 48, rmc(RM_WHITE0));
 						}
 						else
 						{
@@ -3470,7 +3606,7 @@ int main(void)
 		{
 			DrawRectangle(316, 236, 392, 168, BLACK);
 			DrawRectangle(320, 240, 384, 160, LIGHTGRAY);
-			DrawRectangle(348 + (1 - popup_opt) * 192, 332, 136, 48, RAYWHITE);
+			DrawRectangle(348 + (1 - popup_opt) * 192, 332, 136, 48, rmc(RM_WHITE0));
 			DrawRectangle(352, 336, 128, 40, GREEN);
 			DrawRectangle(544, 336, 128, 40, PINK);
 			DrawText("YES", 382, 340, 32, LIME);
@@ -3506,7 +3642,7 @@ int main(void)
 
 		if(current_game_screen == PROFILES)
 		{
-			DrawFade(&camera, RAYWHITE);
+			DrawFade(&camera, rmc(RM_WHITE0));
 		}
 
 	EndDrawing();
