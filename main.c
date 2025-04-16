@@ -2526,6 +2526,20 @@ int main(void)
 	else if(file_list_active)
 	{
 		bool file_list_exit = false;
+		unsigned char* file_dir;
+		const char* top_dir;
+		if(file_list_active == FL_TRACK)
+		{
+			file_dir = track_dir;
+			top_dir = TRACK_DIRECTORY;
+		}
+		else if(file_list_active == FL_DEMO)
+		{
+			file_dir = demo_dir;
+			top_dir = DEMO_DIRECTORY;
+		}
+		//TraceLog(LOG_INFO, "%s, %s", file_dir, top_dir);
+
 		if(InputHeld(menu_input, INPUT_UP))
 		{
 			if(MoveFileListCursor(fpl.count, &selected_file, -1))
@@ -2556,21 +2570,6 @@ int main(void)
 		}
 		if(InputPressed(input, INPUT_BACK))
 		{
-			unsigned char* file_dir;
-			const char* top_dir;
-			if(file_list_active == FL_TRACK)
-			{
-				file_dir = track_dir;
-				top_dir = TRACK_DIRECTORY;
-			}
-			else if(file_list_active == FL_DEMO)
-			{
-				file_dir = demo_dir;
-				top_dir = DEMO_DIRECTORY;
-			}
-
-			//TraceLog(LOG_INFO, "%s, %s", file_dir, top_dir);
-
 			if(!TextIsEqual(file_dir, top_dir))
 			{
 				ReturnToParentDirectory(file_dir);
@@ -2589,7 +2588,7 @@ int main(void)
 			const char* path = (const char*)fpl.paths[selected_file];
 			if(DirectoryExists(path))
 			{
-				ChangeToDirectory(demo_dir, (unsigned char*)path, true);
+				ChangeToDirectory(file_dir, (unsigned char*)path, true);
 				load_file_list = true;
 			}
 			else if(file_list_active == FL_TRACK)

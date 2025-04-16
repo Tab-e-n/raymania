@@ -75,11 +75,19 @@ void ChangeToDirectory(unsigned char* dir, unsigned char* new_dir, bool overwrit
 	}
 	else
 	{
+#ifdef WINDOWS
+		if(!DirectoryExists(TextFormat("%s\\%s", dir, new_dir)))
+		{
+			return;
+		}
+		TextCopy(dir, TextFormat("%s\\%s", dir, new_dir));
+#else
 		if(!DirectoryExists(TextFormat("%s/%s", dir, new_dir)))
 		{
 			return;
 		}
 		TextCopy(dir, TextFormat("%s/%s", dir, new_dir));
+#endif
 	}
 }
 
