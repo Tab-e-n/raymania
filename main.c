@@ -1426,6 +1426,7 @@ int main(void)
 		}
 		break;
 	case RACE:
+		bool demo_realloced = false;
 		if(reset_party)
 		{
 			reset_party = false;
@@ -1719,7 +1720,7 @@ int main(void)
 				}
 				if(playing_demo != DEMO_PLAY)
 				{
-					demo = RecordDemoInput(demo, input.current);
+					demo = RecordDemoInput(demo, input.current, &demo_realloced);
 				}
 			}
 			else
@@ -1758,7 +1759,10 @@ int main(void)
 				PlaySound(sfx_crash_small);
 			}
 
-			UpdateMusicStream(sfx_engine);
+			if(!demo_realloced)
+			{
+				UpdateMusicStream(sfx_engine);
+			}
 			bool car_still = zero(car.velocity.x) && zero(car.velocity.y);
 			bool car_was_still = zero(previous_speed);
 			if(car_still != car_was_still)

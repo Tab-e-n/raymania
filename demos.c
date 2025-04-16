@@ -78,7 +78,7 @@ Demo* AllocateNewDemoSpace(Demo* demo)
 	return new_demo;
 }
 
-Demo* RecordDemoInput(Demo* demo, unsigned char input)
+Demo* RecordDemoInput(Demo* demo, unsigned char input, bool* realloced)
 {
 	if(demo->input_amount == 0)
 	{
@@ -89,7 +89,9 @@ Demo* RecordDemoInput(Demo* demo, unsigned char input)
 	if(demo->input_current >= demo->input_amount * DEMO_INPUT_ALLOC_SIZE - 8)
 	{
 		demo = AllocateNewDemoSpace(demo);
+		*realloced = true;
 	}
+	else *realloced = false;
 	return demo;
 }
 

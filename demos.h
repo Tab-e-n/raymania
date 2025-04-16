@@ -38,7 +38,7 @@ void ClearDemo(Demo* demo);
 Demo* CopyDemo(Demo* demo);
 Demo* AllocateNewDemoSpace(Demo* demo);
 
-Demo* RecordDemoInput(Demo* demo, unsigned char input);
+Demo* RecordDemoInput(Demo* demo, unsigned char input, bool* realloced);
 void StartDemo(Demo* demo);
 void StopDemo(Demo* demo);
 unsigned char GetDemoInput(Demo* demo);
