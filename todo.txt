@@ -53,8 +53,6 @@ Pause sfx
 Place Block sfx
 Remove Block sfx
 Move Block sfx
-Pullup Editor sfx
-Pulldown Editor sfx
 
 Start Race sfx
 Typing Sound sfx
