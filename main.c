@@ -24,8 +24,11 @@
 #define SFX_ENGINE_GRIP "sounds\\car_grip.wav\0"
 #define SFX_ENGINE_TERRA "sounds\\car_terra.wav\0"
 #define SFX_CHECKPOINT "sounds\\checkpoint.wav\0"
+
 #define SFX_TICK "sounds\\tick.wav\0"
 #define SFX_CLICK "sounds\\click.wav\0"
+#define SFX_BACK "sounds\\back.wav\0"
+
 #define SFX_ROTATE "sounds\\rotate.wav\0"
 #define SFX_PULL_DOWN "sounds\\pull_down.wav\0"
 #define SFX_PULL_UP "sounds\\pull_up.wav\0"
@@ -42,8 +45,11 @@
 #define SFX_ENGINE_GRIP "sounds/car_grip.wav\0"
 #define SFX_ENGINE_TERRA "sounds/car_terra.wav\0"
 #define SFX_CHECKPOINT "sounds/checkpoint.wav\0"
+
 #define SFX_TICK "sounds/tick.wav\0"
 #define SFX_CLICK "sounds/click.wav\0"
+#define SFX_BACK "sounds/back.wav\0"
+
 #define SFX_ROTATE "sounds/rotate.wav\0"
 #define SFX_PULL_DOWN "sounds/pull_down.wav\0"
 #define SFX_PULL_UP "sounds/pull_up.wav\0"
@@ -90,10 +96,11 @@ void UpdateVolume(Profile* profile, float* sfx, float* music)
 	if(DEBUG) TraceLog(LOG_INFO, "music: %g", *music);
 }
 
-void UpdateMenuSFX(float sfx, Sound tick, Sound click)
+void UpdateMenuSFX(float sfx, Sound tick, Sound click, Sound back)
 {
 	SetSoundVolume(tick, sfx);
 	SetSoundVolume(click, sfx);
+	SetSoundVolume(back, sfx);
 }
 
 int main(void)
@@ -349,7 +356,7 @@ int main(void)
 
 	float sfx = AudioVolume(0), music = AudioVolume(0);
 	// MENU
-	Sound sfx_tick, sfx_click;
+	Sound sfx_tick, sfx_click, sfx_back;
 	// EDITOR
 	Sound sfx_rotate, sfx_pull_down, sfx_pull_up;
 	// RACE
@@ -358,7 +365,8 @@ int main(void)
 
 	sfx_tick = LoadSound(SFX_TICK);
 	sfx_click = LoadSound(SFX_CLICK);
-	UpdateMenuSFX(sfx, sfx_tick, sfx_click);
+	sfx_back = LoadSound(SFX_BACK);
+	UpdateMenuSFX(sfx, sfx_tick, sfx_click, sfx_back);
 
 	// CONTROLS INTRO
 
@@ -410,7 +418,7 @@ int main(void)
 				PlaySound(sfx_tick);
 			}
 			UpdateVolume(&profile, &sfx, &music);
-			UpdateMenuSFX(sfx, sfx_tick, sfx_click);
+			UpdateMenuSFX(sfx, sfx_tick, sfx_click, sfx_back);
 		}
 		if(InputHeld(menu_input, INPUT_LEFT))
 		{
@@ -420,7 +428,7 @@ int main(void)
 				PlaySound(sfx_tick);
 			}
 			UpdateVolume(&profile, &sfx, &music);
-			UpdateMenuSFX(sfx, sfx_tick, sfx_click);
+			UpdateMenuSFX(sfx, sfx_tick, sfx_click, sfx_back);
 		}
 		if(InputPressed(input, INPUT_ENTER))
 		{
@@ -548,7 +556,7 @@ int main(void)
 		{
 			popup_opt = 0;
 			popup = POPUP_OFF;
-			PlaySound(sfx_click);
+			PlaySound(sfx_back);
 		}
 		if(popup_confirmed && popup_opt)
 		{
@@ -658,7 +666,7 @@ int main(void)
 					{
 						profile = LoadProfile(path);
 						UpdateVolume(&profile, &sfx, &music);
-						UpdateMenuSFX(sfx, sfx_tick, sfx_click);
+						UpdateMenuSFX(sfx, sfx_tick, sfx_click, sfx_back);
 						if(back_to_opt)
 						{
 							reset_options = true;
@@ -685,7 +693,7 @@ int main(void)
 				{
 					profile = DefaultProfile();
 					UpdateVolume(&profile, &sfx, &music);
-					UpdateMenuSFX(sfx, sfx_tick, sfx_click);
+					UpdateMenuSFX(sfx, sfx_tick, sfx_click, sfx_back);
 					if(back_to_opt)
 					{
 						reset_options = true;
@@ -703,7 +711,7 @@ int main(void)
 				}
 				UnloadDirectoryFiles(fpl);
 				fpl.count = 0;
-				PlaySound(sfx_click);
+				PlaySound(sfx_back);
 			}
 			if(party_mode)
 			{
@@ -712,7 +720,7 @@ int main(void)
 					current_game_screen = MENU;
 					UnloadDirectoryFiles(fpl);
 					fpl.count = 0;
-					PlaySound(sfx_click);
+					PlaySound(sfx_back);
 				}
 			}
 		}
@@ -1133,7 +1141,7 @@ int main(void)
 			if(InputPressed(input, INPUT_ESC) || InputPressed(input, INPUT_BACK))
 			{
 				end_efos = true;
-				PlaySound(sfx_click);
+				PlaySound(sfx_back);
 			}
 			else if(InputPressed(input, INPUT_ENTER))
 			{
@@ -1607,7 +1615,7 @@ int main(void)
 			if(InputPressed(input, INPUT_ESC))
 			{
 				paused = false;
-				PlaySound(sfx_click);
+				PlaySound(sfx_back);
 			}
 			if(pause_exit)
 			{
@@ -1630,11 +1638,13 @@ int main(void)
 			{
 				current_game_screen = MENU;
 				reset_menu = true;
+				PlaySound(sfx_back);
 			}
 			if(InputPressed(input, INPUT_ENTER))
 			{
 				race_showcase = false;
 				start_time = game_time;
+				//PlaySound(sfx);
 			}
 
 			Vector2 cam_pos = camera.data.target;
@@ -1667,6 +1677,7 @@ int main(void)
 			{
 				paused = true;
 				pause_option = 0;
+				//PlaySound(sfx_pause);
 			}
 
 			MoveCameraSmooth(&camera, car.position, 0.10);
@@ -1700,6 +1711,7 @@ int main(void)
 			{
 				paused = true;
 				pause_option = 0;
+				//PlaySound(sfx_pause);
 			}
 
 			if(!finished)
@@ -2071,7 +2083,7 @@ int main(void)
 		if(InputPressed(input, INPUT_ESC))
 		{
 			exit_options = true;
-			PlaySound(sfx_click);
+			PlaySound(sfx_back);
 		}
 
 		if(options_customization)
@@ -2302,7 +2314,7 @@ int main(void)
 						}
 					}
 					UpdateVolume(&profile, &sfx, &music);
-					UpdateMenuSFX(sfx, sfx_tick, sfx_click);
+					UpdateMenuSFX(sfx, sfx_tick, sfx_click, sfx_back);
 				}
 			}
 			if(InputHeld(menu_input, INPUT_LEFT))
@@ -2346,7 +2358,7 @@ int main(void)
 						}
 					}
 					UpdateVolume(&profile, &sfx, &music);
-					UpdateMenuSFX(sfx, sfx_tick, sfx_click);
+					UpdateMenuSFX(sfx, sfx_tick, sfx_click, sfx_back);
 				}
 			}
 			if(InputPressed(input, INPUT_BACK))
@@ -2497,7 +2509,7 @@ int main(void)
 				SaveProfile(&profile, fname);
 			}
 			UpdateVolume(&profile, &sfx, &music);
-			UpdateMenuSFX(sfx, sfx_tick, sfx_click);
+			UpdateMenuSFX(sfx, sfx_tick, sfx_click, sfx_back);
 		}
 		break;
 	}
@@ -2574,17 +2586,21 @@ int main(void)
 			{
 				ReturnToParentDirectory(file_dir);
 				load_file_list = true;
-				PlaySound(sfx_click);
+				PlaySound(sfx_back);
 			}
 			else
 			{
 				file_list_exit = true;
-				PlaySound(sfx_click);
+				PlaySound(sfx_back);
 			}
 		}
 
 		if(fpl.count > 0 && (skip_validate_check || InputPressed(input, INPUT_ENTER)))
 		{
+			if(InputPressed(input, INPUT_ENTER))
+			{
+				PlaySound(sfx_click);
+			}
 			const char* path = (const char*)fpl.paths[selected_file];
 			if(DirectoryExists(path))
 			{
@@ -2683,7 +2699,7 @@ int main(void)
 		else if(InputPressed(input, INPUT_ESC))
 		{
 			file_list_exit = true;
-			PlaySound(sfx_click);
+			PlaySound(sfx_back);
 		}
 		if(file_list_exit)
 		{
@@ -2712,7 +2728,7 @@ int main(void)
 		if(InputPressed(input, INPUT_ESC))
 		{
 			inputing_name = 0;
-			PlaySound(sfx_click);
+			PlaySound(sfx_back);
 		}
 		else if(InputPressed(input, INPUT_ENTER))
 		{
@@ -2771,7 +2787,7 @@ int main(void)
 							reset_menu = true;
 						}
 						UpdateVolume(&profile, &sfx, &music);
-						UpdateMenuSFX(sfx, sfx_tick, sfx_click);
+						UpdateMenuSFX(sfx, sfx_tick, sfx_click, sfx_back);
 					}
 				}
 				else
@@ -2786,7 +2802,7 @@ int main(void)
 			if(name[0] == 0)
 			{
 				inputing_name = 0;
-				PlaySound(sfx_click);
+				PlaySound(sfx_back);
 			}
 			else
 			{
@@ -2839,7 +2855,7 @@ int main(void)
 		if(InputPressed(input, INPUT_ESC))
 		{
 			inputing_number = 0;
-			PlaySound(sfx_click);
+			PlaySound(sfx_back);
 		}
 		else if(InputPressed(input, INPUT_ENTER))
 		{
@@ -2886,7 +2902,7 @@ int main(void)
 			else if(in_num == 0)
 			{
 				inputing_number = 0;
-				PlaySound(sfx_click);
+				PlaySound(sfx_back);
 			}
 			else
 			{
@@ -3655,6 +3671,8 @@ int main(void)
 	UnloadSound(sfx_tick);
 	StopSound(sfx_click);
 	UnloadSound(sfx_click);
+	StopSound(sfx_back);
+	UnloadSound(sfx_back);
 
 	CloseAudioDevice();
 	CloseWindow();
