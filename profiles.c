@@ -234,7 +234,7 @@ void LoadProfileDirectory(FilePathList* fpl, unsigned char* dir)
 
 bool MoveProfileSelectorCursor(unsigned int count, int* current, int move)
 {
-	bool previous = *current;
+	int previous = *current;
 	*current = *current + move;
 	if(*current < 0)
 	{

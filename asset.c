@@ -1394,6 +1394,11 @@ Color WaterColor(Vector2 pos, double game_time, Color wave, Color water)
 
 void DrawBackgroundWater(Vector2 position, float zoom, double game_time)
 {
+	DrawBackgroundTris(position, zoom, game_time, RM_TEAL0, RM_BLUE2);
+}
+
+void DrawBackgroundTris(Vector2 position, float zoom, double game_time, char wave, char base)
+{
 	Vector2 offset = (Vector2){Wrap(position.x, 0, 64), Wrap(position.y, 0, 128)};
 	Vector2 points = (Vector2){17 / zoom * .5 + 2, 11 / zoom * .5 + 2};
 	for(int y = -points.y; y < points.y; y++)
@@ -1416,8 +1421,8 @@ void DrawBackgroundWater(Vector2 position, float zoom, double game_time)
 			pos_c_bot.x += 32;
 			pos_c_bot.y += 64;
 
-			Color color_top = WaterColor(Vector2Add(pos_a, position), game_time, rmc(RM_TEAL0), rmc(RM_BLUE2));
-			Color color_bot = WaterColor(Vector2Add(pos_b, position), game_time, rmc(RM_TEAL0), rmc(RM_BLUE2));
+			Color color_top = WaterColor(Vector2Add(pos_a, position), game_time, rmc(wave), rmc(base));
+			Color color_bot = WaterColor(Vector2Add(pos_b, position), game_time, rmc(wave), rmc(base));
 
 			pos_a = Vector2Scale(pos_a, zoom);
 			pos_a = Vector2Add(pos_a, SCREEN_CENTER);
