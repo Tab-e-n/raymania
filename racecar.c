@@ -1136,15 +1136,31 @@ void DrawSkidLine(SkidLinePoint points[SKID_LINE_COUNT], unsigned char model, Co
 	}
 	for(int i = 0; i < off_count; i++)
 	{
+		int last = 0;
+		/*while(last < SKID_LINE_COUNT - 1 && !points[last].draw)
+		{
+			last++;
+		}*/
 		prev_off[i] = (Vector2)
 		{
-			offsets[i].x * -points[0].rotation.y - offsets[i].y * points[0].rotation.x,
-			offsets[i].x * points[0].rotation.x - offsets[i].y * points[0].rotation.y
+			offsets[i].x * -points[last].rotation.y - offsets[i].y * points[last].rotation.x,
+			offsets[i].x * points[last].rotation.x - offsets[i].y * points[last].rotation.y
 		};
 	}
 	for(int i = 0; i < SKID_LINE_COUNT - 1; i++)
 	{
-		if(points[i].draw && points[i + 1].draw)
+		if(!points[i].draw && points[i + 1].draw)
+		{
+			for(int j = 0; j < off_count; j++)
+			{
+				prev_off[j] = (Vector2)
+				{
+					offsets[j].x * -points[i + 1].rotation.y - offsets[j].y * points[i + 1].rotation.x,
+					offsets[j].x * points[i + 1].rotation.x - offsets[j].y * points[i + 1].rotation.y
+				};
+			}
+		}
+		else if(points[i].draw && points[i + 1].draw)
 		{
 			for(int j = 0; j < off_count; j++)
 			{
