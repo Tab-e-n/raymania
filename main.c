@@ -16,6 +16,11 @@
 
 #define VALIDATE_DEMO_FILE "demos\\validation.dm\0"
 
+#define SFX_TICK "sounds\\tick.wav\0"
+#define SFX_CLICK "sounds\\click.wav\0"
+#define SFX_BACK "sounds\\back.wav\0"
+
+#define SFX_PAUSE "sounds\\pause.wav\0"
 #define SFX_START_BLEEP "sounds\\start_bleep_0.wav\0"
 #define SFX_CRASH_SMALL "sounds\\crash_small.wav\0"
 #define SFX_CRASH "sounds\\crash_big.wav\0"
@@ -25,10 +30,6 @@
 #define SFX_ENGINE_TERRA "sounds\\car_terra.wav\0"
 #define SFX_CHECKPOINT "sounds\\checkpoint.wav\0"
 
-#define SFX_TICK "sounds\\tick.wav\0"
-#define SFX_CLICK "sounds\\click.wav\0"
-#define SFX_BACK "sounds\\back.wav\0"
-
 #define SFX_ROTATE "sounds\\rotate.wav\0"
 #define SFX_PULL_DOWN "sounds\\pull_down.wav\0"
 #define SFX_PULL_UP "sounds\\pull_up.wav\0"
@@ -37,6 +38,11 @@
 
 #define VALIDATE_DEMO_FILE "demos/validation.dm\0"
 
+#define SFX_TICK "sounds/tick.wav\0"
+#define SFX_CLICK "sounds/click.wav\0"
+#define SFX_BACK "sounds/back.wav\0"
+
+#define SFX_PAUSE "sounds/pause.wav\0"
 #define SFX_START_BLEEP "sounds/start_bleep_0.wav\0"
 #define SFX_CRASH_SMALL "sounds/crash_small.wav\0"
 #define SFX_CRASH "sounds/crash_big.wav\0"
@@ -45,10 +51,6 @@
 #define SFX_ENGINE_GRIP "sounds/car_grip.wav\0"
 #define SFX_ENGINE_TERRA "sounds/car_terra.wav\0"
 #define SFX_CHECKPOINT "sounds/checkpoint.wav\0"
-
-#define SFX_TICK "sounds/tick.wav\0"
-#define SFX_CLICK "sounds/click.wav\0"
-#define SFX_BACK "sounds/back.wav\0"
 
 #define SFX_ROTATE "sounds/rotate.wav\0"
 #define SFX_PULL_DOWN "sounds/pull_down.wav\0"
@@ -360,7 +362,7 @@ int main(void)
 	// EDITOR
 	Sound sfx_rotate, sfx_pull_down, sfx_pull_up;
 	// RACE
-	Sound sfx_crash, sfx_crash_small, sfx_start_bleep, sfx_checkpoint;
+	Sound sfx_pause, sfx_crash, sfx_crash_small, sfx_start_bleep, sfx_checkpoint;
 	Music sfx_engine;
 
 	sfx_tick = LoadSound(SFX_TICK);
@@ -1472,6 +1474,8 @@ int main(void)
 			SetSoundVolume(sfx_start_bleep, sfx);
 			sfx_checkpoint = LoadSound(SFX_CHECKPOINT);
 			SetSoundVolume(sfx_checkpoint, sfx);
+			sfx_pause = LoadSound(SFX_PAUSE);
+			SetSoundVolume(sfx_pause, sfx);
 			if(track.car == CAR_ROAD)
 			{
 				sfx_engine = LoadMusicStream(SFX_ENGINE_ROAD);
@@ -1677,7 +1681,7 @@ int main(void)
 			{
 				paused = true;
 				pause_option = 0;
-				//PlaySound(sfx_pause);
+				PlaySound(sfx_pause);
 			}
 
 			MoveCameraSmooth(&camera, car.position, 0.10);
@@ -1711,7 +1715,7 @@ int main(void)
 			{
 				paused = true;
 				pause_option = 0;
-				//PlaySound(sfx_pause);
+				PlaySound(sfx_pause);
 			}
 
 			if(!finished)
@@ -2057,6 +2061,8 @@ int main(void)
 			UnloadSound(sfx_start_bleep);
 			StopSound(sfx_checkpoint);
 			UnloadSound(sfx_checkpoint);
+			StopSound(sfx_pause);
+			UnloadSound(sfx_pause);
 
 			TraceLog(LOG_INFO, "Unloading Engine Sound");
 			StopMusicStream(sfx_engine);

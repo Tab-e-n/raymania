@@ -46,9 +46,7 @@ Enviroment Visuals
 
 IN PROGRESS
 Random loud noise fix
-Example Tracks
 
-Pause sfx
 Place Block sfx
 Remove Block sfx
 Move Block sfx
