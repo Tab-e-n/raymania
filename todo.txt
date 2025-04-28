@@ -47,12 +47,9 @@ Enviroment Visuals
 IN PROGRESS
 Random loud noise fix
 
-Place Block sfx
-Remove Block sfx
-Move Block sfx
-
 Start Race sfx
 Typing Sound sfx
+Move Block sfx
 
 BEFORE PLAYTEST MAYBE
 Big blocks go outside of map fix

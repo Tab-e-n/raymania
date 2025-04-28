@@ -33,6 +33,9 @@
 #define SFX_ROTATE "sounds\\rotate.wav\0"
 #define SFX_PULL_DOWN "sounds\\pull_down.wav\0"
 #define SFX_PULL_UP "sounds\\pull_up.wav\0"
+#define SFX_ERROR "sounds\\error.wav\0"
+#define SFX_PLACE "sounds\\place.wav\0"
+#define SFX_REMOVE "sounds\\remove.wav\0"
 
 #else
 
@@ -55,6 +58,9 @@
 #define SFX_ROTATE "sounds/rotate.wav\0"
 #define SFX_PULL_DOWN "sounds/pull_down.wav\0"
 #define SFX_PULL_UP "sounds/pull_up.wav\0"
+#define SFX_ERROR "sounds/error.wav\0"
+#define SFX_PLACE "sounds/place.wav\0"
+#define SFX_REMOVE "sounds/remove.wav\0"
 
 #endif
 
@@ -209,7 +215,7 @@ int main(void)
 	BlockWallArray block_walls[MAX_LOADED_BLOCK_WALLS] = {0};
 	BlockWallArray dblock_walls[MAX_LOADED_BLOCK_WALLS] = {0};
 
-	Vector2int load_placement = PositionToPlacement(camera.data.target); //(Vector2int){0, 0};
+	Vector2int load_placement = PositionToPlacement(camera.data.target);
 	Vector2int d_placement = (Vector2int){0, 0};
 
 	PopupType popup = POPUP_OFF;
@@ -360,7 +366,7 @@ int main(void)
 	// MENU
 	Sound sfx_tick, sfx_click, sfx_back;
 	// EDITOR
-	Sound sfx_rotate, sfx_pull_down, sfx_pull_up;
+	Sound sfx_rotate, sfx_pull_down, sfx_pull_up, sfx_error, sfx_place, sfx_remove;
 	// RACE
 	Sound sfx_pause, sfx_crash, sfx_crash_small, sfx_start_bleep, sfx_checkpoint;
 	Music sfx_engine;
@@ -1111,6 +1117,12 @@ int main(void)
 			SetSoundVolume(sfx_pull_down, sfx);
 			sfx_pull_up = LoadSound(SFX_PULL_UP);
 			SetSoundVolume(sfx_pull_up, sfx);
+			sfx_error = LoadSound(SFX_ERROR);
+			SetSoundVolume(sfx_error, sfx);
+			sfx_place = LoadSound(SFX_PLACE);
+			SetSoundVolume(sfx_place, sfx);
+			sfx_remove = LoadSound(SFX_REMOVE);
+			SetSoundVolume(sfx_remove, sfx);
 		}
 
 		ZoomCameraSmooth(&camera, 0.5, CAM_ZOOM_SPEED);
@@ -1197,18 +1209,6 @@ int main(void)
 				PlaySound(sfx_rotate);
 			}
 
-			if(InputHeld(menu_input, INPUT_ENTER))
-			{
-				AddPiece(&track, blocks, &cursor_info);
-				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
-				ResetMedalTimes(&track);
-			}
-			if(InputHeld(menu_input, INPUT_BACK))
-			{
-				DeletePiece(&track, blocks, cursor_info.placement);
-				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
-				ResetMedalTimes(&track);
-			}
 			if(InputHeld(menu_input, INPUT_LEFT))
 			{
 				MoveEditorCursor(&cursor_info, -1, 0);
@@ -1232,6 +1232,32 @@ int main(void)
 				MoveEditorCursor(&cursor_info, 0, 1);
 				GetPiece(&cursor_info, held_piece);
 				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
+			}
+			if(InputHeld(menu_input, INPUT_ENTER))
+			{
+				if(AddPiece(&track, blocks, &cursor_info))
+				{
+					PlaySound(sfx_place);
+				}
+				else
+				{
+					PlaySound(sfx_error);
+				}
+				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
+				ResetMedalTimes(&track);
+			}
+			if(InputHeld(menu_input, INPUT_BACK))
+			{
+				if(DeletePiece(&track, blocks, cursor_info.placement))
+				{
+					PlaySound(sfx_remove);
+				}
+				else
+				{
+					PlaySound(sfx_error);
+				}
+				overlaping_blocks = OverlapingPieces(&track, cursor_info.placement);
+				ResetMedalTimes(&track);
 			}
 
 			if(InputPressed(input, INPUT_ESC))
@@ -1433,6 +1459,12 @@ int main(void)
 			UnloadSound(sfx_pull_down);
 			StopSound(sfx_pull_up);
 			UnloadSound(sfx_pull_up);
+			StopSound(sfx_error);
+			UnloadSound(sfx_error);
+			StopSound(sfx_place);
+			UnloadSound(sfx_place);
+			StopSound(sfx_remove);
+			UnloadSound(sfx_remove);
 		}
 		break;
 	case RACE:
@@ -2997,7 +3029,6 @@ int main(void)
 		if(track.env == ENV_ISLAND)
 		{
 			DrawBackgroundWater(camera.data.target, camera.data.zoom, game_time);
-			//ClearBackground(BLUE);
 		}
 
 		// Gamespace

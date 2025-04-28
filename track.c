@@ -440,11 +440,17 @@ bool AddPiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], PieceInfo* info)
 
 bool DeletePiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], Vector2int placement)
 {
+	bool removed = false;
 	for(int i = 0; i < MAX_PIECES; i++)
 	{
-		if(Vector2intEqual(track->pieces[i].placement, placement))
+		if(track->pieces[i].id == 0)
+		{
+			// pass
+		}
+		else if(Vector2intEqual(track->pieces[i].placement, placement))
 		{
 			track->pieces[i].id = 0;
+			removed = true;
 		}
 	}
 	for(int i = 0; i < MAX_BLOCK_AMOUNT; i++)
@@ -462,6 +468,7 @@ bool DeletePiece(Track* track, Block blocks[MAX_BLOCK_AMOUNT], Vector2int placem
 			blocks[i] = MakeBlock(0, placement, ROT_NORTH);
 		}
 	}
+	return removed;
 }
 
 unsigned int OverlapingPieces(Track* track, Vector2int placement)

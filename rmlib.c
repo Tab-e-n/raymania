@@ -146,6 +146,8 @@ void CheckKeyboardInput(RMInput* input)
 	input->current += IsKeyDown(KEY_ENTER) << INPUT_ENTER;
 	input->current += IsKeyDown(KEY_ESCAPE) << INPUT_ESC;
 	input->current += IsKeyDown(KEY_R) << INPUT_R;
+
+	//TraceLog(LOG_INFO, "%i", input->current);
 }
 
 bool InputOn(unsigned char input, int key)
@@ -166,6 +168,7 @@ bool InputPressed(RMInput input, int key)
 bool DirectionMenuInput(RMInput* menu, RMInput input, float* block, int key)
 {
 	bool held = false;
+	//TraceLog(LOG_INFO, "%g", *block);
 	if(InputPressed(input, key))
 	{
 		menu->current += (0b1 << key);
@@ -191,17 +194,34 @@ void ActionMenuInput(RMInput* menu, RMInput input, bool direction_pressed, int k
 
 void CheckMenuInput(RMInput* menu, RMInput input, float* block)
 {
-	if(*block > 0)
+	if(*block > 0.0)
 	{
 		*block -= FRAME;
+		if(*block < 0.0)
+		{
+			*block = 0.0;
+		}
 	}
 
-	bool dir_pressed = false;
+	//TraceLog(LOG_INFO, "in: %i", input.current);
 
-	dir_pressed = dir_pressed || DirectionMenuInput(menu, input, block, INPUT_LEFT);
-	dir_pressed = dir_pressed || DirectionMenuInput(menu, input, block, INPUT_RIGHT);
-	dir_pressed = dir_pressed || DirectionMenuInput(menu, input, block, INPUT_UP);
-	dir_pressed = dir_pressed || DirectionMenuInput(menu, input, block, INPUT_DOWN);
+	bool dir_pressed = false;
+	float new_block = 0.0, p_block = *block;
+	const int dir_inputs[4] = {INPUT_LEFT, INPUT_RIGHT, INPUT_UP, INPUT_DOWN};
+
+	for(int i = 0; i < 4; i++)
+	{
+		dir_pressed = DirectionMenuInput(menu, input, &p_block, dir_inputs[i]) || dir_pressed;
+		//TraceLog(LOG_INFO, "%i: %g %g %g", i, *block, p_block, new_block);
+		if(p_block > new_block)
+		{
+			new_block = p_block;
+		}
+		p_block = *block;
+	}
+	//TraceLog(LOG_INFO, "in: %i, menu: %i", input.current, menu->current);
+
+	*block = new_block;
 
 	ActionMenuInput(menu, input, dir_pressed, INPUT_ENTER);
 	ActionMenuInput(menu, input, dir_pressed, INPUT_BACK);
