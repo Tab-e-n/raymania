@@ -1,3 +1,4 @@
+*.o
 demos/*
 profiles/*
 raymania.out
