@@ -1,6 +1,7 @@
 *.o
 demos/*
 profiles/*
+export/*
 raymania.out
 raymania.exe
 triray.out

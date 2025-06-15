@@ -1,0 +1,17 @@
+mkdir "export"
+
+mkdir "export/linux"
+make "raymania.out"
+cp "raymania.out" "export/linux/raymania.out"
+cp "GAME_README.txt" "export/linux/README.txt"
+cp -r "sounds" "export/linux/sounds"
+cp -r "tracks" "export/linux/tracks"
+7z a "export/raymania_linux" "export/linux"
+
+mkdir "export/win"
+make "raymania.exe"
+cp "raymania.exe" "export/win/raymania.exe"
+cp "GAME_README.txt" "export/win/README.txt"
+cp -r "sounds" "export/win/sounds"
+cp -r "tracks" "export/win/tracks"
+7z a "export/raymania_windows" "export/win"
