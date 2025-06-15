@@ -3701,6 +3701,51 @@ int main(void)
 			DrawFade(&camera, rmc(RM_WHITE0));
 		}
 
+		if(IsKeyDown(KEY_F1))
+		{
+			switch(current_game_screen)
+			{
+				case(PROFILES):
+					DrawRectangle(0, 0, SCREEN_SIZE.x, 160, RAYWHITE);
+					DrawText("WASD / ARROW KEYS - Movement", 16, 16, 32, BLACK);
+					DrawText("ENTER - Confirm", 16, 48, 32, BLACK);
+					DrawText("BACKSPACE - Back", 16, 80, 32, BLACK);
+					DrawText("ESC - Close", 16, 112, 32, BLACK);
+					break;
+				case(MENU):
+					DrawRectangle(0, 0, SCREEN_SIZE.x, 160, RAYWHITE);
+					DrawText("WASD / ARROW KEYS - Movement", 16, 16, 32, BLACK);
+					DrawText("ENTER - Confirm", 16, 48, 32, BLACK);
+					DrawText("BACKSPACE - Back", 16, 80, 32, BLACK);
+					DrawText("ESC - Close", 16, 112, 32, BLACK);
+					break;
+				case(EDITOR):
+					DrawRectangle(0, 0, SCREEN_SIZE.x, 192, RAYWHITE);
+					DrawText("WASD / ARROW KEYS - Move cursor", 16, 16, 32, BLACK);
+					DrawText("ENTER - Confirm / Place", 16, 48, 32, BLACK);
+					DrawText("BACKSPACE - Back / Remove", 16, 80, 32, BLACK);
+					DrawText("R - Rotate", 16, 112, 32, BLACK);
+					DrawText("ESC - Piece Catalogue", 16, 144, 32, BLACK);
+					break;
+				case(RACE):
+					DrawRectangle(0, 0, SCREEN_SIZE.x, 224, RAYWHITE);
+					DrawText("WS / UP & DOWN ARROW KEYS - Accelerate / Deccelerate", 16, 16, 32, BLACK);
+					DrawText("AD / LEFT & RIGHT ARROW KEYS - Turn", 16, 48, 32, BLACK);
+					DrawText("ENTER - Checkpoint reset", 16, 80, 32, BLACK);
+					DrawText("BACKSPACE - Reset to start", 16, 112, 32, BLACK);
+					DrawText("R - Save incomplete replay", 16, 144, 32, BLACK);
+					DrawText("ESC - Pause menu", 16, 176, 32, BLACK);
+					break;
+				case(OPTIONS):
+					DrawRectangle(0, 0, SCREEN_SIZE.x, 160, RAYWHITE);
+					DrawText("WASD / ARROW KEYS - Movement", 16, 16, 32, BLACK);
+					DrawText("ENTER - Confirm", 16, 48, 32, BLACK);
+					DrawText("BACKSPACE - Back", 16, 80, 32, BLACK);
+					DrawText("ESC - Close", 16, 112, 32, BLACK);
+					break;
+			}
+		}
+
 	EndDrawing();
 	}
 

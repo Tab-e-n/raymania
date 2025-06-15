@@ -12,15 +12,17 @@ Download Raylib 5.0 and this repository.
 On Linux, you can export a linux build by
 opening the terminal in this repository and running:
 
-`bash compile.sh`
+`make raymania.out`
 
 Or if you want a windows build run:
 
-`bash win_compile.sh`
+`make raymania.exe`
 
 These commands will make an executable file.
 
 ## Controls
+
+F1 - Show controls
 
 ### MENUS
 

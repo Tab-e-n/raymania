@@ -26,6 +26,7 @@ asset.o : asset.c rmlib.h
 	gcc -c asset.c -lraylib
 ui.o : ui.c rmlib.h profiles.h asset.h
 	gcc -c ui.c -lraylib
+
 clean : 
 	rm raymania.out rmlib.o blocks.o racecar.o \
 	camera.o track.o profiles.o demos.o asset.o ui.o
