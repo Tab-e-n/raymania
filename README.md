@@ -1,6 +1,6 @@
 # Raymania
 Raymania is a 2D top down racing game inspired by Trackmania.
-It is also a spiritual successor to my previous project, Web Racer.
+It is also somewhat of a follow up to my previous project, Web Racer.
 
 The game is made using:
  - Raylib 5.0
