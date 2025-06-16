@@ -44,27 +44,29 @@ Speedometer or something with gears
 Arrow that points to the start in editor.
 Enviroment Visuals
 
-IN PROGRESS
-Random loud noise fix
 
-Start Race sfx
-Typing Sound sfx
-Move Block sfx
-
-BEFORE PLAYTEST MAYBE
+DO NEXT
+When track starts, and you car is offscreen, load_placement or whatever doesn't update
 Big blocks go outside of map fix
 Held piece in editor is transparent
 angular velocity?
 Start draws a racecar in editor
 Different zoom for different cars?
-Deleting bigger size blocks when not at their origin (might be too slow with current track structure)
 
-LATER
+Start Race sfx
+Move Block sfx
+
 Collisions take into account multiple lines
 Collisions still suck ass so fix them
-Custom asset rotation
-Block area rotation (same equation as racecar rot)
+Assets can have unique rotated sprites
 Blocks have more pieces
 Tracks have more blocks
-Standartized menus
 Removing Tracks, Profiles and Replays
+(This may be fixed, not sure) Random loud noise fix
+
+
+EXTRA
+Custom Typing Sound sfx
+Standartized menus
+Block area rotation (same equation as racecar rot)
+Deleting bigger size blocks when not at their origin (might be too slow with current track structure)
