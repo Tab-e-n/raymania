@@ -5,7 +5,7 @@ raymania.out : main.c rmlib.o blocks.o racecar.o \
 
 raymania.exe : main.c rmlib.o blocks.o racecar.o \
 	camera.o track.o profiles.o demos.o asset.o ui.o
-	gcc -o raymania.out main.c rmlib.o blocks.o racecar.o \
+	gcc -o raymania.exe main.c rmlib.o blocks.o racecar.o \
 	camera.o track.o profiles.o demos.o asset.o ui.o -lraylib -lgdi32 -lwinmm
 
 rmlib.o : rmlib.c rmlib.h
