@@ -61,10 +61,10 @@ float AirQuotesNoise(float point, bool flipped)
 	};
 	int min_x = (int)point;
 	if(min_x < 0)
-    {
-        point += 40.0;
-        min_x += 40;
-    }
+	{
+		point += 40.0;
+		min_x += 40;
+	}
 	float t = point - min_x;
 	int max_x = (min_x + 1) % 40;
 	min_x %= 40;

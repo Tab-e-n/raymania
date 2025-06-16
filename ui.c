@@ -81,7 +81,7 @@ unsigned char* ChangeToDirectory(unsigned char* dir, unsigned char* new_dir, boo
 		if(!DirectoryExists(TextFormat("%s/%s", dir, new_dir)))
 #endif
 		{
-		    TraceLog(LOG_INFO, "Can't change: %s", dir);
+			TraceLog(LOG_INFO, "Can't change: %s", dir);
 			return dir;
 		}
 #ifdef WINDOWS
@@ -107,7 +107,7 @@ unsigned char* ReturnToParentDirectory(unsigned char* dir)
 #endif
 	if(pos == 0)
 	{
-	    TraceLog(LOG_INFO, "Return failed: %s", dir);
+		TraceLog(LOG_INFO, "Return failed: %s", dir);
 		return dir;
 	}
 	TraceLog(LOG_INFO, "RL_REALLOC: return dir");

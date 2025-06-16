@@ -351,7 +351,7 @@ int main(void)
 	// TRACK
 
 	unsigned char track_name[TRACK_NAME_LENGHT] = {0};
-       	track_name[0] = 'M';
+	track_name[0] = 'M';
 	track_name[1] = 'E';
 	track_name[2] = 'N';
 	track_name[3] = 'U';
@@ -2622,14 +2622,14 @@ int main(void)
 		{
 			if(!TextIsEqual(file_dir, top_dir))
 			{
-                if(file_list_active == FL_TRACK)
-                {
-                    track_dir = ReturnToParentDirectory(track_dir);
-                }
-                else if(file_list_active == FL_DEMO)
-                {
-                    demo_dir = ReturnToParentDirectory(demo_dir);
-                }
+				if(file_list_active == FL_TRACK)
+				{
+					track_dir = ReturnToParentDirectory(track_dir);
+				}
+				else if(file_list_active == FL_DEMO)
+				{
+					demo_dir = ReturnToParentDirectory(demo_dir);
+				}
 				load_file_list = true;
 				PlaySound(sfx_back);
 			}
@@ -2649,15 +2649,14 @@ int main(void)
 			const char* path = (const char*)fpl.paths[selected_file];
 			if(DirectoryExists(path))
 			{
-                if(file_list_active == FL_TRACK)
-                {
-                    track_dir = ChangeToDirectory(track_dir, (unsigned char*)path, true);
-                }
-                else if(file_list_active == FL_DEMO)
-                {
-                    demo_dir = ChangeToDirectory(demo_dir, (unsigned char*)path, true);
-                }
-				TraceLog(LOG_INFO, "Dir's after: %s %s", track_dir, demo_dir);
+				if(file_list_active == FL_TRACK)
+				{
+					track_dir = ChangeToDirectory(track_dir, (unsigned char*)path, true);
+				}
+				else if(file_list_active == FL_DEMO)
+				{
+					demo_dir = ChangeToDirectory(demo_dir, (unsigned char*)path, true);
+				}
 				load_file_list = true;
 			}
 			else if(file_list_active == FL_TRACK)

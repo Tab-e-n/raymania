@@ -29,4 +29,7 @@ ui.o : ui.c ui.h rmlib.h profiles.h asset.h
 
 clean : 
 	rm raymania.out rmlib.o blocks.o racecar.o \
-	camera.o track.o profiles.o demos.o asset.o ui.o
+	camera.o track.o profiles.o demos.o asset.o ui.o \
+	rmlib.h.gch blocks.h.gch racecar.h.gch \
+	camera.h.gch track.h.gch profiles.h.gch \
+	demos.h.gch asset.h.gch ui.h.gch
