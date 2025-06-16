@@ -1,4 +1,5 @@
 *.o
+*.gch
 demos/*
 profiles/*
 export/*

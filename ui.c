@@ -89,6 +89,7 @@ void ChangeToDirectory(unsigned char* dir, unsigned char* new_dir, bool overwrit
 		TextCopy(dir, TextFormat("%s/%s", dir, new_dir));
 #endif
 	}
+	TraceLog(LOG_INFO, "%s", dir);
 }
 
 void ReturnToParentDirectory(unsigned char* dir)
@@ -105,6 +106,7 @@ void ReturnToParentDirectory(unsigned char* dir)
 	TraceLog(LOG_INFO, "RL_REALLOC: return dir");
 	dir = (unsigned char*)RL_REALLOC(dir, pos + 1);
 	dir[pos] = '\0';
+	TraceLog(LOG_INFO, "%s", dir);
 }
 
 void DrawCursor(Vector2 cursor_pos, float size, Color color)
