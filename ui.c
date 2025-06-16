@@ -63,36 +63,42 @@ void DrawFileList(FilePathList fpl, int current, Color bg1, Color bg2)
 	}
 }
 
-void ChangeToDirectory(unsigned char* dir, unsigned char* new_dir, bool overwrite)
+unsigned char* ChangeToDirectory(unsigned char* dir, unsigned char* new_dir, bool overwrite)
 {
 	if(overwrite)
 	{
-		TraceLog(LOG_INFO, "RL_FREE: change dir");
-		RL_FREE(dir);
-		TraceLog(LOG_INFO, "RL_MALLOC: change dir");
-		dir = (unsigned char*)RL_MALLOC(TextLength(new_dir));
+		TraceLog(LOG_INFO, "RL_FREE: overwrite dir");
+		_free(dir);
+		TraceLog(LOG_INFO, "RL_MALLOC: overwrite dir");
+		dir = (unsigned char*)_malloc(TextLength(new_dir));
 		TextCopy(dir, new_dir);
 	}
 	else
 	{
 #ifdef WINDOWS
 		if(!DirectoryExists(TextFormat("%s\\%s", dir, new_dir)))
-		{
-			return;
-		}
-		TextCopy(dir, TextFormat("%s\\%s", dir, new_dir));
 #else
 		if(!DirectoryExists(TextFormat("%s/%s", dir, new_dir)))
-		{
-			return;
-		}
-		TextCopy(dir, TextFormat("%s/%s", dir, new_dir));
 #endif
+		{
+		    TraceLog(LOG_INFO, "Can't change: %s", dir);
+			return dir;
+		}
+#ifdef WINDOWS
+		const char* full_new_dir = TextFormat("%s\\%s", dir, new_dir);
+#else
+		const char* full_new_dir = TextFormat("%s/%s", dir, new_dir);
+#endif
+		TraceLog(LOG_INFO, "RL_REALLOC: change dir");
+		dir = (unsigned char*)_realloc(dir, TextLength(full_new_dir));
+		TextCopy(dir, full_new_dir);
 	}
-	TraceLog(LOG_INFO, "%s", dir);
+	TraceLog(LOG_INFO, "New dir: %s", dir);
+
+	return dir;
 }
 
-void ReturnToParentDirectory(unsigned char* dir)
+unsigned char* ReturnToParentDirectory(unsigned char* dir)
 {
 #ifdef WINDOWS
 	unsigned int pos = TextFindLastChar(dir, '\\');
@@ -101,12 +107,14 @@ void ReturnToParentDirectory(unsigned char* dir)
 #endif
 	if(pos == 0)
 	{
-		return;
+	    TraceLog(LOG_INFO, "Return failed: %s", dir);
+		return dir;
 	}
 	TraceLog(LOG_INFO, "RL_REALLOC: return dir");
 	dir = (unsigned char*)RL_REALLOC(dir, pos + 1);
 	dir[pos] = '\0';
-	TraceLog(LOG_INFO, "%s", dir);
+	TraceLog(LOG_INFO, "Return success: %s", dir);
+	return dir;
 }
 
 void DrawCursor(Vector2 cursor_pos, float size, Color color)

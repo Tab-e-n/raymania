@@ -1306,7 +1306,7 @@ int main(void)
 							PlaySound(sfx_tick);
 						}
 					}
-					else 
+					else
 					{
 						piece_catalogue_item--;
 						PlaySound(sfx_tick);
@@ -1325,7 +1325,7 @@ int main(void)
 							PlaySound(sfx_tick);
 						}
 					}
-					else 
+					else
 					{
 						piece_catalogue_item++;
 						PlaySound(sfx_tick);
@@ -2622,7 +2622,14 @@ int main(void)
 		{
 			if(!TextIsEqual(file_dir, top_dir))
 			{
-				ReturnToParentDirectory(file_dir);
+                if(file_list_active == FL_TRACK)
+                {
+                    track_dir = ReturnToParentDirectory(track_dir);
+                }
+                else if(file_list_active == FL_DEMO)
+                {
+                    demo_dir = ReturnToParentDirectory(demo_dir);
+                }
 				load_file_list = true;
 				PlaySound(sfx_back);
 			}
@@ -2642,7 +2649,15 @@ int main(void)
 			const char* path = (const char*)fpl.paths[selected_file];
 			if(DirectoryExists(path))
 			{
-				ChangeToDirectory(file_dir, (unsigned char*)path, true);
+                if(file_list_active == FL_TRACK)
+                {
+                    track_dir = ChangeToDirectory(track_dir, (unsigned char*)path, true);
+                }
+                else if(file_list_active == FL_DEMO)
+                {
+                    demo_dir = ChangeToDirectory(demo_dir, (unsigned char*)path, true);
+                }
+				TraceLog(LOG_INFO, "Dir's after: %s %s", track_dir, demo_dir);
 				load_file_list = true;
 			}
 			else if(file_list_active == FL_TRACK)

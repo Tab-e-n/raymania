@@ -228,7 +228,7 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 			id[0] = B2x2DR1;
 			id[1] = DVOID;
 			break;
-		case(37): // Dirt 
+		case(37): // Dirt
 			blocks_used = 1;
 			id[0] = B1x1DR1;
 			id[1] = DVOID;
@@ -313,12 +313,12 @@ unsigned int GetPieceAdv(unsigned int piece_id, Vector2int placement, BlockRotat
 			id[0] = B1x1BR1;
 			id[1] = DVOID;
 			break;
-		case(54): // Grass 
+		case(54): // Grass
 			blocks_used = 1;
 			id[0] = B1x1GR0;
 			id[1] = DVOID;
 			break;
-		case(55): // Water 
+		case(55): // Water
 			blocks_used = 1;
 			id[0] = B1x1WR0;
 			id[1] = DVOID;
@@ -698,6 +698,7 @@ const char* TrackFileName(unsigned char* track_dir, unsigned char name[TRACK_NAM
 	filename[track_dir_len + size + 5] = '\0';
 	//const char* FILENAME = (const char*)_realloc(filename, size);
 	const char* FILENAME = (const char*)filename;
+	TraceLog(LOG_INFO, "Track Filename: %s", FILENAME);
 	return FILENAME;
 }
 
