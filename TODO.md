@@ -1,7 +1,10 @@
-COMPLETE
+# COMPLETE
+
 Raylib Logo Startup
 
-FUNCTIONAL
+
+# FUNCTIONAL
+
 Racecar Movement
 Block Mem Storage
 Block Walls
@@ -45,8 +48,10 @@ Arrow that points to the start in editor.
 Enviroment Visuals
 
 
-DO NEXT
-When track starts, and you car is offscreen, load_placement or whatever doesn't update
+# DO NEXT
+
+Reduce main to not be 3700 lines long
+When track starts, and you car is offscreen, load\_placement or whatever doesn't update
 Big blocks go outside of map fix
 Held piece in editor is transparent
 angular velocity?
@@ -65,7 +70,8 @@ Removing Tracks, Profiles and Replays
 (This may be fixed, not sure) Random loud noise fix
 
 
-EXTRA
+# EXTRA
+
 Custom Typing Sound sfx
 Standartized menus
 Block area rotation (same equation as racecar rot)
