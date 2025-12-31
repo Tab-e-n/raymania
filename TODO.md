@@ -1,6 +1,44 @@
-# COMPLETE
+# NEEDS FIXING
 
-Raylib Logo Startup
+Demos don't save if their subdirectory doesn't exist yet
+Pause sound effect
+Racecar sound effects are glitchy and sound bad
+Not enough info about the game's controls
+When track starts, and your car is offscreen, load\_placement or whatever doesn't update
+Reduce main to not be 3700 lines long
+Big blocks go outside of map fix
+Collisions take into account multiple lines
+Collisions still suck ass so fix them
+(This may be fixed, not sure) Random loud noise fix
+Cant esc out of party
+Cant esc out of main menu play submenu
+
+
+# DO NEXT
+
+Held piece in editor is transparent
+angular velocity?
+Start draws a racecar in editor
+Different zoom for different cars?
+Page button instead pulls up a large piece catalogue with more blocks
+Env and Car buttons show selected option without needing to press them
+Select directory when saving
+
+Start Race sfx
+Move Block sfx
+
+Assets can have unique rotated sprites
+Blocks have more pieces
+Tracks have more blocks
+Removing Tracks, Profiles and Replays
+
+
+# EXTRA
+
+Custom Typing Sound sfx
+Standartized menus
+Block area rotation (same equation as racecar rot)
+Deleting bigger size blocks when not at their origin (might be too slow with current track structure)
 
 
 # FUNCTIONAL
@@ -48,31 +86,6 @@ Arrow that points to the start in editor.
 Enviroment Visuals
 
 
-# DO NEXT
+# COMPLETE
 
-Reduce main to not be 3700 lines long
-When track starts, and you car is offscreen, load\_placement or whatever doesn't update
-Big blocks go outside of map fix
-Held piece in editor is transparent
-angular velocity?
-Start draws a racecar in editor
-Different zoom for different cars?
-
-Start Race sfx
-Move Block sfx
-
-Collisions take into account multiple lines
-Collisions still suck ass so fix them
-Assets can have unique rotated sprites
-Blocks have more pieces
-Tracks have more blocks
-Removing Tracks, Profiles and Replays
-(This may be fixed, not sure) Random loud noise fix
-
-
-# EXTRA
-
-Custom Typing Sound sfx
-Standartized menus
-Block area rotation (same equation as racecar rot)
-Deleting bigger size blocks when not at their origin (might be too slow with current track structure)
+Raylib Logo Startup
