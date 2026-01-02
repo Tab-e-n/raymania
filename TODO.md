@@ -23,6 +23,7 @@ Different zoom for different cars?
 Page button instead pulls up a large piece catalogue with more blocks
 Env and Car buttons show selected option without needing to press them
 Select directory when saving
+Drift Mechanic that conservers speed through turns
 
 Start Race sfx
 Move Block sfx
